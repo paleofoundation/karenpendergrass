@@ -42,6 +42,14 @@ const frameworks = [
     category: 'Microbiome Medicine',
   },
   {
+    slug: 'triangulation-method',
+    name: 'Microbiome Signature Triangulation Method',
+    tagline: 'The master reasoning system for intervention discovery and validation',
+    description:
+      'An eight-step pipeline that takes a microbiome signature as input, layers metallomics, maps functional dependencies, identifies ecological vulnerabilities, predicts interventions, triangulates against independent evidence, and produces validated recommendations or STOP analyses. The meta-framework that connects MBTI, HMTc, MMA, Microbial Metallomics, and STOP.',
+    category: 'Core Method',
+  },
+  {
     slug: 'stop',
     name: 'STOP (Suggested Termination Of Practice)',
     tagline: 'Evidence-based recommendations to discontinue harmful interventions',
