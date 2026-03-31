@@ -170,6 +170,29 @@ export default function AdvisoryPage() {
         </div>
       </section>
 
+      {/* Engagement rates */}
+      <section className="max-w-3xl mx-auto px-6 pb-16">
+        <h2
+          className="text-xl font-medium text-ink mb-8"
+          style={{ fontFamily: 'var(--font-display)' }}
+        >
+          Engagement structure
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="bg-white rounded-lg border border-ink/5 p-6">
+            <p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3" style={{ letterSpacing: '0.1em' }}>Expert Consultation</p>
+            <p className="text-3xl font-medium text-ink mb-1" style={{ fontFamily: 'var(--font-display)' }}>$1,500<span className="text-lg text-ink-muted font-normal">/hour</span></p>
+            <p className="text-sm text-ink-light leading-relaxed mt-3">Direct access for microbiome signature analysis, HMTc certification strategy, intervention validation, regulatory guidance, or AI operations architecture. Minimum 2-hour engagement.</p>
+          </div>
+          <div className="bg-white rounded-lg border border-ink/5 p-6">
+            <p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3" style={{ letterSpacing: '0.1em' }}>Advisory Retainer</p>
+            <p className="text-3xl font-medium text-ink mb-1" style={{ fontFamily: 'var(--font-display)' }}>Custom</p>
+            <p className="text-sm text-ink-light leading-relaxed mt-3">Board of Directors, Scientific Advisory Board, and ongoing strategic advisory. Structured as monthly or quarterly retainers with defined deliverables. Equity arrangements considered for early-stage companies.</p>
+          </div>
+        </div>
+        <p className="text-xs text-ink-muted mt-4">All engagements begin with a 30-minute scoping call at no charge to determine fit and define deliverables.</p>
+      </section>
+
       {/* CTA */}
       <section className="max-w-3xl mx-auto px-6 pb-20">
         <div className="bg-ink rounded-lg p-8 text-center">

@@ -7,9 +7,10 @@ const navLinks = [
   { href: '/about', label: 'About' },
   { href: '/ventures', label: 'Ventures' },
   { href: '/frameworks', label: 'Frameworks' },
+  { href: '/publications', label: 'Publications' },
   { href: '/writing', label: 'Writing' },
-  { href: '/research', label: 'Research' },
   { href: '/advisory', label: 'Advisory' },
+  { href: '/karens-brain', label: "Karen's Brain" },
   { href: '/contact', label: 'Contact' },
 ];
 
@@ -28,12 +29,12 @@ export default function Navigation() {
           </span>
         </Link>
 
-        <ul className="hidden md:flex items-center gap-7">
+        <ul className="hidden lg:flex items-center gap-6">
           {navLinks.map((link) => (
             <li key={link.href}>
               <Link
                 href={link.href}
-                className="link-animate text-sm font-medium text-ink-light hover:text-ink transition-colors tracking-wide uppercase"
+                className="link-animate text-[13px] font-medium text-ink-light hover:text-ink transition-colors tracking-wide uppercase"
                 style={{ letterSpacing: '0.08em', fontFamily: 'var(--font-body)' }}
               >
                 {link.label}
@@ -44,7 +45,7 @@ export default function Navigation() {
 
         <button
           onClick={() => setMobileOpen(!mobileOpen)}
-          className="md:hidden flex flex-col gap-1.5 p-2"
+          className="lg:hidden flex flex-col gap-1.5 p-2"
           aria-label="Toggle menu"
         >
           <span className={`block w-5 h-[1.5px] bg-ink transition-transform ${mobileOpen ? 'rotate-45 translate-y-[4.5px]' : ''}`} />
@@ -54,7 +55,7 @@ export default function Navigation() {
       </nav>
 
       {mobileOpen && (
-        <div className="md:hidden border-t border-ink/5 bg-paper">
+        <div className="lg:hidden border-t border-ink/5 bg-paper">
           <ul className="max-w-6xl mx-auto px-6 py-4 flex flex-col gap-3">
             {navLinks.map((link) => (
               <li key={link.href}>
