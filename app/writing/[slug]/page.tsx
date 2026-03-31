@@ -91,6 +91,17 @@ export default function ArticlePage({ params }: Props) {
         </div>
       </header>
 
+      {/* Cover image */}
+      {post.meta.coverImage && (
+        <div className="max-w-3xl mx-auto px-6 mb-8">
+          <img
+            src={post.meta.coverImage}
+            alt={post.meta.title}
+            className="w-full rounded-lg"
+          />
+        </div>
+      )}
+
       {/* Article body */}
       <article
         className="max-w-3xl mx-auto px-6 pb-16 prose"

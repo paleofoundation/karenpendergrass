@@ -125,6 +125,7 @@ export default function HomePage() {
               date={post.meta.date}
               category={post.meta.category}
               excerpt={post.meta.excerpt}
+              coverImage={post.meta.coverImage}
               content={post.content}
               featured
             />
