@@ -45,7 +45,11 @@ export default function MMAPage() {
           <h2>Definition</h2>
 
           <p>
-            A Major Microbial Association (MMA) is a documented, reproducible pattern of microbial taxa that are consistently elevated or reduced in a specific disease state compared to healthy controls. MMAs are derived from primary research literature and represent the consensus microbiome signature for a given condition. They are the foundational data layer of the Microbiome Signatures Database.
+            A Major Microbial Association (MMA) is a documented, reproducible pattern of microbial taxa that are consistently elevated or reduced in a specific disease state compared to healthy controls. MMAs are derived from primary research literature and represent the consensus microbiome signature for a given condition. They are the foundational data layer of the{' '}
+            <Link href="/publications" className="text-accent">
+              Microbiome Signatures Database
+            </Link>
+            .
           </p>
 
           <h2>Why MMAs Are Necessary</h2>

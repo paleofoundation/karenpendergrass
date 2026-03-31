@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import type { ReactNode } from 'react';
 import Link from 'next/link';
 import SectionHeader from '@/components/SectionHeader';
 
@@ -8,7 +9,13 @@ export const metadata: Metadata = {
     'Original research frameworks developed by Karen Pendergrass: MBTI Validation Criteria, HMTc Certification Standards, Microbial Metallomics, Major Microbial Associations (MMA), and STOP recommendations.',
 };
 
-const frameworks = [
+const frameworks: {
+  slug: string;
+  name: string;
+  tagline: string;
+  description: ReactNode;
+  category: string;
+}[] = [
   {
     slug: 'mbti-validation-criteria',
     name: 'Foundational MBTI Validation Criteria',
@@ -37,16 +44,51 @@ const frameworks = [
     slug: 'major-microbial-associations',
     name: 'Major Microbial Associations (MMA)',
     tagline: 'Formalized disease-associated microbiome patterns',
-    description:
-      'A structured system for documenting which microbial taxa are consistently elevated or reduced in specific disease states. MMAs form the foundation of the Microbiome Signatures Database and provide the evidence base for targeted intervention design.',
+    description: (
+      <>
+        A structured system for documenting which microbial taxa are consistently
+        elevated or reduced in specific disease states. MMAs form the foundation of
+        the{' '}
+        <Link href="/publications" className="text-accent">
+          Microbiome Signatures Database
+        </Link>{' '}
+        and provide the evidence base for targeted intervention design.
+      </>
+    ),
     category: 'Microbiome Medicine',
   },
   {
     slug: 'triangulation-method',
     name: 'Microbiome Signature Triangulation Method',
     tagline: 'The master reasoning system for intervention discovery and validation',
-    description:
-      'An eight-step pipeline that takes a microbiome signature as input, layers metallomics, maps functional dependencies, identifies ecological vulnerabilities, predicts interventions, triangulates against independent evidence, and produces validated recommendations or STOP analyses. The meta-framework that connects MBTI, HMTc, MMA, Microbial Metallomics, and STOP.',
+    description: (
+      <>
+        An eight-step pipeline that takes a microbiome signature as input, layers
+        metallomics, maps functional dependencies, identifies ecological
+        vulnerabilities, predicts interventions, triangulates against independent
+        evidence, and produces validated recommendations or{' '}
+        <Link href="/frameworks/stop" className="text-accent">
+          STOP
+        </Link>{' '}
+        analyses. The meta-framework that connects{' '}
+        <Link href="/frameworks/mbti-validation-criteria" className="text-accent">
+          MBTI
+        </Link>
+        ,{' '}
+        <Link href="/frameworks/hmtc" className="text-accent">
+          HMTc
+        </Link>
+        ,{' '}
+        <Link href="/frameworks/major-microbial-associations" className="text-accent">
+          MMA
+        </Link>
+        ,{' '}
+        <Link href="/frameworks/microbial-metallomics" className="text-accent">
+          Microbial Metallomics
+        </Link>
+        , and STOP.
+      </>
+    ),
     category: 'Core Method',
   },
   {

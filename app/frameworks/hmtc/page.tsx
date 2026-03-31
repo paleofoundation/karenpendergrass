@@ -88,7 +88,29 @@ export default function HMTcPage() {
           </p>
 
           <p>
-            HMTc is developed and administered by the <a href="https://paleofoundation.com" target="_blank" rel="noopener noreferrer">Paleo Foundation</a>. Full program details are available at <a href="https://heavymetaltested.com" target="_blank" rel="noopener noreferrer">heavymetaltested.com</a>.
+            HMTc is developed and administered by the{' '}
+            <Link href="/ventures" className="text-accent">
+              Paleo Foundation
+            </Link>{' '}
+            (
+            <a
+              href="https://paleofoundation.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-accent"
+            >
+              paleofoundation.com
+            </a>
+            ). Full program details are available at{' '}
+            <a
+              href="https://heavymetaltested.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-accent"
+            >
+              heavymetaltested.com
+            </a>
+            .
           </p>
         </div>
       </article>

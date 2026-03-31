@@ -29,9 +29,18 @@ export default function HomePage() {
             to clinical practice
           </h1>
           <p className="text-lg text-ink-light leading-relaxed max-w-2xl mb-8">
-            I develop certification standards, validate microbiome-targeted
-            interventions, and research microbial metallomics to bridge the gap
-            between discovery and application. Founder of five organizations
+            I develop certification standards, validate{' '}
+            <Link href="/frameworks/mbti-validation-criteria" className="text-accent">
+              microbiome-targeted interventions
+            </Link>
+            , and research{' '}
+            <Link href="/frameworks/microbial-metallomics" className="text-accent">
+              microbial metallomics
+            </Link>{' '}
+            to bridge the gap between discovery and application. Founder of five{' '}
+            <Link href="/ventures" className="text-accent">
+              organizations
+            </Link>{' '}
             spanning food safety, microbiome medicine, and animal welfare.
           </p>
           <div className="flex flex-wrap gap-4">
@@ -64,22 +73,54 @@ export default function HomePage() {
             <div>
               <p className="font-medium text-ink mb-1">Building</p>
               <p>
-                Tinies platform (tinies.app) connecting sanctuaries with sponsors.
-                Landing page redesign and content strategy in progress.
+                <Link href="/ventures" className="text-accent">
+                  Tinies
+                </Link>{' '}
+                platform (
+                <a
+                  href="https://tinies.app"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-accent"
+                >
+                  tinies.app
+                </a>
+                ) connecting sanctuaries with sponsors. Landing page redesign and
+                content strategy in progress.
               </p>
             </div>
             <div>
               <p className="font-medium text-ink mb-1">Researching</p>
               <p>
-                Microbial metallomics, nickel-dependent pathogenesis, and the
-                endometriosis microbiome signature. HMTc standards for new
-                product categories.
+                <Link href="/frameworks/microbial-metallomics" className="text-accent">
+                  Microbial metallomics
+                </Link>
+                , nickel-dependent pathogenesis, and the{' '}
+                <a
+                  href="https://microbiomemedicine.com/conditions/endometriosis/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-accent"
+                >
+                  endometriosis
+                </a>{' '}
+                microbiome signature.{' '}
+                <Link href="/frameworks/hmtc" className="text-accent">
+                  HMTc
+                </Link>{' '}
+                standards for new product categories.
               </p>
             </div>
             <div>
               <p className="font-medium text-ink mb-1">Operating</p>
               <p>
-                Paleo Foundation certification programs. Gardens of St. Gertrude
+                <Link href="/ventures" className="text-accent">
+                  Paleo Foundation
+                </Link>{' '}
+                certification programs.{' '}
+                <Link href="/ventures" className="text-accent">
+                  Gardens of St. Gertrude
+                </Link>{' '}
                 cat sanctuary in Parekklisia, Cyprus, caring for 92 cats.
               </p>
             </div>
@@ -155,9 +196,17 @@ export default function HomePage() {
             style={{ fontFamily: 'var(--font-display)' }}
           >
             After years of misdiagnoses and failed treatments, I became the first
-            known person to undergo fecal microbiota transplantation for Celiac
-            Disease. That experience changed the trajectory of my career and
-            led to everything you see here.
+            known person to undergo{' '}
+            <a
+              href="https://microbiomemedicine.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-accent"
+            >
+              fecal microbiota transplantation
+            </a>{' '}
+            for Celiac Disease. That experience changed the trajectory of my career
+            and led to everything you see here.
           </p>
           <Link
             href="/about"

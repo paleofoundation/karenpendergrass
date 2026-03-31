@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import type { ReactNode } from 'react';
 import Link from 'next/link';
 import SectionHeader from '@/components/SectionHeader';
 
@@ -11,8 +12,9 @@ export const metadata: Metadata = {
 interface ResearchProject {
   title: string;
   category: string;
-  description: string;
+  description: ReactNode;
   url?: string;
+  internalHref?: string;
   relatedArticles?: { title: string; slug: string }[];
 }
 
@@ -20,19 +22,35 @@ const projects: ResearchProject[] = [
   {
     title: 'Microbiome Signatures Database',
     category: 'Microbiome Medicine',
-    description:
-      'A clinician- and researcher-facing database formalizing disease-associated microbiome patterns through Major Microbial Associations (MMAs). Provides structured intervention guidance using the Microbial Shift and Realignment Process (MSRP) and dual-validation framework for Microbiome-Targeted Interventions (MBTIs).',
+    internalHref: '/publications',
+    description: (
+      <>
+        A clinician- and researcher-facing database formalizing disease-associated
+        microbiome patterns through{' '}
+        <Link href="/frameworks/major-microbial-associations" className="text-accent">
+          Major Microbial Associations (MMAs)
+        </Link>
+        . Provides structured intervention guidance using the Microbial Shift and
+        Realignment Process (MSRP) and dual-validation framework for{' '}
+        <Link href="/frameworks/mbti-validation-criteria" className="text-accent">
+          Microbiome-Targeted Interventions (MBTIs)
+        </Link>
+        .
+      </>
+    ),
     url: 'https://microbiomemedicine.com',
   },
   {
     title: 'Foundational MBTI Validation Criteria',
     category: 'Framework',
+    internalHref: '/frameworks/mbti-validation-criteria',
     description:
       'A validated MBTI must meet three criteria: (1) Microbiome Signature Alignment, modulating the microbiome by increasing reduced taxa and decreasing elevated taxa in the condition\'s signature; (2) Clinical Efficacy, demonstrating measurable improvements in clinical outcomes; and (3) Dual Validation, whereby alignment simultaneously validates the intervention and confirms the microbiome signature\'s accuracy and clinical relevance.',
   },
   {
     title: 'Microbial Metallomics',
     category: 'Research Framework',
+    internalHref: '/frameworks/microbial-metallomics',
     description:
       'Foundational work integrating trace metal analysis into microbiome research. Examines differential acquisition, utilization, and detoxification of trace elements (nickel, zinc, iron, cadmium, lead, aluminum) among taxa enriched in disease states. Introduces metallomics as a lens for pathogen virulence, microbial selection pressure, and nutrient-immune interactions.',
     url: 'https://microbialmetallomics.com',
@@ -43,6 +61,7 @@ const projects: ResearchProject[] = [
   {
     title: 'Heavy Metal Tested & Certified (HMTc) Standards',
     category: 'Standards Development',
+    internalHref: '/frameworks/hmtc',
     description:
       'Category-specific contaminant limits for food, supplements, and personal care products using ALARA-based principles and statistical risk matrices. Eight per-metal standards documents (Pb, As, Hg, Cd, Cr, Ni, Sn, Al) with anti-circumvention language, lot testing schedules, and governance policies.',
     url: 'https://heavymetaltested.com',
@@ -50,14 +69,29 @@ const projects: ResearchProject[] = [
   {
     title: 'STOP (Suggested Termination Of Practice)',
     category: 'Output Framework',
+    internalHref: '/frameworks/stop',
     description:
       'A named recommendation class for discontinuing specific medical interventions, treatments, or standard practices based on emerging evidence suggesting they are ineffective, harmful, or counterproductive. Applied across microbiome and metallomics research to address translational delays.',
   },
   {
     title: 'Nickel and Endometriosis',
     category: 'Microbial Metallomics',
-    description:
-      'Research into the role of nickel in microbial metallomic analyses related to endometriosis. Investigates how nickel-dependent pathogenic enzymes (urease, hydrogenase) interact with endometriosis microbiome signatures and contribute to disease persistence through metal-mediated virulence mechanisms.',
+    description: (
+      <>
+        Research into the role of nickel in microbial metallomic analyses related to{' '}
+        <a
+          href="https://microbiomemedicine.com/conditions/endometriosis/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-accent"
+        >
+          endometriosis
+        </a>
+        . Investigates how nickel-dependent pathogenic enzymes (urease, hydrogenase)
+        interact with endometriosis microbiome signatures and contribute to disease
+        persistence through metal-mediated virulence mechanisms.
+      </>
+    ),
     relatedArticles: [
       { title: 'Systems Thinking in Microbiome Research', slug: 'systems-thinking-in-microbiome-research' },
     ],
@@ -86,11 +120,15 @@ export default function ResearchPage() {
               className="text-xl font-medium text-ink mb-2"
               style={{ fontFamily: 'var(--font-display)' }}
             >
-              {project.title}
+              {project.internalHref ? (
+                <Link href={project.internalHref} className="hover:text-accent transition-colors">
+                  {project.title}
+                </Link>
+              ) : (
+                project.title
+              )}
             </h3>
-            <p className="text-ink-light leading-relaxed mb-3">
-              {project.description}
-            </p>
+            <p className="text-ink-light leading-relaxed mb-3">{project.description}</p>
             <div className="flex flex-wrap gap-4">
               {project.url && (
                 <a

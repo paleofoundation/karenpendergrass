@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import type { ReactNode } from 'react';
 import Link from 'next/link';
 import SectionHeader from '@/components/SectionHeader';
 import { AdvisorySchema } from '@/components/JsonLd';
@@ -14,51 +15,155 @@ export const metadata: Metadata = {
   },
 };
 
-const boardDomains = [
+const boardDomains: { title: string; description: ReactNode; keywords: string }[] = [
   {
     title: 'Food Safety & Certification Governance',
-    description:
-      'Over 15 years designing certification standards (Paleo, Keto, Grain-Free, HMTc) used globally by food manufacturers. Deep expertise in ALARA-based contaminant limits, statistical risk matrices, lot testing protocols, and anti-circumvention language for certification marks. Relevant for food companies, supplement brands, testing laboratories, and certification bodies.',
+    description: (
+      <>
+        Over 15 years designing certification standards (Paleo, Keto, Grain-Free,{' '}
+        <Link href="/frameworks/hmtc" className="text-accent">
+          HMTc
+        </Link>
+        ) used globally by food manufacturers. Deep expertise in ALARA-based
+        contaminant limits, statistical risk matrices, lot testing protocols, and
+        anti-circumvention language for certification marks. Relevant for food
+        companies, supplement brands, testing laboratories, and certification
+        bodies.
+      </>
+    ),
     keywords: 'HMTc, ALARA, certification standards, food safety, contaminant testing',
   },
   {
     title: 'Microbiome Science Translation',
-    description:
-      'Creator of the Foundational MBTI Validation Criteria and the Microbiome Signatures Database. Expertise in formalizing disease-associated microbiome patterns (Major Microbial Associations), validating microbiome-targeted interventions, and bridging the gap between discovery and clinical application. Relevant for biotech companies, probiotic manufacturers, clinical research organizations, and precision nutrition platforms.',
+    description: (
+      <>
+        Creator of the Foundational{' '}
+        <Link href="/frameworks/mbti-validation-criteria" className="text-accent">
+          MBTI Validation Criteria
+        </Link>{' '}
+        and the{' '}
+        <Link href="/publications" className="text-accent">
+          Microbiome Signatures Database
+        </Link>
+        . Expertise in formalizing disease-associated microbiome patterns (
+        <Link href="/frameworks/major-microbial-associations" className="text-accent">
+          Major Microbial Associations
+        </Link>
+        ), validating microbiome-targeted interventions, and bridging the gap between
+        discovery and clinical application. Relevant for biotech companies, probiotic
+        manufacturers, clinical research organizations, and precision nutrition
+        platforms.
+      </>
+    ),
     keywords: 'MBTI, microbiome signatures, MMA, microbiome-targeted interventions, clinical translation',
   },
   {
     title: 'Heavy Metal Risk Assessment & Metallomics',
-    description:
-      'Pioneering work in microbial metallomics examining how trace metals (nickel, zinc, iron, cadmium, lead, aluminum) shape pathogenic bacteria and drive antibiotic resistance. Authored the definitive framework connecting environmental heavy metal contamination to pathogenic selection pressure. Relevant for environmental health organizations, testing laboratories, regulatory bodies, and companies addressing contamination in food, water, and consumer products.',
+    description: (
+      <>
+        Pioneering work in{' '}
+        <Link href="/frameworks/microbial-metallomics" className="text-accent">
+          microbial metallomics
+        </Link>{' '}
+        examining how trace metals (nickel, zinc, iron, cadmium, lead, aluminum)
+        shape pathogenic bacteria and drive antibiotic resistance. Authored the
+        definitive framework connecting environmental heavy metal contamination to
+        pathogenic selection pressure. Relevant for environmental health
+        organizations, testing laboratories, regulatory bodies, and companies
+        addressing contamination in food, water, and consumer products.
+      </>
+    ),
     keywords: 'microbial metallomics, heavy metal contamination, nickel pathogenesis, trace metal analysis',
   },
   {
     title: 'AI-First Operations Design',
-    description:
-      'Foundational operating principle applied across five organizations: if a job can be done by AI, it should be done by AI, with humans shifting to oversight. Built Tinies (a full-stack platform) from scratch using AI coding tools with no prior coding experience. Designed and deployed an AI-managed Operations Command Center replacing traditional COO functions. Relevant for companies undergoing AI transformation, startups designing AI-native workflows, and organizations restructuring around AI capabilities.',
+    description: (
+      <>
+        Foundational operating principle applied across five organizations: if a job
+        can be done by AI, it should be done by AI, with humans shifting to
+        oversight. Built{' '}
+        <Link href="/ventures" className="text-accent">
+          Tinies
+        </Link>{' '}
+        (
+        <a
+          href="https://tinies.app"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-accent"
+        >
+          tinies.app
+        </a>
+        ; a full-stack platform) from scratch using AI coding tools with no prior
+        coding experience. Designed and deployed an AI-managed Operations Command
+        Center replacing traditional COO functions. Relevant for companies
+        undergoing AI transformation, startups designing AI-native workflows, and
+        organizations restructuring around AI capabilities.
+      </>
+    ),
     keywords: 'AI operations, AI-first design, operational AI, AI-native workflows',
   },
   {
     title: 'Animal Welfare Nonprofit Governance',
-    description:
-      'Founder and operator of Gardens of St. Gertrude (92-cat sanctuary in Cyprus) and Tinies (sanctuary-to-sponsor platform). Direct operational experience with sanctuary management, fundraising, veterinary care logistics, and international animal welfare advocacy. Relevant for animal welfare nonprofits, pet industry companies, and foundations supporting animal rescue.',
+    description: (
+      <>
+        Founder and operator of{' '}
+        <Link href="/ventures" className="text-accent">
+          Gardens of St. Gertrude
+        </Link>{' '}
+        (
+        <a
+          href="https://gardensofstgertrude.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-accent"
+        >
+          gardensofstgertrude.com
+        </a>
+        ; 92-cat sanctuary in Cyprus) and{' '}
+        <Link href="/ventures" className="text-accent">
+          Tinies
+        </Link>{' '}
+        (sanctuary-to-sponsor platform). Direct operational experience with
+        sanctuary management, fundraising, veterinary care logistics, and
+        international animal welfare advocacy. Relevant for animal welfare
+        nonprofits, pet industry companies, and foundations supporting animal rescue.
+      </>
+    ),
     keywords: 'animal welfare, sanctuary operations, nonprofit governance',
   },
 ];
 
-const engagementTypes = [
+const engagementTypes: { title: string; details: ReactNode }[] = [
   {
     title: 'Board of Directors / Advisory Board',
     details: 'Ongoing strategic advisory with quarterly meetings, committee participation, and governance oversight. Particularly suited for organizations in food safety, microbiome science, environmental health, and AI-native operations.',
   },
   {
     title: 'Scientific Advisory Board',
-    details: 'Research direction, methodology review, publication strategy, and translational roadmap development. Specializing in microbiome-targeted interventions, metallomics, and systems-level approaches to chronic disease.',
+    details: (
+      <>
+        Research direction, methodology review, publication strategy, and
+        translational roadmap development. Specializing in{' '}
+        <Link href="/frameworks/mbti-validation-criteria" className="text-accent">
+          microbiome-targeted interventions
+        </Link>
+        , metallomics, and systems-level approaches to chronic disease.
+      </>
+    ),
   },
   {
     title: 'Expert Consultation',
-    details: 'Project-based or retainer engagements for certification program design, HMTc implementation, microbiome data interpretation, regulatory strategy, and AI operations architecture.',
+    details: (
+      <>
+        Project-based or retainer engagements for certification program design,{' '}
+        <Link href="/frameworks/hmtc" className="text-accent">
+          HMTc
+        </Link>{' '}
+        implementation, microbiome data interpretation, regulatory strategy, and AI
+        operations architecture.
+      </>
+    ),
   },
   {
     title: 'Speaking & Keynote',
@@ -66,11 +171,72 @@ const engagementTypes = [
   },
 ];
 
-const credentials = [
-  { label: 'Organizations Founded', value: '5 (Paleo Foundation, Microbiome Medicine, Journal of Food Metallomics, Tinies, Gardens of St. Gertrude)' },
+const credentials: { label: string; value: ReactNode }[] = [
+  {
+    label: 'Organizations Founded',
+    value: (
+      <>
+        5 (
+        <Link href="/ventures" className="text-accent">
+          Paleo Foundation
+        </Link>
+        ,{' '}
+        <Link href="/ventures" className="text-accent">
+          Microbiome Medicine
+        </Link>
+        ,{' '}
+        <Link href="/ventures" className="text-accent">
+          Journal of Food Metallomics
+        </Link>
+        ,{' '}
+        <Link href="/ventures" className="text-accent">
+          Tinies
+        </Link>
+        ,{' '}
+        <Link href="/ventures" className="text-accent">
+          Gardens of St. Gertrude
+        </Link>
+        )
+      </>
+    ),
+  },
   { label: 'Years in Food Certification', value: '15+' },
-  { label: 'Certification Standards Developed', value: 'Paleo Certified, Keto Certified, Grain-Free Certified, Heavy Metal Tested & Certified (HMTc)' },
-  { label: 'Research Frameworks Created', value: 'Foundational MBTI Validation Criteria, STOP (Suggested Termination Of Practice), Major Microbial Associations (MMA), Microbial Metallomics framework' },
+  {
+    label: 'Certification Standards Developed',
+    value: (
+      <>
+        Paleo Certified, Keto Certified, Grain-Free Certified, Heavy Metal Tested & Certified (
+        <Link href="/frameworks/hmtc" className="text-accent">
+          HMTc
+        </Link>
+        )
+      </>
+    ),
+  },
+  {
+    label: 'Research Frameworks Created',
+    value: (
+      <>
+        Foundational{' '}
+        <Link href="/frameworks/mbti-validation-criteria" className="text-accent">
+          MBTI Validation Criteria
+        </Link>
+        ,{' '}
+        <Link href="/frameworks/stop" className="text-accent">
+          STOP (Suggested Termination Of Practice)
+        </Link>
+        ,{' '}
+        <Link href="/frameworks/major-microbial-associations" className="text-accent">
+          Major Microbial Associations (MMA)
+        </Link>
+        ,{' '}
+        <Link href="/frameworks/microbial-metallomics" className="text-accent">
+          Microbial Metallomics
+        </Link>{' '}
+        framework
+      </>
+    ),
+  },
   { label: 'HMTc Per-Metal Standards', value: '8 (Lead, Arsenic, Mercury, Cadmium, Chromium, Nickel, Tin, Aluminum)' },
   { label: 'Product Categories Covered by HMTc', value: 'Infant foods, supplements, cosmetics, cleaning products, pet foods, toys' },
   { label: 'Conference Presentations', value: '11th Beneficial Microbes Conference (2025)' },
@@ -97,10 +263,19 @@ export default function AdvisoryPage() {
           Strategic expertise for organizations navigating microbiome science, food safety, and regulatory innovation
         </h1>
         <p className="text-lg text-ink-light leading-relaxed max-w-2xl">
-          I bring 15+ years of standards development, original research in
-          microbial metallomics and microbiome-targeted interventions, and
-          operational experience running five organizations to board and
-          advisory roles. My work sits at intersections that most experts
+          I bring 15+ years of standards development, original research in{' '}
+          <Link href="/frameworks/microbial-metallomics" className="text-accent">
+            microbial metallomics
+          </Link>{' '}
+          and{' '}
+          <Link href="/frameworks/mbti-validation-criteria" className="text-accent">
+            microbiome-targeted interventions
+          </Link>
+          , and operational experience running five{' '}
+          <Link href="/ventures" className="text-accent">
+            organizations
+          </Link>{' '}
+          to board and advisory roles. My work sits at intersections that most experts
           never bridge: bench science and regulatory policy, food safety and
           microbiome medicine, AI systems and human oversight.
         </p>
@@ -182,7 +357,13 @@ export default function AdvisoryPage() {
           <div className="bg-white rounded-lg border border-ink/5 p-6">
             <p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3" style={{ letterSpacing: '0.1em' }}>Expert Consultation</p>
             <p className="text-3xl font-medium text-ink mb-1" style={{ fontFamily: 'var(--font-display)' }}>$1,500<span className="text-lg text-ink-muted font-normal">/hour</span></p>
-            <p className="text-sm text-ink-light leading-relaxed mt-3">Direct access for microbiome signature analysis, HMTc certification strategy, intervention validation, regulatory guidance, or AI operations architecture. Minimum 2-hour engagement.</p>
+            <p className="text-sm text-ink-light leading-relaxed mt-3">
+              Direct access for microbiome signature analysis,{' '}
+              <Link href="/frameworks/hmtc" className="text-accent">
+                HMTc
+              </Link>{' '}
+              certification strategy, intervention validation, regulatory guidance, or AI operations architecture. Minimum 2-hour engagement.
+            </p>
           </div>
           <div className="bg-white rounded-lg border border-ink/5 p-6">
             <p className="text-xs font-semibold uppercase tracking-widest text-accent mb-3" style={{ letterSpacing: '0.1em' }}>Advisory Retainer</p>
@@ -203,10 +384,9 @@ export default function AdvisoryPage() {
             Interested in working together?
           </p>
           <p className="text-sm text-paper/70 mb-5 max-w-lg mx-auto">
-            I am actively accepting board positions, advisory roles, and
-            consulting engagements. If your organization operates at the
-            intersection of science, food safety, or regulatory innovation,
-            I would welcome a conversation.
+            I am actively accepting board positions, advisory roles, and consulting
+            engagements. If your organization operates at the intersection of science,
+            food safety, or regulatory innovation, I would welcome a conversation.
           </p>
           <Link
             href="/contact"

@@ -109,8 +109,16 @@ export default function MBTIPage() {
           <h2>Case Validation: Pomegranate Fruit Extract and Endometriosis</h2>
 
           <p>
-            Pomegranate fruit extract (PFE) has been validated as an MBTI for
-            endometriosis using this framework. PFE increases Lactobacillaceae
+            Pomegranate fruit extract (PFE) has been validated as an MBTI for{' '}
+            <a
+              href="https://microbiomemedicine.com/conditions/endometriosis/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-accent"
+            >
+              endometriosis
+            </a>{' '}
+            using this framework. PFE increases Lactobacillaceae
             and Bacteroidetes while reducing Ruminococcaceae, Prevotellaceae, and
             Burkholderiaceae, aligning with the endometriosis microbiome
             signature (Criterion 1). PFE suppresses endometriotic cell adhesion
@@ -134,10 +142,19 @@ export default function MBTIPage() {
 
           <p>
             The framework is applied across the{' '}
-            <a href="https://microbiomemedicine.com" target="_blank" rel="noopener noreferrer">
+            <Link href="/publications" className="text-accent">
               Microbiome Signatures Database
-            </a>{' '}
-            and forms the methodological foundation for all intervention
+            </Link>{' '}
+            (
+            <a
+              href="https://microbiomemedicine.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-accent"
+            >
+              microbiomemedicine.com
+            </a>
+            ) and forms the methodological foundation for all intervention
             validation within Microbiome Medicine.
           </p>
 

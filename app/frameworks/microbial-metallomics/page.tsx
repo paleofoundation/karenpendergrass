@@ -73,7 +73,16 @@ export default function MicrobialMetallomicsPage() {
           <h2>Implications for Endometriosis</h2>
 
           <p>
-            Microbial metallomics has yielded novel hypotheses for conditions including endometriosis, where nickel-dependent pathogenic enzymes may interact with the disease-specific microbiome signature to contribute to disease persistence. The metallomic framework explains why certain bacteria are enriched in endometriotic tissue and how metal-mediated virulence mechanisms may drive chronic inflammation and immune evasion.
+            Microbial metallomics has yielded novel hypotheses for conditions including{' '}
+            <a
+              href="https://microbiomemedicine.com/conditions/endometriosis/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-accent"
+            >
+              endometriosis
+            </a>
+            , where nickel-dependent pathogenic enzymes may interact with the disease-specific microbiome signature to contribute to disease persistence. The metallomic framework explains why certain bacteria are enriched in endometriotic tissue and how metal-mediated virulence mechanisms may drive chronic inflammation and immune evasion.
           </p>
 
           <h2>Connection to Other Frameworks</h2>
@@ -83,7 +92,20 @@ export default function MicrobialMetallomicsPage() {
           </p>
 
           <p>
-            The Journal of Food Metallomics (<a href="https://microbialmetallomics.com" target="_blank" rel="noopener noreferrer">microbialmetallomics.com</a>) publishes ongoing research in this field.
+            The{' '}
+            <Link href="/ventures" className="text-accent">
+              Journal of Food Metallomics
+            </Link>{' '}
+            (
+            <a
+              href="https://microbialmetallomics.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-accent"
+            >
+              microbialmetallomics.com
+            </a>
+            ) publishes ongoing research in this field.
           </p>
         </div>
       </article>

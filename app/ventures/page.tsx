@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import { getVentures } from '@/lib/content';
 import SectionHeader from '@/components/SectionHeader';
 
@@ -22,7 +23,20 @@ export default function VenturesPage() {
       <SectionHeader
         label="Ventures"
         title="Five organizations, one through-line"
-        description="Every project connects back to translating complex systems science into frameworks that people can actually use. From food safety certification to microbiome research to animal welfare."
+        description={
+          <>
+            Every project connects back to translating complex systems science into
+            frameworks that people can actually use. From{' '}
+            <Link href="/frameworks/hmtc" className="text-accent">
+              food safety certification
+            </Link>{' '}
+            to{' '}
+            <Link href="/publications" className="text-accent">
+              microbiome research
+            </Link>{' '}
+            to animal welfare.
+          </>
+        }
       />
 
       <div className="flex flex-col gap-12">
