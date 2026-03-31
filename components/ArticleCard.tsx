@@ -8,6 +8,7 @@ interface ArticleCardProps {
   category: string;
   excerpt: string;
   content: string;
+  coverImage?: string;
   featured?: boolean;
 }
 
@@ -24,6 +25,7 @@ export default function ArticleCard({
   category,
   excerpt,
   content,
+  coverImage,
   featured = false,
 }: ArticleCardProps) {
   const displayExcerpt =
@@ -38,6 +40,15 @@ export default function ArticleCard({
     return (
       <article className="group">
         <Link href={`/writing/${slug}`} className="block">
+          {coverImage && (
+            <div className="mb-4 overflow-hidden rounded-lg aspect-[16/10]">
+              <img
+                src={coverImage}
+                alt={title}
+                className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-300"
+              />
+            </div>
+          )}
           <div className="mb-3 flex items-center gap-3">
             <span
               className="text-xs font-semibold uppercase tracking-widest text-accent"

@@ -13,6 +13,7 @@ export interface PostMeta {
   tags: string[];
   status: string;
   excerpt: string;
+  coverImage: string;
 }
 
 export interface Post {
@@ -52,6 +53,7 @@ export function getAllPosts(): Post[] {
         tags: data.tags || [],
         status: data.status || 'publish',
         excerpt: data.excerpt || '',
+        coverImage: data.coverImage || '',
       },
       content,
     };
@@ -81,6 +83,7 @@ export function getPostBySlug(slug: string): Post | null {
       tags: data.tags || [],
       status: data.status || 'publish',
       excerpt: data.excerpt || '',
+        coverImage: data.coverImage || '',
     },
     content,
   };
