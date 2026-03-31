@@ -1,0 +1,91 @@
+'use client';
+
+import Link from 'next/link';
+import { useState } from 'react';
+
+const navLinks = [
+  { href: '/about', label: 'About' },
+  { href: '/ventures', label: 'Ventures' },
+  { href: '/writing', label: 'Writing' },
+  { href: '/research', label: 'Research' },
+  { href: '/speaking', label: 'Speaking' },
+  { href: '/contact', label: 'Contact' },
+];
+
+export default function Navigation() {
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  return (
+    <header className="sticky top-0 z-50 bg-paper/90 backdrop-blur-md border-b border-ink/5">
+      <nav className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+        {/* Logo / Name */}
+        <Link href="/" className="group flex items-baseline gap-2">
+          <span
+            className="font-display text-xl font-medium tracking-tight text-ink"
+            style={{ fontFamily: 'var(--font-display)' }}
+          >
+            Karen Pendergrass
+          </span>
+        </Link>
+
+        {/* Desktop nav */}
+        <ul className="hidden md:flex items-center gap-8">
+          {navLinks.map((link) => (
+            <li key={link.href}>
+              <Link
+                href={link.href}
+                className="link-animate text-sm font-medium text-ink-light hover:text-ink transition-colors tracking-wide uppercase"
+                style={{ letterSpacing: '0.08em', fontFamily: 'var(--font-body)' }}
+              >
+                {link.label}
+              </Link>
+            </li>
+          ))}
+        </ul>
+
+        {/* Mobile toggle */}
+        <button
+          onClick={() => setMobileOpen(!mobileOpen)}
+          className="md:hidden flex flex-col gap-1.5 p-2"
+          aria-label="Toggle menu"
+        >
+          <span
+            className={`block w-5 h-[1.5px] bg-ink transition-transform ${
+              mobileOpen ? 'rotate-45 translate-y-[4.5px]' : ''
+            }`}
+          />
+          <span
+            className={`block w-5 h-[1.5px] bg-ink transition-opacity ${
+              mobileOpen ? 'opacity-0' : ''
+            }`}
+          />
+          <span
+            className={`block w-5 h-[1.5px] bg-ink transition-transform ${
+              mobileOpen ? '-rotate-45 -translate-y-[4.5px]' : ''
+            }`}
+          />
+        </button>
+      </nav>
+
+      {/* Mobile menu */}
+      {mobileOpen && (
+        <div className="md:hidden border-t border-ink/5 bg-paper">
+          <ul className="max-w-6xl mx-auto px-6 py-4 flex flex-col gap-3">
+            {navLinks.map((link) => (
+              <li key={link.href}>
+                <Link
+                  href={link.href}
+                  onClick={() => setMobileOpen(false)}
+                  className="block text-sm font-medium text-ink-light hover:text-ink py-1 tracking-wide uppercase"
+                  style={{ letterSpacing: '0.08em' }}
+                >
+                  {link.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </header>
+  );
+}
