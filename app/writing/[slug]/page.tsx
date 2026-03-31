@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import { remark } from 'remark';
+import remarkHtml from 'remark-html';
 import { getAllPosts, getPostBySlug, formatDate, readingTime } from '@/lib/content';
 
 interface Props {
@@ -53,9 +55,10 @@ export default function ArticlePage({ params }: Props) {
   const prevPost = currentIndex < allPosts.length - 1 ? allPosts[currentIndex + 1] : null;
   const nextPost = currentIndex > 0 ? allPosts[currentIndex - 1] : null;
 
-  // Simple markdown-to-HTML for the content
-  // In production you'd use next-mdx-remote or remark here
-  const htmlContent = simpleMarkdownToHtml(post.content);
+  const htmlContent = remark()
+    .use(remarkHtml)
+    .processSync(post.content)
+    .toString();
 
   return (
     <div className="page-enter">
@@ -143,89 +146,4 @@ export default function ArticlePage({ params }: Props) {
       </nav>
     </div>
   );
-}
-
-/**
- * Simple markdown-to-HTML converter for basic rendering.
- * Replace with next-mdx-remote for full MDX support in production.
- */
-function simpleMarkdownToHtml(md: string): string {
-  let html = md;
-
-  // Headings
-  html = html.replace(/^#### (.+)$/gm, '<h4>$1</h4>');
-  html = html.replace(/^### (.+)$/gm, '<h3>$1</h3>');
-  html = html.replace(/^## (.+)$/gm, '<h2>$1</h2>');
-  html = html.replace(/^# (.+)$/gm, '<h1>$1</h1>');
-
-  // Bold and italic
-  html = html.replace(/\*\*\*(.+?)\*\*\*/g, '<strong><em>$1</em></strong>');
-  html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
-  html = html.replace(/\*(.+?)\*/g, '<em>$1</em>');
-
-  // Links
-  html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
-
-  // Images
-  html = html.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img src="$2" alt="$1" loading="lazy" />');
-
-  // Horizontal rules
-  html = html.replace(/^---$/gm, '<hr />');
-
-  // Blockquotes
-  html = html.replace(/^> (.+)$/gm, '<blockquote><p>$1</p></blockquote>');
-
-  // List items (simple)
-  html = html.replace(/^- (.+)$/gm, '<li>$1</li>');
-
-  // Inline code
-  html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
-
-  // Paragraphs: wrap lines that aren't already HTML
-  const lines = html.split('\n');
-  const result: string[] = [];
-  let inList = false;
-
-  for (let i = 0; i < lines.length; i++) {
-    const line = lines[i].trim();
-
-    if (!line) {
-      if (inList) {
-        result.push('</ul>');
-        inList = false;
-      }
-      continue;
-    }
-
-    if (line.startsWith('<li>')) {
-      if (!inList) {
-        result.push('<ul>');
-        inList = true;
-      }
-      result.push(line);
-      continue;
-    }
-
-    if (inList) {
-      result.push('</ul>');
-      inList = false;
-    }
-
-    if (
-      line.startsWith('<h') ||
-      line.startsWith('<blockquote') ||
-      line.startsWith('<hr') ||
-      line.startsWith('<ul') ||
-      line.startsWith('</ul') ||
-      line.startsWith('<img')
-    ) {
-      result.push(line);
-    } else {
-      result.push(`<p>${line}</p>`);
-    }
-  }
-
-  if (inList) result.push('</ul>');
-
-  return result.join('\n');
 }

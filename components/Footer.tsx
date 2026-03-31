@@ -6,8 +6,10 @@ const footerSections = [
     links: [
       { href: '/about', label: 'About' },
       { href: '/ventures', label: 'Ventures' },
+      { href: '/frameworks', label: 'Frameworks' },
       { href: '/writing', label: 'Writing' },
       { href: '/research', label: 'Research' },
+      { href: '/advisory', label: 'Advisory & Board' },
     ],
   },
   {
@@ -16,6 +18,7 @@ const footerSections = [
       { href: 'https://paleofoundation.com', label: 'Paleo Foundation', external: true },
       { href: 'https://microbiomemedicine.com', label: 'Microbiome Medicine', external: true },
       { href: 'https://microbialmetallomics.com', label: 'Journal of Food Metallomics', external: true },
+      { href: 'https://heavymetaltested.com', label: 'Heavy Metal Tested', external: true },
       { href: 'https://tinies.app', label: 'Tinies', external: true },
       { href: 'https://gardensofstgertrude.com', label: 'Gardens of St. Gertrude', external: true },
     ],
@@ -24,7 +27,7 @@ const footerSections = [
     title: 'Connect',
     links: [
       { href: '/contact', label: 'Contact' },
-      { href: '/speaking', label: 'Speaking & Advisory' },
+      { href: '/advisory', label: 'Board & Advisory' },
     ],
   },
 ];
@@ -34,7 +37,6 @@ export default function Footer() {
     <footer className="border-t border-ink/5 bg-paper-warm mt-20">
       <div className="max-w-6xl mx-auto px-6 py-16">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
-          {/* Brand column */}
           <div className="md:col-span-1">
             <p
               className="text-lg font-medium text-ink mb-3"
@@ -44,11 +46,10 @@ export default function Footer() {
             </p>
             <p className="text-sm text-ink-muted leading-relaxed">
               Standards developer, microbiome signatures researcher, and founder.
-              Based in Cyprus.
+              Based in Cyprus. Available for board and advisory roles.
             </p>
           </div>
 
-          {/* Link columns */}
           {footerSections.map((section) => (
             <div key={section.title}>
               <p
@@ -85,7 +86,6 @@ export default function Footer() {
           ))}
         </div>
 
-        {/* Bottom bar */}
         <div className="mt-14 pt-6 border-t border-ink/5 flex flex-col sm:flex-row justify-between items-center gap-3">
           <p className="text-xs text-ink-muted">
             &copy; {new Date().getFullYear()} Karen Pendergrass. All rights reserved.
