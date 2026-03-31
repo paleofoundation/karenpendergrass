@@ -99,7 +99,7 @@ export default function ResearchPage() {
                   rel="noopener noreferrer"
                   className="text-sm text-accent font-medium link-animate"
                 >
-                  {project.url.replace('https://', '')} &nearr;
+                  {project.url.replace('https://', '')} ↗
                 </a>
               )}
               {project.relatedArticles?.map((article) => (

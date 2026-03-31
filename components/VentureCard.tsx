@@ -36,7 +36,7 @@ export default function VentureCard({ venture }: { venture: Venture }) {
       <p className="text-sm text-ink-light leading-relaxed">{venture.tagline}</p>
       <div className="mt-4 flex items-center gap-1 text-xs text-accent font-medium">
         <span>{venture.url.replace('https://', '')}</span>
-        <span>&nearr;</span>
+        <span>↗</span>
       </div>
     </a>
   );

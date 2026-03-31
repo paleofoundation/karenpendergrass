@@ -69,7 +69,7 @@ export default function Footer() {
                         className="text-sm text-ink-light hover:text-accent transition-colors"
                       >
                         {link.label}
-                        <span className="text-ink-muted ml-1 text-xs">&nearr;</span>
+                        <span className="text-ink-muted ml-1 text-xs">↗</span>
                       </a>
                     ) : (
                       <Link

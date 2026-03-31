@@ -160,7 +160,7 @@ export default function PublicationsPage() {
                     rel="noopener noreferrer"
                     className="text-xs text-accent font-medium link-animate"
                   >
-                    doi:{pub.doi} &nearr;
+                    doi:{pub.doi} ↗
                   </a>
                 )}
                 {pub.url && (
@@ -198,7 +198,7 @@ export default function PublicationsPage() {
                 rel="noopener noreferrer"
                 className="text-xs text-accent font-medium link-animate"
               >
-                {db.url.replace('https://', '')} &nearr;
+                {db.url.replace('https://', '')} ↗
               </a>
             </div>
           ))}

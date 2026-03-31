@@ -66,7 +66,7 @@ export default function ContactPage() {
                   rel="noopener noreferrer"
                   className="text-sm text-ink-light hover:text-accent transition-colors"
                 >
-                  {org.name} &nearr;
+                  {org.name} ↗
                 </a>
               ))}
             </div>

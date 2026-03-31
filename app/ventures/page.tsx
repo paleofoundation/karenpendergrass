@@ -53,7 +53,7 @@ export default function VenturesPage() {
                 className="inline-flex items-center gap-1 text-sm text-accent font-medium link-animate"
               >
                 {venture.url.replace('https://', '')}
-                <span>&nearr;</span>
+                <span>↗</span>
               </a>
             </article>
           );
