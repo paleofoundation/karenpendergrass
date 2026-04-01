@@ -86,7 +86,7 @@ export default function HomePage() {
           </div>
           <div className="order-2 md:order-1 relative w-full min-h-[300px] h-[min(55vw,420px)] md:min-h-0 md:h-full md:-ml-6 md:w-[calc(100%+1.5rem)]">
             <Image
-              src="/images/karen-pendergrass.jpg"
+              src="/images/Karen_Pendergrass.png"
               alt="Karen Pendergrass"
               fill
               sizes="(max-width: 768px) 100vw, 45vw"
