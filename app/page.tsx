@@ -84,12 +84,13 @@ export default function HomePage() {
               Start a conversation
             </Link>
           </div>
-          <div className="order-2 md:order-1 relative w-full min-h-[300px] h-[min(55vw,420px)] md:min-h-0 md:h-full md:-ml-6 md:w-[calc(100%+1.5rem)]">
+          <div className="order-2 md:order-1 relative w-full min-h-[500px] h-[min(90vw,620px)] md:min-h-0 md:h-full md:-ml-6 md:w-[calc(100%+1.5rem)]">
             <Image
               src="/images/Karen_Pendergrass.png"
               alt="Karen Pendergrass"
               fill
               sizes="(max-width: 768px) 100vw, 45vw"
+              quality={100}
               className="object-cover object-top"
               priority
             />
