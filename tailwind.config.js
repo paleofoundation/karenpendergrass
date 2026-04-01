@@ -10,20 +10,8 @@ module.exports = {
         display: ['var(--font-display)'],
         body: ['var(--font-body)'],
         mono: ['var(--font-mono)'],
-        playfair: ['"Playfair Display"', 'Georgia', 'serif'],
-        dm: ['"DM Sans"', 'system-ui', 'sans-serif'],
       },
       colors: {
-        brand: {
-          red: '#C8102E',
-        },
-        home: {
-          surface: '#f3f5f7',
-          cream: '#f7f5f0',
-          ink: '#1A1A1A',
-          rowborder: '#E0D8CC',
-          dark: '#111111',
-        },
         ink: {
           DEFAULT: '#1a1a1a',
           light: '#4a4a4a',
