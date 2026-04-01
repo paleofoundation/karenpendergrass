@@ -9,8 +9,8 @@ const navLinks = [
   { href: '/frameworks', label: 'Frameworks' },
   { href: '/publications', label: 'Publications' },
   { href: '/writing', label: 'Writing' },
+  { href: '/roundtable', label: 'Roundtable' },
   { href: '/advisory', label: 'Advisory' },
-  { href: '/karens-brain', label: "Karen's Brain" },
   { href: '/contact', label: 'Contact' },
 ];
 
@@ -29,13 +29,13 @@ export default function Navigation() {
           </span>
         </Link>
 
-        <ul className="hidden lg:flex items-center gap-6">
+        <ul className="hidden lg:flex items-center gap-5">
           {navLinks.map((link) => (
             <li key={link.href}>
               <Link
                 href={link.href}
-                className="link-animate text-[13px] font-medium text-ink-light hover:text-ink transition-colors tracking-wide uppercase"
-                style={{ letterSpacing: '0.08em', fontFamily: 'var(--font-body)' }}
+                className="link-animate text-[12.5px] font-medium text-ink-light hover:text-ink transition-colors tracking-wide uppercase"
+                style={{ letterSpacing: '0.07em', fontFamily: 'var(--font-body)' }}
               >
                 {link.label}
               </Link>
