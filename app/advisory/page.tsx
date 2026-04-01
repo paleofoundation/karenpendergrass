@@ -387,6 +387,23 @@ export default function AdvisoryPage() {
         </div>
       </section>
 
+      {/* Domains of applied work */}
+      <section className="max-w-3xl mx-auto px-6 pb-16">
+        <h2
+          className="text-xl font-medium text-ink mb-6"
+          style={{ fontFamily: 'var(--font-display)' }}
+        >
+          Domains of applied work
+        </h2>
+        <p className="text-sm text-ink-light leading-relaxed">
+          Applied the{' '}
+          <Link href="/frameworks/triangulation-method" className="text-accent">
+            Microbiome Signature Triangulation Method
+          </Link>{' '}
+          and site-specific prebiotic fiber interventions across oncology (drug repurposing for metastasized bone cancer, pancreatic cancer, basal cell carcinoma, melanoma), nephrology (chronic kidney disease, NAFLD remission), gastroenterology, and veterinary medicine, in collaboration with clinicians and veterinarians managing complex cases.
+        </p>
+      </section>
+
       {/* Credentials */}
       <section className="max-w-3xl mx-auto px-6 pb-16">
         <h2

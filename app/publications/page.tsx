@@ -30,6 +30,16 @@ interface Publication {
 
 const publications: Publication[] = [
   {
+    title:
+      'Beyond \'Just Eat Real Food\': The Case for Prebiotic Fiber and Hydrocolloid Fortification in Modern Diets',
+    authors: 'Pendergrass, K.',
+    venue: 'Microbiome Diet Research, The Paleo Foundation',
+    year: '2019',
+    type: 'journal',
+    description:
+      'Research paper arguing that achieving recommended prebiotic fiber intake through whole foods alone is impractical for most Americans, and that hydrocolloid-fortified packaged foods offer a viable, evidence-based solution. Documented the nephroprotective, bifidogenic, and anti-diabetic properties of gum arabic, resistant maltodextrin, and other high-molecular-weight prebiotic fibers across 81 references.',
+  },
+  {
     title: 'From Dysbiosis to Dyshomeostasis: Why Parkinson\'s Requires a Metallomic-Microbiome Lens',
     authors: 'Pendergrass, K.',
     venue: 'Microbiome Medicine Journal, Volume I, Issue I',
@@ -132,6 +142,17 @@ export default function PublicationsPage() {
         title="Published research"
         description="Journal articles, conference presentations, roundtable papers, and structured databases in microbiome medicine, microbial metallomics, and food safety certification."
       />
+      <p className="text-sm text-ink-muted mb-8">
+        ORCID:{' '}
+        <a
+          href="https://orcid.org/0000-0002-2348-7259"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-accent font-mono text-xs link-animate"
+        >
+          0000-0002-2348-7259 ↗
+        </a>
+      </p>
 
       {/* Publications list */}
       <section className="mb-16">

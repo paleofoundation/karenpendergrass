@@ -26,6 +26,7 @@ export function PersonSchema() {
       'Trace Metal Dysregulation',
     ],
     sameAs: [
+      'https://orcid.org/0000-0002-2348-7259',
       'https://paleofoundation.com',
       'https://microbiomemedicine.com',
       'https://microbialmetallomics.com',
