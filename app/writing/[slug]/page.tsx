@@ -28,23 +28,48 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const post = getPostBySlug(params.slug);
   if (!post) return {};
 
-  const description =
+  const fallbackDesc =
     post.meta.excerpt ||
     post.content
       .replace(/[#*_\[\]()]/g, '')
       .replace(/\n+/g, ' ')
       .slice(0, 160);
 
+  const description = (post.meta.description || fallbackDesc).slice(0, 150);
+  const canonical =
+    post.meta.canonicalUrl ||
+    `https://karenpendergrass.com/writing/${post.meta.slug}`;
+  const og = post.meta.openGraph;
+  const ogTitle = og?.title || post.meta.title;
+  const ogDescription = (og?.description || description).slice(0, 150);
+  const ogType = og?.type || 'article';
+  const ogUrl = og?.url || canonical;
+  const authorName = post.meta.author || 'Karen Pendergrass';
+
+  const kw = post.meta.keywords;
+  const keywords =
+    typeof kw === 'string'
+      ? kw
+          .split(',')
+          .map((k) => k.trim())
+          .filter(Boolean)
+      : Array.isArray(kw)
+        ? kw
+        : undefined;
+
   return {
     title: post.meta.title,
     description,
+    keywords: keywords?.length ? keywords : undefined,
+    authors: [{ name: authorName }],
+    alternates: { canonical },
     openGraph: {
-      title: post.meta.title,
-      description,
-      type: 'article',
+      title: ogTitle,
+      description: ogDescription,
+      type: ogType,
+      url: ogUrl,
       publishedTime: post.meta.date,
-      authors: ['Karen Pendergrass'],
-      url: `https://karenpendergrass.com/writing/${post.meta.slug}`,
+      authors: [authorName],
       ...(post.meta.coverImage
         ? {
             images: [
@@ -123,6 +148,7 @@ export default function ArticlePage({ params }: Props) {
         slug={post.meta.slug}
         date={post.meta.date}
         excerpt={
+          post.meta.description ||
           post.meta.excerpt ||
           post.content
             .replace(/[#*_\[\]()]/g, '')

@@ -11,6 +11,18 @@ export const metadata: Metadata = {
   },
   description:
     'Standards developer, microbiome signatures researcher, and founder at the intersection of microbiome science, translational medicine, and regulatory innovation.',
+  keywords: [
+    'Karen Pendergrass',
+    'microbiome researcher Cyprus',
+    'food certification standards',
+    'HMTc certification',
+    'heavy metal testing food',
+    'microbial metallomics',
+    'microbiome signatures database',
+    'Paleo Foundation',
+    'food safety researcher',
+    'Limassol Cyprus',
+  ],
   metadataBase: new URL('https://karenpendergrass.com'),
   openGraph: {
     title: 'Karen Pendergrass',

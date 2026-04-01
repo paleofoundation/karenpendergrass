@@ -29,11 +29,12 @@ export default function AboutPage() {
       {/* Prose body */}
       <article className="max-w-3xl mx-auto px-6 pb-20 prose">
         <p>
-          I run five organizations. I live in Cyprus with 92 cats. I research how
-          trace metals shape pathogenic bacteria. I build food safety certification
-          standards used by manufacturers worldwide. I am building a platform to
-          connect animal sanctuaries with sponsors. And I got here because
-          conventional medicine failed me.
+          I run five organizations. I live in Parekklisia, Cyprus, in the Limassol
+          district, with 92 cats. I research how trace metals shape pathogenic
+          bacteria. I build food safety certification standards used by
+          manufacturers worldwide. I am building a platform to connect animal
+          sanctuaries with sponsors. And I got here because conventional medicine
+          failed me.
         </p>
 
         <h2>The health crisis that started everything</h2>

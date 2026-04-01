@@ -1,5 +1,3 @@
-import type { PostMeta } from '@/lib/content';
-
 // Person schema for Karen Pendergrass - appears on every page via layout
 export function PersonSchema() {
   const schema = {
@@ -7,13 +5,23 @@ export function PersonSchema() {
     '@type': 'Person',
     name: 'Karen Pendergrass',
     url: 'https://karenpendergrass.com',
-    jobTitle: 'Standards Developer & Microbiome Signatures Researcher',
+    jobTitle:
+      'Standards Developer and Microbiome Signatures Researcher',
     description:
       'Founder and CEO of the Paleo Foundation. Standards developer, microbiome signatures researcher, and microbial metallomics pioneer. Creator of the MBTI Validation Framework, HMTc certification standards, and the Microbiome Signatures Database.',
+    worksFor: {
+      '@type': 'Organization',
+      name: 'Paleo Foundation',
+    },
     knowsAbout: [
-      'Microbiome Signatures',
-      'Microbiome-Targeted Interventions',
       'Microbial Metallomics',
+      'Microbiome Signatures',
+      'Heavy Metal Certification',
+      'Food Safety Standards',
+      'Paleo Certification',
+      'Phage Therapy',
+      'Translational Microbiome Medicine',
+      'Microbiome-Targeted Interventions',
       'Heavy Metal Testing and Certification',
       'Food Safety Certification Standards',
       'ALARA Principles in Food Safety',
@@ -73,6 +81,7 @@ export function PersonSchema() {
     address: {
       '@type': 'PostalAddress',
       addressLocality: 'Parekklisia',
+      addressRegion: 'Limassol',
       addressCountry: 'CY',
     },
   };

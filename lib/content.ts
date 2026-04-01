@@ -4,6 +4,13 @@ import matter from 'gray-matter';
 
 const contentDirectory = path.join(process.cwd(), 'content');
 
+export interface PostMetaOpenGraph {
+  title?: string;
+  description?: string;
+  type?: string;
+  url?: string;
+}
+
 export interface PostMeta {
   title: string;
   date: string;
@@ -14,6 +21,12 @@ export interface PostMeta {
   status: string;
   excerpt: string;
   coverImage: string;
+  /** Plain-text SEO description (≈150 chars); distinct from excerpt when set */
+  description?: string;
+  keywords?: string | string[];
+  author?: string;
+  canonicalUrl?: string;
+  openGraph?: PostMetaOpenGraph;
 }
 
 export interface Post {
@@ -54,6 +67,11 @@ export function getAllPosts(): Post[] {
         status: data.status || 'publish',
         excerpt: data.excerpt || '',
         coverImage: data.coverImage || '',
+        description: data.description || '',
+        keywords: data.keywords ?? '',
+        author: data.author || '',
+        canonicalUrl: data.canonicalUrl || '',
+        openGraph: data.openGraph || undefined,
       },
       content,
     };
@@ -84,6 +102,11 @@ export function getPostBySlug(slug: string): Post | null {
       status: data.status || 'publish',
       excerpt: data.excerpt || '',
         coverImage: data.coverImage || '',
+        description: data.description || '',
+        keywords: data.keywords ?? '',
+        author: data.author || '',
+        canonicalUrl: data.canonicalUrl || '',
+        openGraph: data.openGraph || undefined,
     },
     content,
   };
