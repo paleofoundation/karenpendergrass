@@ -10,8 +10,8 @@ const navLinks = [
   { href: '/publications', label: 'Publications' },
   { href: '/writing', label: 'Writing' },
   { href: '/roundtable', label: 'Roundtable' },
+  { href: '/speaking', label: 'Speaking' },
   { href: '/advisory', label: 'Advisory' },
-  { href: '/contact', label: 'Contact' },
 ];
 
 export default function Navigation() {
