@@ -3,6 +3,8 @@ import { getAllPosts, getVentures, formatDate, readingTime } from '@/lib/content
 import ArticleCard from '@/components/ArticleCard';
 import VentureCard from '@/components/VentureCard';
 import SectionHeader from '@/components/SectionHeader';
+import ImpactSection from '@/components/ImpactSection';
+import Testimonials from '@/components/Testimonials';
 
 export default function HomePage() {
   const posts = getAllPosts();
@@ -117,11 +119,29 @@ export default function HomePage() {
                 <Link href="/ventures" className="text-accent">
                   Paleo Foundation
                 </Link>{' '}
-                certification programs.{' '}
+                (
+                <a
+                  href="https://paleofoundation.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-accent"
+                >
+                  paleofoundation.com
+                </a>
+                ) certification programs.{' '}
                 <Link href="/ventures" className="text-accent">
                   Gardens of St. Gertrude
                 </Link>{' '}
-                cat sanctuary in Parekklisia, Cyprus, caring for 92 cats.
+                (
+                <a
+                  href="https://gardensofstgertrude.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-accent"
+                >
+                  gardensofstgertrude.com
+                </a>
+                ) cat sanctuary in Parekklisia, Cyprus, caring for 92 cats.
               </p>
             </div>
           </div>
@@ -149,6 +169,9 @@ export default function HomePage() {
           </Link>
         </div>
       </section>
+
+      <ImpactSection />
+      <Testimonials />
 
       {/* ─── Featured Writing ─── */}
       <section className="max-w-6xl mx-auto px-6 pb-20">

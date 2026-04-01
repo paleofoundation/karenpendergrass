@@ -126,7 +126,11 @@ export default function TriangulationMethodPage() {
           </p>
 
           <p>
-            The method uniquely integrates <Link href="/frameworks/microbial-metallomics">microbial metallomics</Link> as a driver of microbial selection. The model is not just "microbiome leads to disease" but rather "environment plus metals leads to microbial selection, which leads to virulence pathways, which leads to host pathology." This is why interventions like low-nickel diets, lactoferrin supplementation, and metal chelation emerge logically from the framework rather than being discovered by chance.
+            The method uniquely integrates{' '}
+            <Link href="/frameworks/microbial-metallomics" className="text-accent">
+              microbial metallomics
+            </Link>{' '}
+            as a driver of microbial selection. The model is not just "microbiome leads to disease" but rather "environment plus metals leads to microbial selection, which leads to virulence pathways, which leads to host pathology." This is why interventions like low-nickel diets, lactoferrin supplementation, and metal chelation emerge logically from the framework rather than being discovered by chance.
           </p>
 
           <h2>The knowledge primitives</h2>
@@ -162,17 +166,55 @@ export default function TriangulationMethodPage() {
           <h2>Case study</h2>
 
           <p>
-            The method was demonstrated live at the 11th Beneficial Microbes Conference (2025) using the endometriosis microbiome signature as a case study. The full 10-step walkthrough, from metallomic signature through STOP analysis, is available as a detailed article: <Link href="/writing/endometriosis-microbiome-signature-triangulation-method">"Unlocking the Endometriosis Microbiome Signature."</Link>
+            The method was demonstrated live at the 11th Beneficial Microbes Conference (2025) using the{' '}
+            <a
+              href="https://microbiomemedicine.com/conditions/endometriosis/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-accent"
+            >
+              endometriosis
+            </a>{' '}
+            microbiome signature as a case study. The full 10-step walkthrough, from metallomic signature through STOP analysis, is available as a detailed article:{' '}
+            <Link
+              href="/writing/endometriosis-microbiome-signature-triangulation-method"
+              className="text-accent"
+            >
+              &ldquo;Unlocking the Endometriosis Microbiome Signature.&rdquo;
+            </Link>
           </p>
 
           <h2>Relationship to other frameworks</h2>
 
           <p>
-            The Triangulation Method is the meta-framework that connects all other frameworks in this research program. <Link href="/frameworks/major-microbial-associations">Major Microbial Associations (MMA)</Link> provide the structured signature data that enters the pipeline. <Link href="/frameworks/microbial-metallomics">Microbial Metallomics</Link> provides the metallomic analysis layer. The <Link href="/frameworks/mbti-validation-criteria">MBTI Validation Criteria</Link> formalize the acceptance conditions for validated interventions. <Link href="/frameworks/stop">STOP recommendations</Link> are the negative output when the method identifies practices that should be discontinued. And <Link href="/frameworks/hmtc">HMTc certification</Link> addresses the upstream contamination that feeds the metallomic signatures driving disease.
+            The Triangulation Method is the meta-framework that connects all other frameworks in this research program.{' '}
+            <Link href="/frameworks/major-microbial-associations" className="text-accent">
+              Major Microbial Associations (MMA)
+            </Link>{' '}
+            provide the structured signature data that enters the pipeline.{' '}
+            <Link href="/frameworks/microbial-metallomics" className="text-accent">
+              Microbial Metallomics
+            </Link>{' '}
+            provides the metallomic analysis layer. The{' '}
+            <Link href="/frameworks/mbti-validation-criteria" className="text-accent">
+              MBTI Validation Criteria
+            </Link>{' '}
+            formalize the acceptance conditions for validated interventions.{' '}
+            <Link href="/frameworks/stop" className="text-accent">
+              STOP recommendations
+            </Link>{' '}
+            are the negative output when the method identifies practices that should be discontinued. And{' '}
+            <Link href="/frameworks/hmtc" className="text-accent">
+              HMTc certification
+            </Link>{' '}
+            addresses the upstream contamination that feeds the metallomic signatures driving disease.
           </p>
 
           <p>
-            The complete specification of this reasoning system is documented in the Karen's Brain Master Reference Specification (Version 1.0, March 2026). <Link href="/karens-brain">Learn more about Karen's Brain.</Link>
+            The complete specification of this reasoning system is documented in the Karen&apos;s Brain Master Reference Specification (Version 1.0, March 2026).{' '}
+            <Link href="/karens-brain" className="text-accent">
+              Learn more about Karen&apos;s Brain.
+            </Link>
           </p>
         </div>
       </article>

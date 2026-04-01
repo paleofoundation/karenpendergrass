@@ -67,17 +67,38 @@ export default function MMAPage() {
           <h2>Clinical Application</h2>
 
           <p>
-            MMAs serve as the evidence base for designing microbiome-targeted interventions. If a condition's MMA shows reduced Lactobacillaceae and elevated Prevotellaceae, an intervention should be evaluated on its ability to reverse those specific patterns. This specificity is what the <Link href="/frameworks/mbti-validation-criteria">MBTI Validation Criteria</Link> requires: an intervention must align with the condition's MMA (Criterion 1: Microbiome Signature Alignment) and produce clinical improvement (Criterion 2: Clinical Efficacy) to be validated.
+            MMAs serve as the evidence base for designing microbiome-targeted interventions. If a condition's MMA shows reduced Lactobacillaceae and elevated Prevotellaceae, an intervention should be evaluated on its ability to reverse those specific patterns. This specificity is what the{' '}
+            <Link href="/frameworks/mbti-validation-criteria" className="text-accent">
+              MBTI Validation Criteria
+            </Link>{' '}
+            requires: an intervention must align with the condition's MMA (Criterion 1: Microbiome Signature Alignment) and produce clinical improvement (Criterion 2: Clinical Efficacy) to be validated.
           </p>
 
           <h2>Relationship to Microbial Metallomics</h2>
 
           <p>
-            MMAs gain additional explanatory power when combined with <Link href="/frameworks/microbial-metallomics">microbial metallomics</Link>. When a condition's MMA shows enrichment of taxa that are known nickel-dependent pathogens (for example, Helicobacter in gastric conditions), metallomics provides the mechanistic explanation for why those taxa are enriched and suggests metal-targeted therapeutic strategies that complement microbiome-targeted approaches.
+            MMAs gain additional explanatory power when combined with{' '}
+            <Link href="/frameworks/microbial-metallomics" className="text-accent">
+              microbial metallomics
+            </Link>
+            . When a condition's MMA shows enrichment of taxa that are known nickel-dependent pathogens (for example, Helicobacter in gastric conditions), metallomics provides the mechanistic explanation for why those taxa are enriched and suggests metal-targeted therapeutic strategies that complement microbiome-targeted approaches. Program-level discovery and validation connect through the{' '}
+            <Link href="/frameworks/triangulation-method" className="text-accent">
+              Microbiome Signature Triangulation Method
+            </Link>
+            .
           </p>
 
           <p>
-            The full Microbiome Signatures Database, with MMAs for dozens of conditions, is available at <a href="https://microbiomemedicine.com" target="_blank" rel="noopener noreferrer">microbiomemedicine.com</a>.
+            The full Microbiome Signatures Database, with MMAs for dozens of conditions, is available at{' '}
+            <a
+              href="https://microbiomemedicine.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-accent"
+            >
+              microbiomemedicine.com
+            </a>
+            .
           </p>
         </div>
       </article>

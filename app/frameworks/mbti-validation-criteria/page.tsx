@@ -155,23 +155,31 @@ export default function MBTIPage() {
               microbiomemedicine.com
             </a>
             ) and forms the methodological foundation for all intervention
-            validation within Microbiome Medicine.
+            validation within{' '}
+            <Link href="/ventures" className="text-accent">
+              Microbiome Medicine
+            </Link>
+            .
           </p>
 
           <h2>Related Work</h2>
 
           <p>
             The MBTI Validation Criteria is part of a broader research program
-            that includes{' '}
-            <Link href="/frameworks/major-microbial-associations">
+            that includes the{' '}
+            <Link href="/frameworks/triangulation-method" className="text-accent">
+              Microbiome Signature Triangulation Method
+            </Link>{' '}
+            for ecosystem-level discovery and validation,{' '}
+            <Link href="/frameworks/major-microbial-associations" className="text-accent">
               Major Microbial Associations (MMA)
             </Link>{' '}
             for formalizing disease-associated microbiome patterns,{' '}
-            <Link href="/frameworks/microbial-metallomics">
+            <Link href="/frameworks/microbial-metallomics" className="text-accent">
               Microbial Metallomics
             </Link>{' '}
             for understanding trace metal influences on pathogenic selection, and{' '}
-            <Link href="/frameworks/stop">
+            <Link href="/frameworks/stop" className="text-accent">
               STOP recommendations
             </Link>{' '}
             for identifying interventions that should be discontinued.

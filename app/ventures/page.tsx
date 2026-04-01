@@ -50,7 +50,12 @@ export default function VenturesPage() {
                     className="text-2xl font-medium text-ink"
                     style={{ fontFamily: 'var(--font-display)' }}
                   >
-                    {venture.name}
+                    <Link
+                      href="/ventures"
+                      className="text-inherit no-underline hover:text-accent transition-colors"
+                    >
+                      {venture.name}
+                    </Link>
                   </h2>
                   <p className="text-sm text-ink-muted mt-0.5">{venture.role}</p>
                 </div>

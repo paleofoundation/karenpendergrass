@@ -88,7 +88,19 @@ export default function MicrobialMetallomicsPage() {
           <h2>Connection to Other Frameworks</h2>
 
           <p>
-            Microbial metallomics provides the mechanistic underpinning for several related frameworks. It explains why <Link href="/frameworks/hmtc">HMTc certification</Link> matters beyond simple toxicology: the metals being measured are shaping microbial communities in consumers. It informs the <Link href="/frameworks/mbti-validation-criteria">MBTI Validation Criteria</Link> by identifying metal-dependent pathways that interventions must address. And it generates <Link href="/frameworks/stop">STOP recommendations</Link> when metal supplementation practices inadvertently feed pathogenic bacteria.
+            Microbial metallomics provides the mechanistic underpinning for several related frameworks. It explains why{' '}
+            <Link href="/frameworks/hmtc" className="text-accent">
+              HMTc certification
+            </Link>{' '}
+            matters beyond simple toxicology: the metals being measured are shaping microbial communities in consumers. It informs the{' '}
+            <Link href="/frameworks/mbti-validation-criteria" className="text-accent">
+              MBTI Validation Criteria
+            </Link>{' '}
+            by identifying metal-dependent pathways that interventions must address. And it generates{' '}
+            <Link href="/frameworks/stop" className="text-accent">
+              STOP recommendations
+            </Link>{' '}
+            when metal supplementation practices inadvertently feed pathogenic bacteria.
           </p>
 
           <p>

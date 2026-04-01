@@ -66,17 +66,40 @@ export default function STOPPage() {
           <h2>Application in Microbiome and Metallomics Research</h2>
 
           <p>
-            STOPs are particularly relevant in microbiome science, where interventions based on incomplete understanding of microbial ecosystems can inadvertently feed pathogenic bacteria. For example, <Link href="/writing/nutritional-immunity-rethinking-iron-and-zinc-supplementation">nutritional immunity research</Link> demonstrates that iron and zinc supplementation during active infection may support pathogen growth rather than patient recovery, because pathogenic bacteria require these metals for virulence. A STOP on routine iron supplementation during certain infections would be based on this emerging metallomics evidence.
+            STOPs are particularly relevant in microbiome science, where interventions based on incomplete understanding of microbial ecosystems can inadvertently feed pathogenic bacteria. For example,{' '}
+            <Link
+              href="/writing/nutritional-immunity-rethinking-iron-and-zinc-supplementation"
+              className="text-accent"
+            >
+              nutritional immunity research
+            </Link>{' '}
+            demonstrates that iron and zinc supplementation during active infection may support pathogen growth rather than patient recovery, because pathogenic bacteria require these metals for virulence. A STOP on routine iron supplementation during certain infections would be based on this emerging metallomics evidence.
           </p>
 
           <p>
-            Similarly, <Link href="/frameworks/microbial-metallomics">microbial metallomics</Link> research has shown that some conventional practices inadvertently create environmental conditions that select for more dangerous pathogens. STOPs provide the formal mechanism for translating these findings into practice changes.
+            Similarly,{' '}
+            <Link href="/frameworks/microbial-metallomics" className="text-accent">
+              microbial metallomics
+            </Link>{' '}
+            research has shown that some conventional practices inadvertently create environmental conditions that select for more dangerous pathogens. STOPs provide the formal mechanism for translating these findings into practice changes.
           </p>
 
           <h2>Relationship to Other Frameworks</h2>
 
           <p>
-            STOPs complement the constructive frameworks in this research program. Where <Link href="/frameworks/mbti-validation-criteria">MBTI Validation Criteria</Link> identifies what to start doing and <Link href="/frameworks/major-microbial-associations">Major Microbial Associations</Link> identify what the targets should be, STOPs identify what to stop doing. Together, they form a complete translational toolkit: validate new interventions, formalize the evidence base, and retire practices that no longer serve patients.
+            STOPs complement the constructive frameworks in this research program. The{' '}
+            <Link href="/frameworks/triangulation-method" className="text-accent">
+              Microbiome Signature Triangulation Method
+            </Link>{' '}
+            structures upstream discovery;{' '}
+            <Link href="/frameworks/mbti-validation-criteria" className="text-accent">
+              MBTI Validation Criteria
+            </Link>{' '}
+            identify what to start doing;{' '}
+            <Link href="/frameworks/major-microbial-associations" className="text-accent">
+              Major Microbial Associations
+            </Link>{' '}
+            identify what the targets should be; and STOPs identify what to stop doing. Together, they form a complete translational toolkit: validate new interventions, formalize the evidence base, and retire practices that no longer serve patients.
           </p>
         </div>
       </article>

@@ -151,7 +151,16 @@ export default function AboutPage() {
           <Link href="/ventures" className="text-accent">
             Paleo Foundation
           </Link>{' '}
-          for over a decade. What started as a certification body for Paleo, Keto,
+          (
+          <a
+            href="https://paleofoundation.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-accent"
+          >
+            paleofoundation.com
+          </a>
+          ) for over a decade. What started as a certification body for Paleo, Keto,
           and Grain-Free products evolved into something broader as I recognized
           that the food system&apos;s heavy metal contamination problem was directly
           connected to the microbial selection pressures I was studying.
@@ -177,8 +186,17 @@ export default function AboutPage() {
           I live in Parekklisia, Cyprus, near RAF Akrotiri, where I run{' '}
           <Link href="/ventures" className="text-accent">
             Gardens of St. Gertrude
-          </Link>
-          , a cat sanctuary caring for 92 cats. The operational reality of running a
+          </Link>{' '}
+          (
+          <a
+            href="https://gardensofstgertrude.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-accent"
+          >
+            gardensofstgertrude.com
+          </a>
+          ), a cat sanctuary caring for 92 cats. The operational reality of running a
           sanctuary is that fundraising tools designed for general nonprofits fail
           spectacularly when applied to the specific needs of animal rescue.
           Sanctuaries need sponsor-to-animal matching, recurring micro-donations,
@@ -253,7 +271,10 @@ export default function AboutPage() {
           >
             paleofoundation.com
           </a>
-          ): Food certification standards for Paleo, Keto, Grain-Free, and HMTc
+          ): Food certification standards for Paleo, Keto, Grain-Free, and{' '}
+          <Link href="/frameworks/hmtc" className="text-accent">
+            HMTc
+          </Link>{' '}
           programs.{' '}
           <strong>
             <Link href="/ventures" className="text-accent">

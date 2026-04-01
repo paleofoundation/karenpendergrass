@@ -84,7 +84,11 @@ export default function HMTcPage() {
           <h2>Connection to Microbial Metallomics</h2>
 
           <p>
-            HMTc emerged from a recognition that heavy metal contamination is not just a toxicological problem but a microbiological one. Research in <Link href="/frameworks/microbial-metallomics">microbial metallomics</Link> demonstrates that environmental heavy metal exposure selects for pathogenic, antibiotic-resistant bacteria. The same metals that HMTc measures in food are shaping the microbial communities in the consumers who eat that food. This connection between food safety certification and microbiome health is unique to the HMTc framework.
+            HMTc emerged from a recognition that heavy metal contamination is not just a toxicological problem but a microbiological one. Research in{' '}
+            <Link href="/frameworks/microbial-metallomics" className="text-accent">
+              microbial metallomics
+            </Link>{' '}
+            demonstrates that environmental heavy metal exposure selects for pathogenic, antibiotic-resistant bacteria. The same metals that HMTc measures in food are shaping the microbial communities in the consumers who eat that food. This connection between food safety certification and microbiome health is unique to the HMTc framework.
           </p>
 
           <p>

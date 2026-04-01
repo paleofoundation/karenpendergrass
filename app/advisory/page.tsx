@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 import Link from 'next/link';
-import SectionHeader from '@/components/SectionHeader';
+import IntakeForm from '@/components/IntakeForm';
 import { AdvisorySchema } from '@/components/JsonLd';
 
 export const metadata: Metadata = {
@@ -124,7 +124,16 @@ const boardDomains: { title: string; description: ReactNode; keywords: string }[
         <Link href="/ventures" className="text-accent">
           Tinies
         </Link>{' '}
-        (sanctuary-to-sponsor platform). Direct operational experience with
+        (
+        <a
+          href="https://tinies.app"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-accent"
+        >
+          tinies.app
+        </a>
+        ; sanctuary-to-sponsor platform). Direct operational experience with
         sanctuary management, fundraising, veterinary care logistics, and
         international animal welfare advocacy. Relevant for animal welfare
         nonprofits, pet industry companies, and foundations supporting animal rescue.
@@ -167,7 +176,15 @@ const engagementTypes: { title: string; details: ReactNode }[] = [
   },
   {
     title: 'Speaking & Keynote',
-    details: 'Conference presentations, panel participation, and keynote addresses on microbiome science, food safety, heavy metal certification, and building with AI.',
+    details: (
+      <>
+        Conference presentations, panel participation, and keynote addresses on microbiome science, food safety,{' '}
+        <Link href="/frameworks/hmtc" className="text-accent">
+          heavy metal certification
+        </Link>
+        , and building with AI.
+      </>
+    ),
   },
 ];
 
@@ -179,23 +196,68 @@ const credentials: { label: string; value: ReactNode }[] = [
         5 (
         <Link href="/ventures" className="text-accent">
           Paleo Foundation
-        </Link>
-        ,{' '}
+        </Link>{' '}
+        (
+        <a
+          href="https://paleofoundation.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-accent"
+        >
+          paleofoundation.com
+        </a>
+        ),{' '}
         <Link href="/ventures" className="text-accent">
           Microbiome Medicine
-        </Link>
-        ,{' '}
+        </Link>{' '}
+        (
+        <a
+          href="https://microbiomemedicine.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-accent"
+        >
+          microbiomemedicine.com
+        </a>
+        ),{' '}
         <Link href="/ventures" className="text-accent">
           Journal of Food Metallomics
-        </Link>
-        ,{' '}
+        </Link>{' '}
+        (
+        <a
+          href="https://microbialmetallomics.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-accent"
+        >
+          microbialmetallomics.com
+        </a>
+        ),{' '}
         <Link href="/ventures" className="text-accent">
           Tinies
-        </Link>
-        ,{' '}
+        </Link>{' '}
+        (
+        <a
+          href="https://tinies.app"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-accent"
+        >
+          tinies.app
+        </a>
+        ),{' '}
         <Link href="/ventures" className="text-accent">
           Gardens of St. Gertrude
-        </Link>
+        </Link>{' '}
+        (
+        <a
+          href="https://gardensofstgertrude.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-accent"
+        >
+          gardensofstgertrude.com
+        </a>
         )
       </>
     ),
@@ -374,27 +436,8 @@ export default function AdvisoryPage() {
         <p className="text-xs text-ink-muted mt-4">All engagements begin with a 30-minute scoping call at no charge to determine fit and define deliverables.</p>
       </section>
 
-      {/* CTA */}
       <section className="max-w-3xl mx-auto px-6 pb-20">
-        <div className="bg-ink rounded-lg p-8 text-center">
-          <p
-            className="text-xl font-medium text-paper mb-3"
-            style={{ fontFamily: 'var(--font-display)' }}
-          >
-            Interested in working together?
-          </p>
-          <p className="text-sm text-paper/70 mb-5 max-w-lg mx-auto">
-            I am actively accepting board positions, advisory roles, and consulting
-            engagements. If your organization operates at the intersection of science,
-            food safety, or regulatory innovation, I would welcome a conversation.
-          </p>
-          <Link
-            href="/contact"
-            className="inline-flex items-center px-5 py-2.5 bg-paper text-ink text-sm font-medium rounded-md hover:bg-paper-warm transition-colors"
-          >
-            Get in touch
-          </Link>
-        </div>
+        <IntakeForm />
       </section>
     </div>
   );
