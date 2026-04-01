@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Image from 'next/image';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
@@ -57,30 +58,42 @@ export default function HomePage() {
   return (
     <div className="page-enter">
       {/* Section 1: Hero */}
-      <section className="max-w-6xl mx-auto px-6 pt-20 pb-16 md:pt-28 md:pb-20">
-        <div className="max-w-3xl">
-          <p className="text-sm md:text-base italic text-ink-muted mb-6 leading-relaxed">
-            Founder of 5 organizations. 15 years in microbiome research. Consistently early.
-          </p>
-          <h1
-            className="text-4xl md:text-5xl lg:text-6xl font-bold text-ink leading-[1.1] tracking-tight mb-8"
-            style={{ fontFamily: 'var(--font-display)' }}
-          >
-            I build the frameworks that become the standard before there&apos;s a market for them.
-          </h1>
-          <blockquote className="border-l-[3px] border-accent pl-5 md:pl-6 mb-4 max-w-2xl">
-            <p className="text-base md:text-lg italic text-ink-light leading-relaxed">
-              &ldquo;Well if it isn&apos;t the oracle herself! Too bad we don&apos;t have a recording of
-              that call. And now you need to put out a 2030 trends prediction piece.&rdquo;
+      <section className="max-w-6xl mx-auto px-6 pt-20 pb-16 md:pt-28 md:pb-20 overflow-x-clip">
+        <div className="grid grid-cols-1 md:grid-cols-[45fr_55fr] md:items-stretch gap-8 md:gap-x-8 md:gap-y-0">
+          <div className="order-1 md:order-2 max-w-3xl">
+            <p className="text-sm md:text-base italic text-ink-muted mb-6 leading-relaxed">
+              Founder of 5 organizations. 15 years in microbiome research. Consistently early.
             </p>
-          </blockquote>
-          <p className="text-sm text-ink-muted mb-8 pl-5 md:pl-6">Fred Hart · Partner at Interact</p>
-          <Link
-            href="/contact"
-            className="inline-flex items-center px-5 py-2.5 bg-ink text-paper text-sm font-medium rounded-md hover:bg-ink-light transition-colors"
-          >
-            Start a conversation
-          </Link>
+            <h1
+              className="text-4xl md:text-5xl lg:text-6xl font-bold text-ink leading-[1.1] tracking-tight mb-8"
+              style={{ fontFamily: 'var(--font-display)' }}
+            >
+              I build the frameworks that become the standard before there&apos;s a market for them.
+            </h1>
+            <blockquote className="border-l-[3px] border-accent pl-5 md:pl-6 mb-4 max-w-2xl">
+              <p className="text-base md:text-lg italic text-ink-light leading-relaxed">
+                &ldquo;Well if it isn&apos;t the oracle herself! Too bad we don&apos;t have a recording of
+                that call. And now you need to put out a 2030 trends prediction piece.&rdquo;
+              </p>
+            </blockquote>
+            <p className="text-sm text-ink-muted mb-8 pl-5 md:pl-6">Fred Hart · Partner at Interact</p>
+            <Link
+              href="/contact"
+              className="inline-flex items-center px-5 py-2.5 bg-accent text-paper text-sm font-medium rounded-md hover:bg-accent-dark transition-colors"
+            >
+              Start a conversation
+            </Link>
+          </div>
+          <div className="order-2 md:order-1 relative w-full min-h-[300px] h-[min(55vw,420px)] md:min-h-0 md:h-full md:-ml-6 md:w-[calc(100%+1.5rem)]">
+            <Image
+              src="/images/karen-pendergrass.jpg"
+              alt="Karen Pendergrass"
+              fill
+              sizes="(max-width: 768px) 100vw, 45vw"
+              className="object-cover object-top"
+              priority
+            />
+          </div>
         </div>
       </section>
 
@@ -95,17 +108,17 @@ export default function HomePage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16">
           <ul className="space-y-8 list-none p-0 m-0">
             <li className="text-sm md:text-base text-ink-light leading-relaxed">
-              <span className="font-bold text-ink">2009</span>
+              <span className="font-bold text-accent">2009</span>
               <span className="text-ink-muted"> — </span>
               Founded Paleo Foundation. Professor said there was no market. The market arrived.
             </li>
             <li className="text-sm md:text-base text-ink-light leading-relaxed">
-              <span className="font-bold text-ink">2020</span>
+              <span className="font-bold text-accent">2020</span>
               <span className="text-ink-muted"> — </span>
               Told Fred Hart that Pepsi would put prebiotics on their cans. Pepsi confirmed 2026.
             </li>
             <li className="text-sm md:text-base text-ink-light leading-relaxed">
-              <span className="font-bold text-ink">2026</span>
+              <span className="font-bold text-accent">2026</span>
               <span className="text-ink-muted"> — </span>
               Published Microbiome Medicine Journal, Volume I. 5 original papers on Parkinson&apos;s
               disease.
@@ -113,17 +126,17 @@ export default function HomePage() {
           </ul>
           <ul className="space-y-8 list-none p-0 m-0">
             <li className="text-sm md:text-base text-ink-light leading-relaxed">
-              <span className="font-bold text-ink">2012</span>
+              <span className="font-bold text-accent">2012</span>
               <span className="text-ink-muted"> — </span>
               First documented FMT for Celiac Disease. 4 years before the first published case study.
             </li>
             <li className="text-sm md:text-base text-ink-light leading-relaxed">
-              <span className="font-bold text-ink">2025</span>
+              <span className="font-bold text-accent">2025</span>
               <span className="text-ink-muted"> — </span>
               Only non-PhD among 150 researchers. Invited guest at Beneficial Microbes Conference.
             </li>
             <li className="text-sm md:text-base text-ink-light leading-relaxed italic text-ink-muted">
-              <span className="font-bold text-ink not-italic">Soon</span>
+              <span className="font-bold text-accent not-italic">Soon</span>
               <span className="text-ink-muted not-italic"> — </span>
               Heavy metals as the next major consumer health issue. Smart toilets for biomonitoring.
               Phage therapy replacing antibiotics.
