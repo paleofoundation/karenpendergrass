@@ -1,6 +1,9 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import { unified } from 'unified';
+import remarkParse from 'remark-parse';
+import remarkHtml from 'remark-html';
 import { getAllPosts, getPostBySlug, formatDate, readingTime } from '@/lib/content';
 import { ArticleSchema } from '@/components/JsonLd';
 import ShareButtons from '@/components/ShareButtons';
@@ -101,7 +104,9 @@ export default function ArticlePage({ params }: Props) {
     related.push(...others);
   }
 
-  const htmlContent = simpleMarkdownToHtml(post.content);
+  const htmlContent = String(
+    unified().use(remarkParse).use(remarkHtml).processSync(post.content)
+  );
 
   return (
     <div className="page-enter">
@@ -253,107 +258,4 @@ export default function ArticlePage({ params }: Props) {
       </nav>
     </div>
   );
-}
-
-/**
- * Simple markdown-to-HTML converter for basic rendering.
- * Replace with next-mdx-remote for full MDX support in production.
- */
-function simpleMarkdownToHtml(md: string): string {
-  let html = md;
-
-  // Headings - add IDs for TOC anchor links
-  html = html.replace(/^#### (.+)$/gm, (_, text) => {
-    const id = text.toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-').trim();
-    return `<h4 id="${id}">${text}</h4>`;
-  });
-  html = html.replace(/^### (.+)$/gm, (_, text) => {
-    const id = text.toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-').trim();
-    return `<h3 id="${id}">${text}</h3>`;
-  });
-  html = html.replace(/^## (.+)$/gm, (_, text) => {
-    const id = text.toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-').trim();
-    return `<h2 id="${id}">${text}</h2>`;
-  });
-  html = html.replace(/^# (.+)$/gm, (_, text) => {
-    const id = text.toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-').trim();
-    return `<h1 id="${id}">${text}</h1>`;
-  });
-
-  // Bold and italic
-  html = html.replace(/\*\*\*(.+?)\*\*\*/g, '<strong><em>$1</em></strong>');
-  html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
-  html = html.replace(/\*(.+?)\*/g, '<em>$1</em>');
-
-  // Links
-  html = html.replace(
-    /\[([^\]]+)\]\(([^)]+)\)/g,
-    '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>'
-  );
-
-  // Images
-  html = html.replace(
-    /!\[([^\]]*)\]\(([^)]+)\)/g,
-    '<img src="$2" alt="$1" loading="lazy" />'
-  );
-
-  // Horizontal rules
-  html = html.replace(/^---$/gm, '<hr />');
-
-  // Blockquotes
-  html = html.replace(/^> (.+)$/gm, '<blockquote><p>$1</p></blockquote>');
-
-  // List items (simple)
-  html = html.replace(/^- (.+)$/gm, '<li>$1</li>');
-
-  // Inline code
-  html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
-
-  // Paragraphs
-  const lines = html.split('\n');
-  const result: string[] = [];
-  let inList = false;
-
-  for (let i = 0; i < lines.length; i++) {
-    const line = lines[i].trim();
-
-    if (!line) {
-      if (inList) {
-        result.push('</ul>');
-        inList = false;
-      }
-      continue;
-    }
-
-    if (line.startsWith('<li>')) {
-      if (!inList) {
-        result.push('<ul>');
-        inList = true;
-      }
-      result.push(line);
-      continue;
-    }
-
-    if (inList) {
-      result.push('</ul>');
-      inList = false;
-    }
-
-    if (
-      line.startsWith('<h') ||
-      line.startsWith('<blockquote') ||
-      line.startsWith('<hr') ||
-      line.startsWith('<ul') ||
-      line.startsWith('</ul') ||
-      line.startsWith('<img')
-    ) {
-      result.push(line);
-    } else {
-      result.push(`<p>${line}</p>`);
-    }
-  }
-
-  if (inList) result.push('</ul>');
-
-  return result.join('\n');
 }
