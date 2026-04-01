@@ -1,98 +1,50 @@
 import Link from 'next/link';
 
-const footerSections = [
-  {
-    title: 'Navigate',
-    links: [
-      { href: '/about', label: 'About' },
-      { href: '/ventures', label: 'Ventures' },
-      { href: '/frameworks', label: 'Frameworks' },
-      { href: '/writing', label: 'Writing' },
-      { href: '/research', label: 'Research' },
-      { href: '/advisory', label: 'Advisory & Board' },
-    ],
-  },
-  {
-    title: 'Projects',
-    links: [
-      { href: 'https://paleofoundation.com', label: 'Paleo Foundation', external: true },
-      { href: 'https://microbiomemedicine.com', label: 'Microbiome Medicine', external: true },
-      { href: 'https://microbialmetallomics.com', label: 'Journal of Food Metallomics', external: true },
-      { href: 'https://heavymetaltested.com', label: 'Heavy Metal Tested', external: true },
-      { href: 'https://tinies.app', label: 'Tinies', external: true },
-      { href: 'https://gardensofstgertrude.com', label: 'Gardens of St. Gertrude', external: true },
-    ],
-  },
-  {
-    title: 'Connect',
-    links: [
-      { href: '/contact', label: 'Contact' },
-      { href: '/advisory', label: 'Board & Advisory' },
-    ],
-  },
-];
-
 export default function Footer() {
   return (
-    <footer className="border-t border-ink/5 bg-paper-warm mt-20">
-      <div className="max-w-6xl mx-auto px-6 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
-          <div className="md:col-span-1">
-            <p
-              className="text-lg font-medium text-ink mb-3"
-              style={{ fontFamily: 'var(--font-display)' }}
+    <footer className="border-t border-home-rowborder/80 bg-home-cream mt-auto">
+      <div className="max-w-6xl mx-auto px-6 py-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between text-xs text-home-ink/70 font-dm">
+        <p>
+          © {new Date().getFullYear()} Karen Pendergrass · Parekklisia, Cyprus ·{' '}
+          <span className="whitespace-nowrap">
+            ORCID:{' '}
+            <a
+              href="https://orcid.org/0000-0002-2348-7259"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-brand-red font-mono text-[11px] no-underline hover:underline"
             >
-              Karen Pendergrass
-            </p>
-            <p className="text-sm text-ink-muted leading-relaxed">
-              Standards developer, microbiome signatures researcher, and founder.
-              Based in Cyprus. Available for board and advisory roles.
-            </p>
-          </div>
-
-          {footerSections.map((section) => (
-            <div key={section.title}>
-              <p
-                className="text-xs font-semibold text-ink-muted uppercase tracking-widest mb-4"
-                style={{ letterSpacing: '0.12em' }}
-              >
-                {section.title}
-              </p>
-              <ul className="flex flex-col gap-2.5">
-                {section.links.map((link) => (
-                  <li key={link.href}>
-                    {'external' in link ? (
-                      <a
-                        href={link.href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-sm text-ink-light hover:text-accent transition-colors"
-                      >
-                        {link.label}
-                        <span className="text-ink-muted ml-1 text-xs">↗</span>
-                      </a>
-                    ) : (
-                      <Link
-                        href={link.href}
-                        className="text-sm text-ink-light hover:text-accent transition-colors"
-                      >
-                        {link.label}
-                      </Link>
-                    )}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
-
-        <div className="mt-14 pt-6 border-t border-ink/5 flex flex-col sm:flex-row justify-between items-center gap-3">
-          <p className="text-xs text-ink-muted">
-            &copy; {new Date().getFullYear()} Karen Pendergrass. All rights reserved.
-          </p>
-          <p className="text-xs text-ink-muted">
-            Parekklisia, Cyprus
-          </p>
+              0000-0002-2348-7259
+            </a>
+          </span>
+        </p>
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
+          <a
+            href="https://www.linkedin.com/in/karenpendergrass"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-home-ink no-underline font-medium hover:underline hover:text-brand-red"
+          >
+            LinkedIn
+          </a>
+          <span className="text-home-ink/30 hidden sm:inline" aria-hidden>
+            ·
+          </span>
+          <Link
+            href="/publications"
+            className="text-home-ink no-underline font-medium hover:underline hover:text-brand-red"
+          >
+            Publications
+          </Link>
+          <span className="text-home-ink/30 hidden sm:inline" aria-hidden>
+            ·
+          </span>
+          <Link
+            href="/contact"
+            className="text-home-ink no-underline font-medium hover:underline hover:text-brand-red"
+          >
+            Contact
+          </Link>
         </div>
       </div>
     </footer>

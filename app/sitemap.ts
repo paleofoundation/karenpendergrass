@@ -1,14 +1,16 @@
 import { MetadataRoute } from 'next';
-import { getAllPosts } from '@/lib/content';
+import { getAllPosts, getVentures } from '@/lib/content';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const posts = getAllPosts();
+  const ventures = getVentures();
   const baseUrl = 'https://karenpendergrass.com';
 
   const staticPages: MetadataRoute.Sitemap = [
     { url: baseUrl, lastModified: new Date(), changeFrequency: 'weekly', priority: 1 },
     { url: `${baseUrl}/about`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.9 },
     { url: `${baseUrl}/advisory`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.9 },
+    { url: `${baseUrl}/speaking`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.9 },
     { url: `${baseUrl}/publications`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.9 },
     { url: `${baseUrl}/ventures`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.8 },
     { url: `${baseUrl}/writing`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.8 },
@@ -30,5 +32,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.7,
   }));
 
-  return [...staticPages, ...postPages];
+  const venturePages: MetadataRoute.Sitemap = ventures.map((v) => ({
+    url: `${baseUrl}/ventures/${v.slug}`,
+    lastModified: new Date(),
+    changeFrequency: 'monthly',
+    priority: 0.75,
+  }));
+
+  return [...staticPages, ...venturePages, ...postPages];
 }

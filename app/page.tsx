@@ -1,242 +1,312 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
-import { getAllPosts, getVentures, formatDate, readingTime } from '@/lib/content';
-import ArticleCard from '@/components/ArticleCard';
-import VentureCard from '@/components/VentureCard';
-import SectionHeader from '@/components/SectionHeader';
-import ImpactSection from '@/components/ImpactSection';
-import Testimonials from '@/components/Testimonials';
+
+export const metadata: Metadata = {
+  title: 'Karen Pendergrass',
+  description:
+    'Founder of five organizations. Frameworks in microbiome science, food safety certification, and translational medicine—built before the market existed.',
+};
+
+const ventureRows = [
+  {
+    slug: 'paleo-foundation',
+    name: 'Paleo Foundation',
+    description: 'Certification standards for Paleo, Keto, Grain-Free, HMTc',
+  },
+  {
+    slug: 'microbiome-medicine',
+    name: 'Microbiome Medicine',
+    description: 'Disease-associated microbiome patterns for clinical translation',
+  },
+  {
+    slug: 'journal-of-food-metallomics',
+    name: 'Journal of Food Metallomics',
+    description: 'Trace metal analysis meets microbiome and food safety',
+  },
+  {
+    slug: 'tinies',
+    name: 'Tinies',
+    description: 'Connecting animal sanctuaries with sponsors worldwide',
+  },
+  {
+    slug: 'gardens-of-st-gertrude',
+    name: 'Gardens of St. Gertrude',
+    description: 'Cat sanctuary in Parekklisia, Cyprus. 92 cats.',
+  },
+] as const;
+
+const currentArticles = [
+  {
+    slug: 'microbial-metallomics-and-heavy-metal-contamination',
+    title: 'Microbial Metallomics: The Missing Link in Heavy Metal Contamination',
+    meta: 'Microbiome Research · 13 min · Feb 2026',
+  },
+  {
+    slug: 'obesity-heavy-metals-sugar-scapegoat',
+    title: "The Obesity Scapegoat: Why Sugar Isn't the Whole Story",
+    meta: 'Analysis · 6 min · Jan 2026',
+  },
+  {
+    slug: '2030-trends',
+    title: '2030 Trends: What the Next Five Years Look Like',
+    meta: 'Forecasting · 10 min · 2026',
+  },
+  {
+    slug: 'range',
+    title: 'Range: How a Dropped-Out, Self-Taught Polymath Ended Up Here',
+    meta: 'Personal · 15 min · 2026',
+  },
+] as const;
+
+function BtnPrimary({
+  href,
+  children,
+  className = '',
+}: {
+  href: string;
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <Link
+      href={href}
+      className={`inline-flex items-center justify-center px-6 py-3 bg-brand-red text-white text-sm font-semibold font-dm tracking-wide rounded-sm no-underline hover:opacity-95 transition-opacity ${className}`}
+    >
+      {children}
+    </Link>
+  );
+}
+
+function BtnOutline({
+  href,
+  children,
+  dark = false,
+  className = '',
+}: {
+  href: string;
+  children: React.ReactNode;
+  dark?: boolean;
+  className?: string;
+}) {
+  const base = dark
+    ? 'border-white text-white hover:bg-white hover:text-home-dark'
+    : 'border-brand-red text-brand-red hover:bg-brand-red hover:text-white';
+  return (
+    <Link
+      href={href}
+      className={`inline-flex items-center justify-center px-5 py-2.5 border text-sm font-semibold font-dm tracking-wide rounded-sm no-underline transition-colors ${base} ${className}`}
+    >
+      {children}
+    </Link>
+  );
+}
 
 export default function HomePage() {
-  const posts = getAllPosts();
-  const ventures = getVentures();
-  const featuredPosts = posts.slice(0, 3);
-
   return (
-    <div className="page-enter">
-      {/* ─── Hero ─── */}
-      <section className="max-w-6xl mx-auto px-6 pt-20 pb-16 md:pt-28 md:pb-20">
-        <div className="max-w-3xl">
-          <p
-            className="text-xs font-semibold uppercase tracking-widest text-accent mb-6"
-            style={{ letterSpacing: '0.15em' }}
-          >
-            Standards &middot; Research &middot; Translation
+    <div className="bg-home-surface text-home-ink font-dm antialiased">
+      {/* Hero */}
+      <section className="max-w-6xl mx-auto px-6 py-20 md:py-24">
+        <p className="text-sm md:text-base italic text-home-ink/60 mb-6 max-w-2xl leading-relaxed">
+          Founder of 5 organizations. 15 years in microbiome research. Consistently early.
+        </p>
+        <h1 className="font-playfair font-bold text-home-ink text-4xl sm:text-5xl md:text-[3.25rem] lg:text-[4rem] leading-[1.08] tracking-tight max-w-4xl mb-10">
+          I build the frameworks that become the standard before there&apos;s a market for them.
+        </h1>
+        <blockquote className="border-l-[3px] border-brand-red/50 pl-5 md:pl-6 max-w-2xl mb-4">
+          <p className="text-base md:text-lg italic text-home-ink/65 leading-relaxed">
+            &ldquo;Well if it isn&apos;t the oracle herself! Too bad we don&apos;t have a recording of that
+            call. And now you need to put out a 2030 trends prediction piece.&rdquo;
           </p>
-          <h1
-            className="text-4xl md:text-5xl lg:text-6xl font-medium text-ink leading-[1.1] tracking-tight mb-6"
-            style={{ fontFamily: 'var(--font-display)' }}
-          >
-            Building the frameworks that connect
-            <span className="text-accent"> microbiome science </span>
-            to clinical practice
-          </h1>
-          <p className="text-lg text-ink-light leading-relaxed max-w-2xl mb-8">
-            I develop certification standards, validate{' '}
-            <Link href="/frameworks/mbti-validation-criteria" className="text-accent">
-              microbiome-targeted interventions
-            </Link>
-            , and research{' '}
-            <Link href="/frameworks/microbial-metallomics" className="text-accent">
-              microbial metallomics
-            </Link>{' '}
-            to bridge the gap between discovery and application. Founder of five{' '}
-            <Link href="/ventures" className="text-accent">
-              organizations
-            </Link>{' '}
-            spanning food safety, microbiome medicine, and animal welfare.
-          </p>
-          <div className="flex flex-wrap gap-4">
-            <Link
-              href="/about"
-              className="inline-flex items-center px-5 py-2.5 bg-ink text-paper text-sm font-medium rounded-md hover:bg-ink-light transition-colors"
-            >
-              Read my story
-            </Link>
-            <Link
-              href="/writing"
-              className="inline-flex items-center px-5 py-2.5 border border-ink/15 text-ink text-sm font-medium rounded-md hover:bg-ink/5 transition-colors"
-            >
-              Browse writing
-            </Link>
+        </blockquote>
+        <p className="text-sm text-home-ink/50 mb-10 pl-5 md:pl-6">Fred Hart · Partner at Interact</p>
+        <BtnPrimary href="/contact">Start a conversation</BtnPrimary>
+      </section>
+
+      {/* The receipts */}
+      <section className="max-w-6xl mx-auto px-6 py-20 md:py-24 border-t border-home-rowborder/60">
+        <p
+          className="text-xs font-semibold tracking-[0.2em] text-home-ink/80 uppercase mb-12 font-dm"
+          style={{ fontFeatureSettings: '"smcp"' }}
+        >
+          <span className="text-brand-red">—</span> THE RECEIPTS
+        </p>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20">
+          <ul className="space-y-10 list-none p-0 m-0">
+            <li>
+              <p className="text-sm md:text-base leading-relaxed">
+                <span className="font-bold text-brand-red">2009</span>
+                <span className="text-home-ink/40"> — </span>
+                Founded Paleo Foundation. Professor said there was no market. The market arrived.
+              </p>
+            </li>
+            <li>
+              <p className="text-sm md:text-base leading-relaxed">
+                <span className="font-bold text-brand-red">2020</span>
+                <span className="text-home-ink/40"> — </span>
+                Told Fred Hart that Pepsi would put prebiotics on their cans. Pepsi confirmed 2026.
+              </p>
+            </li>
+            <li>
+              <p className="text-sm md:text-base leading-relaxed">
+                <span className="font-bold text-brand-red">2026</span>
+                <span className="text-home-ink/40"> — </span>
+                Published Microbiome Medicine Journal, Volume I. 5 original papers on Parkinson&apos;s
+                disease.
+              </p>
+            </li>
+          </ul>
+          <ul className="space-y-10 list-none p-0 m-0">
+            <li>
+              <p className="text-sm md:text-base leading-relaxed">
+                <span className="font-bold text-brand-red">2012</span>
+                <span className="text-home-ink/40"> — </span>
+                First documented FMT for Celiac Disease. 4 years before the first published case study.
+              </p>
+            </li>
+            <li>
+              <p className="text-sm md:text-base leading-relaxed">
+                <span className="font-bold text-brand-red">2025</span>
+                <span className="text-home-ink/40"> — </span>
+                Only non-PhD among 150 researchers. Invited guest at Beneficial Microbes Conference.
+              </p>
+            </li>
+            <li>
+              <p className="text-sm md:text-base leading-relaxed italic text-home-ink/55">
+                <span className="font-bold text-brand-red not-italic">Soon</span>
+                <span className="text-home-ink/40 not-italic"> — </span>
+                Heavy metals as the next major consumer health issue. Smart toilets for biomonitoring.
+                Phage therapy replacing antibiotics.
+              </p>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      {/* Work with me */}
+      <section className="max-w-6xl mx-auto px-6 py-20 md:py-24 border-t border-home-rowborder/60">
+        <h2 className="font-playfair text-3xl md:text-4xl font-semibold text-home-ink mb-3">
+          Work with me
+        </h2>
+        <p className="text-home-ink/65 text-base md:text-lg mb-12 max-w-2xl">
+          Three ways, depending on what you need and how fast you need it.
+        </p>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-5">
+          {/* Advisory */}
+          <div className="border border-home-rowborder bg-home-surface p-6 md:p-8 flex flex-col">
+            <p className="text-xs font-semibold tracking-[0.18em] text-home-ink/70 uppercase mb-4">
+              Advisory
+            </p>
+            <p className="font-playfair text-2xl font-semibold text-home-ink mb-4">$1,500/hr</p>
+            <p className="text-sm text-home-ink/70 leading-relaxed flex-1 mb-8">
+              For founders, executives, and product teams who need a specific question answered by
+              someone who&apos;s already solved it.
+            </p>
+            <BtnOutline href="/advisory">Book advisory</BtnOutline>
+          </div>
+          {/* Roundtable featured */}
+          <div className="border border-home-dark bg-home-dark text-white p-6 md:p-8 flex flex-col">
+            <p className="text-xs font-semibold tracking-[0.18em] text-white/70 uppercase mb-4">
+              Roundtable
+            </p>
+            <p className="font-playfair text-2xl font-semibold text-white mb-4">$75K+</p>
+            <p className="text-sm text-white/75 leading-relaxed flex-1 mb-8">
+              Structured multi-omics sessions producing prioritized targets, testable therapeutic
+              directions, and a published synthesis.
+            </p>
+            <BtnPrimary href="/roundtable">Request a roundtable</BtnPrimary>
+          </div>
+          {/* Speaking */}
+          <div className="border border-home-rowborder bg-home-surface p-6 md:p-8 flex flex-col">
+            <p className="text-xs font-semibold tracking-[0.18em] text-home-ink/70 uppercase mb-4">
+              Speaking
+            </p>
+            <p className="font-playfair text-2xl font-semibold text-home-ink mb-4">Inquiry</p>
+            <p className="text-sm text-home-ink/70 leading-relaxed flex-1 mb-8">
+              Conferences, panels, and podcasts. Six topics from microbial metallomics to certification
+              systems to trend forecasting.
+            </p>
+            <BtnOutline href="/speaking">View speaking topics</BtnOutline>
           </div>
         </div>
       </section>
 
-      {/* ─── Currently ─── */}
-      <section className="max-w-6xl mx-auto px-6 pb-16">
-        <div className="bg-paper-warm rounded-lg border border-ink/5 p-6 md:p-8">
-          <p
-            className="text-xs font-semibold uppercase tracking-widest text-ink-muted mb-4"
-            style={{ letterSpacing: '0.12em' }}
-          >
-            Currently
-          </p>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm text-ink-light leading-relaxed">
-            <div>
-              <p className="font-medium text-ink mb-1">Building</p>
-              <p>
-                <Link href="/ventures" className="text-accent">
-                  Tinies
-                </Link>{' '}
-                platform (
-                <a
-                  href="https://tinies.app"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-accent"
+      {/* Five categories */}
+      <section className="max-w-6xl mx-auto px-6 py-20 md:py-24 border-t border-home-rowborder/60">
+        <h2 className="font-playfair text-3xl md:text-4xl font-semibold text-home-ink mb-3 max-w-3xl">
+          Five categories I created before they had a market
+        </h2>
+        <p className="text-home-ink/65 text-base md:text-lg mb-10 max-w-3xl">
+          Every project connects back to translating complex systems science into frameworks people can
+          actually use.
+        </p>
+        <ul className="border-t border-home-rowborder list-none p-0 m-0">
+          {ventureRows.map((row) => (
+            <li key={row.slug} className="border-b border-home-rowborder">
+              <Link
+                href={`/ventures/${row.slug}`}
+                className="group flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-2 py-5 px-1 -mx-1 no-underline hover:bg-home-cream/60 transition-colors rounded-sm"
+              >
+                <p className="m-0 text-sm md:text-base leading-relaxed pr-4">
+                  <span className="font-bold text-home-ink group-hover:text-brand-red transition-colors">
+                    {row.name}
+                  </span>
+                  <span className="font-normal text-home-ink/55"> {row.description}</span>
+                </p>
+                <span
+                  className="text-home-ink/40 shrink-0 sm:ml-auto text-lg group-hover:text-brand-red transition-colors self-start sm:self-auto"
+                  aria-hidden
                 >
-                  tinies.app
-                </a>
-                ) connecting sanctuaries with sponsors. Landing page redesign and
-                content strategy in progress.
-              </p>
-            </div>
-            <div>
-              <p className="font-medium text-ink mb-1">Researching</p>
-              <p>
-                <Link href="/frameworks/microbial-metallomics" className="text-accent">
-                  Microbial metallomics
-                </Link>
-                , nickel-dependent pathogenesis, and the{' '}
-                <a
-                  href="https://microbiomemedicine.com/conditions/endometriosis/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-accent"
-                >
-                  endometriosis
-                </a>{' '}
-                microbiome signature.{' '}
-                <Link href="/frameworks/hmtc" className="text-accent">
-                  HMTc
-                </Link>{' '}
-                standards for new product categories.
-              </p>
-            </div>
-            <div>
-              <p className="font-medium text-ink mb-1">Operating</p>
-              <p>
-                <Link href="/ventures" className="text-accent">
-                  Paleo Foundation
-                </Link>{' '}
-                (
-                <a
-                  href="https://paleofoundation.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-accent"
-                >
-                  paleofoundation.com
-                </a>
-                ) certification programs.{' '}
-                <Link href="/ventures" className="text-accent">
-                  Gardens of St. Gertrude
-                </Link>{' '}
-                (
-                <a
-                  href="https://gardensofstgertrude.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-accent"
-                >
-                  gardensofstgertrude.com
-                </a>
-                ) cat sanctuary in Parekklisia, Cyprus, caring for 92 cats.
-              </p>
-            </div>
-          </div>
-        </div>
+                  →
+                </span>
+              </Link>
+            </li>
+          ))}
+        </ul>
       </section>
 
-      {/* ─── Ventures ─── */}
-      <section className="max-w-6xl mx-auto px-6 pb-20">
-        <SectionHeader
-          label="Ventures"
-          title="Five organizations, one through-line"
-          description="Every project connects back to translating complex systems science into frameworks that people can actually use."
-        />
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {ventures.map((venture) => (
-            <VentureCard key={venture.slug} venture={venture} />
-          ))}
-        </div>
-        <div className="mt-6">
-          <Link
-            href="/ventures"
-            className="text-sm text-accent font-medium link-animate"
-          >
-            View all ventures in detail
-          </Link>
-        </div>
-      </section>
-
-      <ImpactSection />
-      <Testimonials />
-
-      {/* ─── Featured Writing ─── */}
-      <section className="max-w-6xl mx-auto px-6 pb-20">
-        <SectionHeader
-          label="Writing"
-          title="Recent work"
-          description="Research articles, analysis, and essays on microbiome science, metallomics, food safety, and systems thinking."
-        />
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {featuredPosts.map((post) => (
-            <ArticleCard
-              key={post.meta.slug}
-              title={post.meta.title}
-              slug={post.meta.slug}
-              date={post.meta.date}
-              category={post.meta.category}
-              excerpt={post.meta.excerpt}
-              coverImage={post.meta.coverImage}
-              content={post.content}
-              featured
-            />
-          ))}
-        </div>
-        <div className="mt-8">
+      {/* Current thinking */}
+      <section className="max-w-6xl mx-auto px-6 py-20 md:py-24 border-t border-home-rowborder/60">
+        <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-10">
+          <h2 className="font-playfair text-3xl md:text-4xl font-semibold text-home-ink">Current thinking</h2>
           <Link
             href="/writing"
-            className="text-sm text-accent font-medium link-animate"
+            className="text-sm font-semibold text-brand-red no-underline hover:underline shrink-0 font-dm"
           >
-            View all {posts.length} articles
+            All writing →
           </Link>
         </div>
+        <ul className="divide-y divide-home-rowborder list-none p-0 m-0">
+          {currentArticles.map((article) => (
+            <li key={article.slug} className="py-6 first:pt-0">
+              <Link
+                href={`/writing/${article.slug}`}
+                className="group block no-underline"
+              >
+                <span className="block font-bold text-home-ink text-base md:text-lg group-hover:text-brand-red transition-colors">
+                  {article.title}
+                </span>
+                <span className="block text-xs md:text-sm text-home-ink/50 mt-2 font-dm">{article.meta}</span>
+              </Link>
+            </li>
+          ))}
+        </ul>
       </section>
 
-      {/* ─── Origin teaser ─── */}
-      <section className="max-w-6xl mx-auto px-6 pb-20">
-        <div className="max-w-3xl mx-auto text-center">
-          <p
-            className="text-xs font-semibold uppercase tracking-widest text-ink-muted mb-4"
-            style={{ letterSpacing: '0.12em' }}
-          >
-            The story
+      {/* Origin story */}
+      <section className="bg-home-dark text-white">
+        <div className="max-w-6xl mx-auto px-6 py-20 md:py-24">
+          <p className="text-xs font-semibold tracking-[0.15em] text-white/45 uppercase mb-8">
+            The origin story
           </p>
-          <p
-            className="text-2xl md:text-3xl font-light text-ink leading-snug mb-6"
-            style={{ fontFamily: 'var(--font-display)' }}
-          >
-            After years of misdiagnoses and failed treatments, I became the first
-            known person to undergo{' '}
-            <a
-              href="https://microbiomemedicine.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-accent"
-            >
-              fecal microbiota transplantation
-            </a>{' '}
-            for Celiac Disease. That experience changed the trajectory of my career
-            and led to everything you see here.
+          <p className="font-playfair text-2xl md:text-3xl lg:text-[2.25rem] leading-snug font-semibold text-white max-w-3xl mb-8">
+            After years of misdiagnoses, I became the first known person to undergo FMT for Celiac
+            Disease.
           </p>
-          <Link
-            href="/about"
-            className="text-sm text-accent font-medium link-animate"
-          >
-            Read the full story
-          </Link>
+          <p className="text-base md:text-lg text-white/75 leading-relaxed max-w-2xl mb-10">
+            DIY, because no GI would do it. Four years later, the published case study called it a
+            breakthrough. That experience changed the trajectory of everything you see here.
+          </p>
+          <BtnPrimary href="/about">Read the full story</BtnPrimary>
         </div>
       </section>
     </div>
