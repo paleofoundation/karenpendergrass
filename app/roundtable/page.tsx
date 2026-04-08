@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
-  title: 'Microbiome Medicine Roundtable | Karen Pendergrass',
+  title: 'Microbiome Medicine Roundtable',
   description:
     'The Microbiome Medicine Roundtable is a structured, mechanism-first synthesis service that converts fragmented biomedical observations into coherent disease models, risk stratification frameworks, and novel intervention candidates. Each Roundtable produces a published journal issue.',
   keywords: [
@@ -14,6 +14,9 @@ export const metadata: Metadata = {
     'microbial metallomics',
     'Karen Pendergrass',
   ],
+  alternates: {
+    canonical: '/roundtable',
+  },
 };
 
 const deliverables = [

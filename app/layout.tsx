@@ -24,6 +24,9 @@ export const metadata: Metadata = {
     'Limassol Cyprus',
   ],
   metadataBase: new URL('https://karenpendergrass.com'),
+  alternates: {
+    canonical: '/',
+  },
   openGraph: {
     title: 'Karen Pendergrass',
     description:
@@ -32,13 +35,23 @@ export const metadata: Metadata = {
     siteName: 'Karen Pendergrass',
     locale: 'en_US',
     type: 'website',
+    images: [
+      {
+        url: '/images/Karen_Pendergrass.png',
+        width: 1200,
+        height: 630,
+        alt: 'Karen Pendergrass',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Karen Pendergrass',
     description:
       'Standards developer, microbiome signatures researcher, and founder at the intersection of microbiome science, translational medicine, and regulatory innovation.',
+    images: ['/images/Karen_Pendergrass.png'],
   },
+  authors: [{ name: 'Karen Pendergrass', url: 'https://karenpendergrass.com' }],
   robots: {
     index: true,
     follow: true,

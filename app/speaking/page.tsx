@@ -3,9 +3,12 @@ import Link from 'next/link';
 import SectionHeader from '@/components/SectionHeader';
 
 export const metadata: Metadata = {
-  title: 'Speaking | Karen Pendergrass',
+  title: 'Speaking',
   description:
     'Book Karen Pendergrass for keynotes, conference presentations, podcasts, and panels on microbiome medicine, microbial metallomics, food safety certification, trend forecasting, and unconventional career paths.',
+  alternates: {
+    canonical: '/speaking',
+  },
 };
 
 const topics = [

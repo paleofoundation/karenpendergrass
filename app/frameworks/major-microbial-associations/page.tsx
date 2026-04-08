@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { FrameworkSchema } from '@/components/JsonLd';
 
 export const metadata: Metadata = {
-  title: 'Major Microbial Associations (MMA) | Karen Pendergrass',
+  title: 'Major Microbial Associations (MMA)',
   description:
     'Major Microbial Associations (MMAs) are formalized, disease-associated microbiome patterns documenting which taxa are consistently elevated or reduced in specific conditions. MMAs form the evidence base for the Microbiome Signatures Database and targeted intervention design. Developed by Karen Pendergrass.',
   keywords: [
@@ -15,6 +15,9 @@ export const metadata: Metadata = {
     'taxa associations',
     'Karen Pendergrass',
   ],
+  alternates: {
+    canonical: '/frameworks/major-microbial-associations',
+  },
 };
 
 export default function MMAPage() {

@@ -3,7 +3,7 @@ import Link from 'next/link';
 import SectionHeader from '@/components/SectionHeader';
 
 export const metadata: Metadata = {
-  title: 'Publications | Karen Pendergrass',
+  title: 'Publications',
   description:
     'Complete publication list for Karen Pendergrass: 20+ papers spanning microbiome medicine, microbial metallomics, food metallomics, heavy metal certification, ketogenic diet research, and translational veterinary medicine.',
   keywords: [
@@ -16,6 +16,9 @@ export const metadata: Metadata = {
     'ketogenic diet research',
     'microbiome signatures',
   ],
+  alternates: {
+    canonical: '/publications',
+  },
 };
 
 interface Publication {

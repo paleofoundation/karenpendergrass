@@ -4,9 +4,12 @@ import Link from 'next/link';
 import SectionHeader from '@/components/SectionHeader';
 
 export const metadata: Metadata = {
-  title: 'Frameworks | Karen Pendergrass',
+  title: 'Frameworks',
   description:
     'Original research frameworks developed by Karen Pendergrass: MBTI Validation Criteria, HMTc Certification Standards, Microbial Metallomics, Major Microbial Associations (MMA), and STOP recommendations.',
+  alternates: {
+    canonical: '/frameworks',
+  },
 };
 
 const frameworks: {

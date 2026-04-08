@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { FrameworkSchema } from '@/components/JsonLd';
 
 export const metadata: Metadata = {
-  title: 'Microbial Metallomics | Karen Pendergrass',
+  title: 'Microbial Metallomics',
   description:
     'Microbial metallomics is a research framework integrating trace metal analysis into microbiome science. It examines how bacteria acquire, transport, and utilize metals like nickel, zinc, iron, and cadmium, and how environmental contamination selects for virulent pathogens. Developed by Karen Pendergrass.',
   keywords: [
@@ -16,6 +16,9 @@ export const metadata: Metadata = {
     'pathogenic selection pressure',
     'Karen Pendergrass',
   ],
+  alternates: {
+    canonical: '/frameworks/microbial-metallomics',
+  },
 };
 
 export default function MicrobialMetallomicsPage() {

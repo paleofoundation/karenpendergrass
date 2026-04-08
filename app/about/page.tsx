@@ -5,6 +5,9 @@ export const metadata: Metadata = {
   title: 'About',
   description:
     'The story of Karen Pendergrass: from chronic illness and self-directed research to founding five organizations at the intersection of microbiome science, food safety, and regulatory innovation.',
+  alternates: {
+    canonical: '/about',
+  },
 };
 
 export default function AboutPage() {

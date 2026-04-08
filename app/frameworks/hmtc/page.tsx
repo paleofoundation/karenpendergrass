@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { FrameworkSchema } from '@/components/JsonLd';
 
 export const metadata: Metadata = {
-  title: 'Heavy Metal Tested & Certified (HMTc) | Karen Pendergrass',
+  title: 'Heavy Metal Tested & Certified (HMTc)',
   description:
     'HMTc is a certification framework establishing category-specific heavy metal contaminant limits for food, supplements, and consumer products using ALARA-based principles, statistical risk matrices, and defined surveillance protocols. Developed by Karen Pendergrass at the Paleo Foundation.',
   keywords: [
@@ -16,6 +16,9 @@ export const metadata: Metadata = {
     'Karen Pendergrass',
     'Paleo Foundation',
   ],
+  alternates: {
+    canonical: '/frameworks/hmtc',
+  },
 };
 
 export default function HMTcPage() {

@@ -7,6 +7,9 @@ export const metadata: Metadata = {
   title: 'Writing',
   description:
     'Articles on microbiome research, microbial metallomics, food safety, causal reasoning, and systems thinking by Karen Pendergrass.',
+  alternates: {
+    canonical: '/writing',
+  },
 };
 
 const categoryLabels: Record<string, string> = {

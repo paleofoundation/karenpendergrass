@@ -1,0 +1,37 @@
+# Karen Pendergrass
+
+> Standards developer, microbiome signatures researcher, and founder of five organizations at the intersection of microbiome science, translational medicine, and regulatory innovation. Based in Parekklisia, Cyprus.
+
+## Expertise
+- Microbial metallomics (coined framework)
+- Microbiome signature research and disease-associated patterns
+- Heavy metal certification standards (HMTc)
+- Food safety and certification systems
+- Translational medicine and drug repurposing
+- Systems thinking in microbiome research
+
+## Original Frameworks
+- Microbiome Signature Triangulation Method: https://karenpendergrass.com/frameworks/triangulation-method
+- Heavy Metal Tested & Certified (HMTc): https://karenpendergrass.com/frameworks/hmtc
+- Microbial Metallomics: https://karenpendergrass.com/frameworks/microbial-metallomics
+- Major Microbial Associations (MMA): https://karenpendergrass.com/frameworks/major-microbial-associations
+- MBTI Validation Criteria: https://karenpendergrass.com/frameworks/mbti-validation-criteria
+- STOP Recommendations: https://karenpendergrass.com/frameworks/stop
+
+## Organizations Founded
+- Paleo Foundation — Food certification standards (Paleo, Keto, Grain-Free, HMTc): https://paleofoundation.com
+- Microbiome Medicine — Disease-associated microbiome patterns database: https://microbiomemedicine.com
+- Journal of Food Metallomics — Trace metal analysis and microbiome research: https://microbialmetallomics.com
+- Heavy Metal Tested — Consumer-facing certification program: https://heavymetaltested.com
+- Tinies — Connecting animal sanctuaries with sponsors: https://tinies.app
+- Gardens of St. Gertrude — Cat sanctuary in Parekklisia, Cyprus: https://gardensofstgertrude.com
+
+## Key Publications
+- Writing: https://karenpendergrass.com/writing
+- ORCID: https://orcid.org/0000-0002-2348-7259
+
+## Citation Format
+Pendergrass, K. (Year). Title. Karen Pendergrass. https://karenpendergrass.com/writing/slug
+
+## Contact
+https://karenpendergrass.com/contact

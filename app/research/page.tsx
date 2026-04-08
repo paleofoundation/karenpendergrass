@@ -7,6 +7,9 @@ export const metadata: Metadata = {
   title: 'Research',
   description:
     'Karen Pendergrass research portfolio: microbiome signatures, microbial metallomics, MBTI validation framework, HMTc standards, and translational medicine.',
+  alternates: {
+    canonical: '/research',
+  },
 };
 
 interface ResearchProject {

@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { FrameworkSchema } from '@/components/JsonLd';
 
 export const metadata: Metadata = {
-  title: 'Foundational MBTI Validation Criteria | Karen Pendergrass',
+  title: 'Foundational MBTI Validation Criteria',
   description:
     'The Foundational MBTI Validation Criteria is a dual-validation framework for microbiome-targeted interventions (MBTIs) requiring microbiome signature alignment, clinical efficacy, and co-validation of both the intervention and the underlying microbial signature. Developed by Karen Pendergrass.',
   keywords: [
@@ -14,6 +14,9 @@ export const metadata: Metadata = {
     'microbiome medicine',
     'Karen Pendergrass',
   ],
+  alternates: {
+    canonical: '/frameworks/mbti-validation-criteria',
+  },
 };
 
 export default function MBTIPage() {

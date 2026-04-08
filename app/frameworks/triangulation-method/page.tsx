@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { FrameworkSchema } from '@/components/JsonLd';
 
 export const metadata: Metadata = {
-  title: 'Microbiome Signature Triangulation Method | Karen Pendergrass',
+  title: 'Microbiome Signature Triangulation Method',
   description:
     'The Microbiome Signature Triangulation Method is a self-falsifying approach to intervention discovery that reconstructs the causal ecology of disease, identifies pathogen vulnerabilities, predicts interventions, and validates them through independent evidence convergence. Developed by Karen Pendergrass.',
   keywords: [
@@ -15,6 +15,9 @@ export const metadata: Metadata = {
     'microbiome causal inference',
     'Karen Pendergrass',
   ],
+  alternates: {
+    canonical: '/frameworks/triangulation-method',
+  },
 };
 
 export default function TriangulationMethodPage() {

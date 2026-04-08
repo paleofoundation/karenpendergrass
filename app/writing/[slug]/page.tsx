@@ -42,7 +42,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const og = post.meta.openGraph;
   const ogTitle = og?.title || post.meta.title;
   const ogDescription = (og?.description || description).slice(0, 150);
-  const ogType = og?.type || 'article';
+  const ogType = (og?.type || 'article') as 'article' | 'website';
   const ogUrl = og?.url || canonical;
   const authorName = post.meta.author || 'Karen Pendergrass';
 

@@ -7,6 +7,9 @@ export const metadata: Metadata = {
   title: 'Ventures',
   description:
     'The five organizations founded by Karen Pendergrass: Paleo Foundation, Microbiome Medicine, Journal of Food Metallomics, Tinies, and Gardens of St. Gertrude.',
+  alternates: {
+    canonical: '/ventures',
+  },
 };
 
 const statusStyles: Record<string, { label: string; dot: string }> = {

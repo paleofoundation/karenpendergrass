@@ -6,6 +6,9 @@ export const metadata: Metadata = {
   title: 'Karen Pendergrass',
   description:
     'Founder of five organizations. Frameworks in microbiome science, food safety, and translational medicine.',
+  alternates: {
+    canonical: '/',
+  },
 };
 
 const ventureRows = [

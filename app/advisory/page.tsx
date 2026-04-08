@@ -5,11 +5,14 @@ import IntakeForm from '@/components/IntakeForm';
 import { AdvisorySchema } from '@/components/JsonLd';
 
 export const metadata: Metadata = {
-  title: 'Advisory & Board Services | Karen Pendergrass',
+  title: 'Advisory & Board Services',
   description:
     'Karen Pendergrass provides board advisory services, expert consultation, and strategic guidance in microbiome science, food safety certification, heavy metal risk assessment, microbial metallomics, and AI-first operations design.',
+  alternates: {
+    canonical: '/advisory',
+  },
   openGraph: {
-    title: 'Advisory & Board Services | Karen Pendergrass',
+    title: 'Advisory & Board Services',
     description:
       'Board advisory, expert consultation, and strategic guidance in microbiome science, food safety certification, and heavy metal risk assessment.',
   },

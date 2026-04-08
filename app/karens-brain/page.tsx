@@ -14,6 +14,9 @@ export const metadata: Metadata = {
     'metallomic analysis',
     'Karen Pendergrass',
   ],
+  alternates: {
+    canonical: '/karens-brain',
+  },
 };
 
 export default function KarensBrainPage() {

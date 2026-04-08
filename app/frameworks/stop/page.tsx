@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { FrameworkSchema } from '@/components/JsonLd';
 
 export const metadata: Metadata = {
-  title: 'STOP (Suggested Termination Of Practice) | Karen Pendergrass',
+  title: 'STOP (Suggested Termination Of Practice)',
   description:
     'STOP is a named output class for recommending that specific medical interventions, treatments, or standard practices be discontinued based on emerging evidence that they are ineffective, harmful, or counterproductive. Developed by Karen Pendergrass.',
   keywords: [
@@ -14,6 +14,9 @@ export const metadata: Metadata = {
     'medical practice review',
     'Karen Pendergrass',
   ],
+  alternates: {
+    canonical: '/frameworks/stop',
+  },
 };
 
 export default function STOPPage() {
