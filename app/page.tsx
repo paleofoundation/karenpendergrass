@@ -1,11 +1,12 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
+import ScrollReveal from '@/components/ScrollReveal';
 
 export const metadata: Metadata = {
   title: 'Karen Pendergrass',
   description:
-    'Founder of five organizations. Frameworks in microbiome science, food safety, and translational medicine.',
+    'Founder of six organizations. Frameworks in microbiome science, food safety, and translational medicine.',
   alternates: {
     canonical: '/',
   },
@@ -14,23 +15,39 @@ export const metadata: Metadata = {
 const ventureRows = [
   {
     name: 'Paleo Foundation',
+    url: 'https://paleofoundation.com',
     description: 'Certification standards for Paleo, Keto, Grain-Free, HMTc',
+    tag: 'Standards',
   },
   {
     name: 'Microbiome Medicine',
+    url: 'https://microbiomemedicine.com',
     description: 'Disease-associated microbiome patterns for clinical translation',
+    tag: 'Research',
   },
   {
     name: 'Journal of Food Metallomics',
+    url: 'https://microbialmetallomics.com',
     description: 'Trace metal analysis meets microbiome and food safety',
+    tag: 'Publication',
+  },
+  {
+    name: 'WikiBiome',
+    url: 'https://wikibiome.com',
+    description: 'Open microbiome knowledge platform for researchers and clinicians',
+    tag: 'Platform',
   },
   {
     name: 'Tinies',
+    url: 'https://tinies.app',
     description: 'Connecting animal sanctuaries with sponsors worldwide',
+    tag: 'Social Impact',
   },
   {
     name: 'Gardens of St. Gertrude',
+    url: 'https://gardensofstgertrude.com',
     description: 'Cat sanctuary in Parekklisia, Cyprus. 92 cats.',
+    tag: 'Sanctuary',
   },
 ] as const;
 
@@ -57,278 +74,488 @@ const currentArticles = [
   },
 ] as const;
 
+const receipts: { year: string; text: string; isFuture?: boolean }[] = [
+  {
+    year: '2009',
+    text: 'Founded Paleo Foundation. Professor said there was no market. The market arrived.',
+  },
+  {
+    year: '2012',
+    text: 'First documented FMT for Celiac Disease. 4 years before the first published case study.',
+  },
+  {
+    year: '2020',
+    text: 'Told Fred Hart that Pepsi would put prebiotics on their cans. Pepsi confirmed 2026.',
+  },
+  {
+    year: '2025',
+    text: 'Only non-PhD among 150 researchers. Invited guest at Beneficial Microbes Conference.',
+  },
+  {
+    year: '2026',
+    text: "Published Microbiome Medicine Journal, Volume I. 5 original papers on Parkinson's disease.",
+  },
+  {
+    year: 'Soon',
+    text: 'Heavy metals as the next major consumer health issue. Smart toilets for biomonitoring. Phage therapy replacing antibiotics.',
+    isFuture: true,
+  },
+];
+
 export default function HomePage() {
   return (
     <div className="page-enter">
-      {/* Section 1: Hero */}
-      <section className="max-w-6xl mx-auto px-6 pt-20 pb-16 md:pt-28 md:pb-20 overflow-x-clip">
-        <div className="grid grid-cols-1 md:grid-cols-[45fr_55fr] md:items-stretch gap-8 md:gap-x-8 md:gap-y-0">
-          <div className="order-1 md:order-2 max-w-3xl">
-            <p className="text-sm md:text-base italic text-ink-muted mb-6 leading-relaxed">
-              Founder of 5 organizations. 15 years in microbiome research. Consistently early.
-            </p>
-            <h1
-              className="text-4xl md:text-5xl lg:text-6xl font-bold text-ink leading-[1.1] tracking-tight mb-8"
-              style={{ fontFamily: 'var(--font-display)' }}
-            >
-              I build the frameworks that become the standard before there&apos;s a market for them.
-            </h1>
-            <blockquote className="border-l-[3px] border-accent pl-5 md:pl-6 mb-4 max-w-2xl">
-              <p className="text-base md:text-lg italic text-ink-light leading-relaxed">
-                &ldquo;Well if it isn&apos;t the oracle herself! Too bad we don&apos;t have a recording of
-                that call. And now you need to put out a 2030 trends prediction piece.&rdquo;
-              </p>
-            </blockquote>
-            <p className="text-sm text-ink-muted mb-8 pl-5 md:pl-6">Fred Hart · Partner at Interact</p>
-            <Link
-              href="/contact"
-              className="inline-flex items-center px-5 py-2.5 bg-accent text-paper text-sm font-medium rounded-md hover:bg-accent-dark transition-colors"
-            >
-              Start a conversation
-            </Link>
-          </div>
-          <div className="order-2 md:order-1 relative w-full min-h-[500px] h-[min(90vw,620px)] md:min-h-0 md:h-full md:-ml-6 md:w-[calc(100%+1.5rem)]">
-            <Image
-              src="/images/Karen_Pendergrass.png"
-              alt="Karen Pendergrass"
-              fill
-              sizes="(max-width: 768px) 100vw, 45vw"
-              quality={100}
-              className="object-cover object-top"
-              priority
-            />
-          </div>
-        </div>
-      </section>
+      {/* ═══════════════════════════════════════════
+          SECTION 1: HERO — Full viewport, editorial
+          ═══════════════════════════════════════════ */}
+      <section className="relative min-h-[100svh] flex items-center overflow-hidden">
+        {/* Graph paper texture layer */}
+        <div className="absolute inset-0 graph-paper-overlay" />
 
-      {/* Section 2: The receipts */}
-      <section className="max-w-6xl mx-auto px-6 pb-16 md:pb-20 border-t border-ink/5 pt-16 md:pt-20">
-        <p
-          className="text-xs font-semibold uppercase tracking-widest text-ink-muted mb-10 md:mb-12"
-          style={{ letterSpacing: '0.2em' }}
-        >
-          — THE RECEIPTS
-        </p>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16">
-          <ul className="space-y-8 list-none p-0 m-0">
-            <li className="text-sm md:text-base text-ink-light leading-relaxed">
-              <span className="font-bold text-accent">2009</span>
-              <span className="text-ink-muted"> — </span>
-              Founded Paleo Foundation. Professor said there was no market. The market arrived.
-            </li>
-            <li className="text-sm md:text-base text-ink-light leading-relaxed">
-              <span className="font-bold text-accent">2020</span>
-              <span className="text-ink-muted"> — </span>
-              Told Fred Hart that Pepsi would put prebiotics on their cans. Pepsi confirmed 2026.
-            </li>
-            <li className="text-sm md:text-base text-ink-light leading-relaxed">
-              <span className="font-bold text-accent">2026</span>
-              <span className="text-ink-muted"> — </span>
-              Published Microbiome Medicine Journal, Volume I. 5 original papers on Parkinson&apos;s
-              disease.
-            </li>
-          </ul>
-          <ul className="space-y-8 list-none p-0 m-0">
-            <li className="text-sm md:text-base text-ink-light leading-relaxed">
-              <span className="font-bold text-accent">2012</span>
-              <span className="text-ink-muted"> — </span>
-              First documented FMT for Celiac Disease. 4 years before the first published case study.
-            </li>
-            <li className="text-sm md:text-base text-ink-light leading-relaxed">
-              <span className="font-bold text-accent">2025</span>
-              <span className="text-ink-muted"> — </span>
-              Only non-PhD among 150 researchers. Invited guest at Beneficial Microbes Conference.
-            </li>
-            <li className="text-sm md:text-base text-ink-light leading-relaxed italic text-ink-muted">
-              <span className="font-bold text-accent not-italic">Soon</span>
-              <span className="text-ink-muted not-italic"> — </span>
-              Heavy metals as the next major consumer health issue. Smart toilets for biomonitoring.
-              Phage therapy replacing antibiotics.
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      {/* Section 3: Work with me */}
-      <section className="max-w-6xl mx-auto px-6 pb-16 md:pb-20 border-t border-ink/5 pt-16 md:pt-20">
-        <h2
-          className="text-2xl md:text-3xl font-medium text-ink mb-3"
-          style={{ fontFamily: 'var(--font-display)' }}
-        >
-          Work with me
-        </h2>
-        <p className="text-lg text-ink-light leading-relaxed max-w-2xl mb-10 md:mb-12">
-          Three ways, depending on what you need and how fast you need it.
-        </p>
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="border border-ink/5 rounded-lg bg-paper-warm p-6 md:p-8 flex flex-col">
-            <p
-              className="text-xs font-semibold uppercase tracking-widest text-ink-muted mb-4"
-              style={{ letterSpacing: '0.12em' }}
-            >
-              Advisory
-            </p>
-            <p
-              className="text-xl md:text-2xl font-medium text-ink mb-4"
-              style={{ fontFamily: 'var(--font-display)' }}
-            >
-              $1,500/hr
-            </p>
-            <p className="text-sm text-ink-light leading-relaxed flex-1 mb-6">
-              For founders, executives, and product teams who need a specific question answered by
-              someone who&apos;s already solved it.
-            </p>
-            <Link
-              href="/advisory"
-              className="inline-flex items-center justify-center px-5 py-2.5 border border-ink/15 text-ink text-sm font-medium rounded-md hover:bg-ink/5 transition-colors mt-auto"
-            >
-              Book advisory
-            </Link>
-          </div>
-          <div className="border border-ink/5 rounded-lg bg-paper-warm p-6 md:p-8 flex flex-col">
-            <p
-              className="text-xs font-semibold uppercase tracking-widest text-ink-muted mb-4"
-              style={{ letterSpacing: '0.12em' }}
-            >
-              Roundtable
-            </p>
-            <p
-              className="text-xl md:text-2xl font-medium text-ink mb-4"
-              style={{ fontFamily: 'var(--font-display)' }}
-            >
-              $75K+
-            </p>
-            <p className="text-sm text-ink-light leading-relaxed flex-1 mb-6">
-              Structured multi-omics sessions producing prioritized targets, testable therapeutic
-              directions, and a published synthesis.
-            </p>
-            <Link
-              href="/roundtable"
-              className="inline-flex items-center justify-center px-5 py-2.5 bg-ink text-paper text-sm font-medium rounded-md hover:bg-ink-light transition-colors mt-auto"
-            >
-              Request a roundtable
-            </Link>
-          </div>
-          <div className="border border-ink/5 rounded-lg bg-paper-warm p-6 md:p-8 flex flex-col">
-            <p
-              className="text-xs font-semibold uppercase tracking-widest text-ink-muted mb-4"
-              style={{ letterSpacing: '0.12em' }}
-            >
-              Speaking
-            </p>
-            <p
-              className="text-xl md:text-2xl font-medium text-ink mb-4"
-              style={{ fontFamily: 'var(--font-display)' }}
-            >
-              Inquiry
-            </p>
-            <p className="text-sm text-ink-light leading-relaxed flex-1 mb-6">
-              Conferences, panels, and podcasts. Six topics from microbial metallomics to certification
-              systems to trend forecasting.
-            </p>
-            <Link
-              href="/speaking"
-              className="inline-flex items-center justify-center px-5 py-2.5 border border-ink/15 text-ink text-sm font-medium rounded-md hover:bg-ink/5 transition-colors mt-auto"
-            >
-              View speaking topics
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* Section 4: Five categories */}
-      <section className="max-w-6xl mx-auto px-6 pb-16 md:pb-20 border-t border-ink/5 pt-16 md:pt-20">
-        <h2
-          className="text-2xl md:text-3xl font-medium text-ink mb-3 max-w-3xl"
-          style={{ fontFamily: 'var(--font-display)' }}
-        >
-          Five categories I created before they had a market
-        </h2>
-        <p className="text-lg text-ink-light leading-relaxed max-w-3xl mb-10">
-          Every project connects back to translating complex systems science into frameworks people can
-          actually use.
-        </p>
-        <ul className="border-t border-ink/10 list-none p-0 m-0">
-          {ventureRows.map((row) => (
-            <li key={row.name} className="border-b border-ink/10">
-              <Link
-                href="/ventures"
-                className="group flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-2 py-5 no-underline hover:bg-ink/5 transition-colors -mx-1 px-1 rounded-sm"
+        <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-10 w-full">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center py-24 lg:py-0">
+            {/* Left: Text */}
+            <div className="order-2 lg:order-1 max-w-xl">
+              <p
+                className="text-xs font-semibold uppercase tracking-[0.2em] mb-6"
+                style={{ color: 'var(--color-accent)' }}
               >
-                <p className="m-0 text-sm md:text-base leading-relaxed pr-4">
-                  <span className="font-bold text-ink group-hover:text-accent transition-colors">
-                    {row.name}
-                  </span>
-                  <span className="font-normal text-ink-muted"> — {row.description}</span>
+                Standards · Research · Frameworks
+              </p>
+
+              <h1
+                className="text-4xl md:text-5xl lg:text-[3.5rem] font-medium leading-[1.1] tracking-tight mb-8"
+                style={{ fontFamily: 'var(--font-display)', color: 'var(--color-ink)' }}
+              >
+                I build the frameworks that become the standard before there&apos;s a market for them.
+              </h1>
+
+              <blockquote
+                className="border-l-[3px] pl-5 md:pl-6 mb-6 max-w-lg"
+                style={{ borderColor: 'var(--color-accent)' }}
+              >
+                <p
+                  className="text-base md:text-lg italic leading-relaxed"
+                  style={{ color: 'var(--color-ink-secondary)' }}
+                >
+                  &ldquo;Well if it isn&apos;t the oracle herself! Too bad we don&apos;t have a recording of
+                  that call. And now you need to put out a 2030 trends prediction piece.&rdquo;
                 </p>
-                <span
-                  className="text-ink-muted shrink-0 text-lg group-hover:text-accent transition-colors"
-                  aria-hidden
-                >
-                  →
-                </span>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </section>
+              </blockquote>
+              <p
+                className="text-sm mb-10 pl-5 md:pl-6"
+                style={{ color: 'var(--color-ink-muted)' }}
+              >
+                Fred Hart · Partner at Interact
+              </p>
 
-      {/* Section 5: Current thinking */}
-      <section className="max-w-6xl mx-auto px-6 pb-16 md:pb-20 border-t border-ink/5 pt-16 md:pt-20">
-        <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-4 mb-8">
-          <h2
-            className="text-2xl md:text-3xl font-medium text-ink m-0"
-            style={{ fontFamily: 'var(--font-display)' }}
-          >
-            Current thinking
-          </h2>
-          <Link href="/writing" className="text-sm text-accent font-medium link-animate shrink-0">
-            All writing →
-          </Link>
+              <div className="flex flex-wrap items-center gap-4">
+                <Link
+                  href="/contact"
+                  className="inline-flex items-center px-6 py-3 text-sm font-medium rounded-md transition-all duration-300 hover:-translate-y-0.5"
+                  style={{
+                    backgroundColor: 'var(--color-accent)',
+                    color: '#fff',
+                  }}
+                >
+                  Start a conversation
+                </Link>
+                <Link
+                  href="/about"
+                  className="inline-flex items-center px-6 py-3 text-sm font-medium rounded-md transition-all duration-300 hover:-translate-y-0.5"
+                  style={{
+                    border: '1px solid var(--color-border)',
+                    color: 'var(--color-ink)',
+                  }}
+                >
+                  Read the full story
+                </Link>
+              </div>
+            </div>
+
+            {/* Right: Portrait */}
+            <div className="order-1 lg:order-2 relative">
+              <div className="relative w-full aspect-[3/4] max-w-md mx-auto lg:max-w-none lg:ml-auto">
+                {/* Decorative frame */}
+                <div
+                  className="absolute -inset-3 rounded-lg opacity-40"
+                  style={{ border: '1px solid var(--color-border)' }}
+                />
+                <div
+                  className="absolute -inset-6 rounded-lg opacity-20 hidden lg:block"
+                  style={{ border: '1px solid var(--color-border)' }}
+                />
+                <Image
+                  src="/images/Karen_Pendergrass.png"
+                  alt="Karen Pendergrass"
+                  fill
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  quality={100}
+                  className="object-cover object-top rounded-lg"
+                  priority
+                />
+              </div>
+            </div>
+          </div>
         </div>
-        <ul className="divide-y divide-ink/10 list-none p-0 m-0">
-          {currentArticles.map((article) => (
-            <li key={article.slug} className="py-6 first:pt-0">
-              <Link href={`/writing/${article.slug}`} className="group block no-underline">
-                <span
-                  className="block font-bold text-ink text-base md:text-lg group-hover:text-accent transition-colors"
-                  style={{ fontFamily: 'var(--font-display)' }}
-                >
-                  {article.title}
-                </span>
-                <span className="block text-xs md:text-sm text-ink-muted mt-2">{article.meta}</span>
-              </Link>
-            </li>
-          ))}
-        </ul>
+
+        {/* Scroll indicator */}
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-40">
+          <span className="text-[10px] uppercase tracking-[0.2em]" style={{ color: 'var(--color-ink-muted)' }}>
+            Scroll
+          </span>
+          <div className="w-px h-8" style={{ backgroundColor: 'var(--color-ink-muted)' }} />
+        </div>
       </section>
 
-      {/* Section 6: Origin story */}
-      <section className="w-full bg-ink text-paper mt-0">
-        <div className="max-w-6xl mx-auto px-6 py-16 md:py-20">
-          <p
-            className="text-xs font-semibold uppercase tracking-widest text-paper/50 mb-8"
-            style={{ letterSpacing: '0.12em' }}
-          >
-            The origin story
-          </p>
-          <p
-            className="text-2xl md:text-3xl font-medium text-paper leading-snug max-w-3xl mb-8"
-            style={{ fontFamily: 'var(--font-display)' }}
-          >
-            After years of misdiagnoses, I became the first known person to undergo FMT for Celiac
-            Disease.
-          </p>
-          <p className="text-base md:text-lg text-paper/75 leading-relaxed max-w-2xl mb-10">
-            DIY, because no GI would do it. Four years later, the published case study called it a
-            breakthrough. That experience changed the trajectory of everything you see here.
-          </p>
-          <Link
-            href="/about"
-            className="inline-flex items-center px-5 py-2.5 bg-paper text-ink text-sm font-medium rounded-md hover:bg-paper-warm transition-colors"
-          >
-            Read the full story
-          </Link>
+      {/* ═══════════════════════════════════════════
+          SECTION 2: THE RECEIPTS — Timeline
+          ═══════════════════════════════════════════ */}
+      <section className="relative py-24 md:py-32" style={{ borderTop: '1px solid var(--color-border-light)' }}>
+        <div className="max-w-7xl mx-auto px-6 md:px-10">
+          <ScrollReveal animation="fade-in">
+            <p
+              className="text-xs font-semibold uppercase tracking-[0.2em] mb-16"
+              style={{ color: 'var(--color-accent)' }}
+            >
+              — The Receipts
+            </p>
+          </ScrollReveal>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-10">
+            {receipts.map((item, i) => (
+              <ScrollReveal key={item.year} animation="slide-up" delay={i * 80}>
+                <div className="group">
+                  <p
+                    className="text-3xl md:text-4xl font-medium mb-3"
+                    style={{
+                      fontFamily: 'var(--font-display)',
+                      color: item.isFuture ? 'var(--color-accent-light)' : 'var(--color-accent)',
+                    }}
+                  >
+                    {item.year}
+                  </p>
+                  <p
+                    className={`text-sm md:text-base leading-relaxed ${item.isFuture ? 'italic' : ''}`}
+                    style={{ color: 'var(--color-ink-secondary)' }}
+                  >
+                    {item.text}
+                  </p>
+                </div>
+              </ScrollReveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════
+          SECTION 3: WORK WITH ME — Service tiers
+          ═══════════════════════════════════════════ */}
+      <section
+        className="relative py-24 md:py-32"
+        style={{ backgroundColor: 'var(--color-bg-alt)', borderTop: '1px solid var(--color-border-light)' }}
+      >
+        <div className="absolute inset-0 graph-paper-overlay" />
+        <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-10">
+          <ScrollReveal animation="fade-in">
+            <h2
+              className="text-3xl md:text-4xl font-medium mb-3"
+              style={{ fontFamily: 'var(--font-display)', color: 'var(--color-ink)' }}
+            >
+              Work with me
+            </h2>
+            <p
+              className="text-lg leading-relaxed max-w-2xl mb-14"
+              style={{ color: 'var(--color-ink-secondary)' }}
+            >
+              Three ways, depending on what you need and how fast you need it.
+            </p>
+          </ScrollReveal>
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Advisory */}
+            <ScrollReveal animation="slide-up" delay={0}>
+              <div
+                className="venture-card p-8 md:p-10 flex flex-col h-full"
+              >
+                <p
+                  className="text-xs font-semibold uppercase tracking-[0.15em] mb-5"
+                  style={{ color: 'var(--color-ink-muted)' }}
+                >
+                  Advisory
+                </p>
+                <p
+                  className="text-2xl md:text-3xl font-medium mb-5"
+                  style={{ fontFamily: 'var(--font-display)', color: 'var(--color-ink)' }}
+                >
+                  $1,500/hr
+                </p>
+                <p
+                  className="text-sm leading-relaxed flex-1 mb-8"
+                  style={{ color: 'var(--color-ink-secondary)' }}
+                >
+                  For founders, executives, and product teams who need a specific question answered by
+                  someone who&apos;s already solved it.
+                </p>
+                <Link
+                  href="/advisory"
+                  className="inline-flex items-center justify-center px-5 py-3 text-sm font-medium rounded-md transition-all duration-300 hover:-translate-y-0.5"
+                  style={{
+                    border: '1px solid var(--color-border)',
+                    color: 'var(--color-ink)',
+                  }}
+                >
+                  Book advisory
+                </Link>
+              </div>
+            </ScrollReveal>
+
+            {/* Roundtable — Featured */}
+            <ScrollReveal animation="slide-up" delay={100}>
+              <div
+                className="venture-card p-8 md:p-10 flex flex-col h-full"
+                style={{ borderColor: 'var(--color-accent)' }}
+              >
+                <p
+                  className="text-xs font-semibold uppercase tracking-[0.15em] mb-5"
+                  style={{ color: 'var(--color-accent)' }}
+                >
+                  Roundtable
+                </p>
+                <p
+                  className="text-2xl md:text-3xl font-medium mb-5"
+                  style={{ fontFamily: 'var(--font-display)', color: 'var(--color-ink)' }}
+                >
+                  $75K+
+                </p>
+                <p
+                  className="text-sm leading-relaxed flex-1 mb-8"
+                  style={{ color: 'var(--color-ink-secondary)' }}
+                >
+                  Structured multi-omics sessions producing prioritized targets, testable therapeutic
+                  directions, and a published synthesis.
+                </p>
+                <Link
+                  href="/roundtable"
+                  className="inline-flex items-center justify-center px-5 py-3 text-sm font-medium rounded-md transition-all duration-300 hover:-translate-y-0.5"
+                  style={{
+                    backgroundColor: 'var(--color-ink)',
+                    color: 'var(--color-bg)',
+                  }}
+                >
+                  Request a roundtable
+                </Link>
+              </div>
+            </ScrollReveal>
+
+            {/* Speaking */}
+            <ScrollReveal animation="slide-up" delay={200}>
+              <div
+                className="venture-card p-8 md:p-10 flex flex-col h-full"
+              >
+                <p
+                  className="text-xs font-semibold uppercase tracking-[0.15em] mb-5"
+                  style={{ color: 'var(--color-ink-muted)' }}
+                >
+                  Speaking
+                </p>
+                <p
+                  className="text-2xl md:text-3xl font-medium mb-5"
+                  style={{ fontFamily: 'var(--font-display)', color: 'var(--color-ink)' }}
+                >
+                  Inquiry
+                </p>
+                <p
+                  className="text-sm leading-relaxed flex-1 mb-8"
+                  style={{ color: 'var(--color-ink-secondary)' }}
+                >
+                  Conferences, panels, and podcasts. Six topics from microbial metallomics to certification
+                  systems to trend forecasting.
+                </p>
+                <Link
+                  href="/speaking"
+                  className="inline-flex items-center justify-center px-5 py-3 text-sm font-medium rounded-md transition-all duration-300 hover:-translate-y-0.5"
+                  style={{
+                    border: '1px solid var(--color-border)',
+                    color: 'var(--color-ink)',
+                  }}
+                >
+                  View speaking topics
+                </Link>
+              </div>
+            </ScrollReveal>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════
+          SECTION 4: SIX VENTURES — Table layout
+          ═══════════════════════════════════════════ */}
+      <section className="relative py-24 md:py-32" style={{ borderTop: '1px solid var(--color-border-light)' }}>
+        <div className="max-w-7xl mx-auto px-6 md:px-10">
+          <ScrollReveal animation="fade-in">
+            <h2
+              className="text-3xl md:text-4xl font-medium mb-3 max-w-3xl"
+              style={{ fontFamily: 'var(--font-display)', color: 'var(--color-ink)' }}
+            >
+              Six categories I created before they had a market
+            </h2>
+            <p
+              className="text-lg leading-relaxed max-w-3xl mb-14"
+              style={{ color: 'var(--color-ink-secondary)' }}
+            >
+              Every project connects back to translating complex systems science into frameworks people can
+              actually use.
+            </p>
+          </ScrollReveal>
+
+          <div style={{ borderTop: '1px solid var(--color-border)' }}>
+            {ventureRows.map((row, i) => (
+              <ScrollReveal key={row.name} animation="slide-up" delay={i * 60}>
+                <a
+                  href={row.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-6 py-5 no-underline transition-colors duration-200 -mx-2 px-2 rounded-sm"
+                  style={{ borderBottom: '1px solid var(--color-border-light)' }}
+                >
+                  <div className="flex items-center gap-4 flex-1 min-w-0">
+                    <span
+                      className="text-[10px] font-semibold uppercase tracking-[0.15em] shrink-0 w-20 text-right hidden sm:block"
+                      style={{ color: 'var(--color-ink-muted)' }}
+                    >
+                      {row.tag}
+                    </span>
+                    <span
+                      className="font-medium transition-colors duration-200 group-hover:text-amber-700"
+                      style={{ fontFamily: 'var(--font-display)', color: 'var(--color-ink)' }}
+                    >
+                      {row.name}
+                    </span>
+                    <span
+                      className="text-sm hidden md:inline"
+                      style={{ color: 'var(--color-ink-muted)' }}
+                    >
+                      — {row.description}
+                    </span>
+                  </div>
+                  <span
+                    className="text-lg shrink-0 transition-transform duration-200 group-hover:translate-x-1"
+                    style={{ color: 'var(--color-ink-muted)' }}
+                    aria-hidden
+                  >
+                    ↗
+                  </span>
+                </a>
+              </ScrollReveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════
+          SECTION 5: CURRENT THINKING — Articles
+          ═══════════════════════════════════════════ */}
+      <section
+        className="relative py-24 md:py-32"
+        style={{ backgroundColor: 'var(--color-bg-alt)', borderTop: '1px solid var(--color-border-light)' }}
+      >
+        <div className="max-w-7xl mx-auto px-6 md:px-10">
+          <ScrollReveal animation="fade-in">
+            <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-4 mb-12">
+              <h2
+                className="text-3xl md:text-4xl font-medium m-0"
+                style={{ fontFamily: 'var(--font-display)', color: 'var(--color-ink)' }}
+              >
+                Current thinking
+              </h2>
+              <Link
+                href="/writing"
+                className="text-sm font-medium link-animate shrink-0"
+                style={{ color: 'var(--color-accent)' }}
+              >
+                All writing →
+              </Link>
+            </div>
+          </ScrollReveal>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {currentArticles.map((article, i) => (
+              <ScrollReveal key={article.slug} animation="slide-up" delay={i * 80}>
+                <Link
+                  href={`/writing/${article.slug}`}
+                  className="group block no-underline venture-card p-6 md:p-8 h-full"
+                >
+                  <span
+                    className="block font-medium text-lg md:text-xl mb-3 transition-colors duration-200 group-hover:text-amber-700"
+                    style={{ fontFamily: 'var(--font-display)', color: 'var(--color-ink)' }}
+                  >
+                    {article.title}
+                  </span>
+                  <span
+                    className="block text-xs md:text-sm"
+                    style={{ color: 'var(--color-ink-muted)' }}
+                  >
+                    {article.meta}
+                  </span>
+                </Link>
+              </ScrollReveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════
+          SECTION 6: ORIGIN STORY — Dark panel
+          ═══════════════════════════════════════════ */}
+      <section
+        className="relative w-full"
+        style={{ backgroundColor: 'var(--color-ink)' }}
+      >
+        <div className="max-w-7xl mx-auto px-6 md:px-10 py-24 md:py-32">
+          <div className="max-w-3xl">
+            <ScrollReveal animation="fade-in">
+              <p
+                className="text-xs font-semibold uppercase tracking-[0.2em] mb-10"
+                style={{ color: 'rgba(255,255,255,0.4)' }}
+              >
+                The origin story
+              </p>
+            </ScrollReveal>
+
+            <ScrollReveal animation="slide-up" delay={100}>
+              <p
+                className="text-2xl md:text-3xl lg:text-4xl font-medium leading-snug mb-8"
+                style={{ fontFamily: 'var(--font-display)', color: '#fff' }}
+              >
+                After years of misdiagnoses, I became the first known person to undergo FMT for Celiac
+                Disease.
+              </p>
+            </ScrollReveal>
+
+            <ScrollReveal animation="slide-up" delay={200}>
+              <p
+                className="text-base md:text-lg leading-relaxed max-w-2xl mb-12"
+                style={{ color: 'rgba(255,255,255,0.65)' }}
+              >
+                DIY, because no GI would do it. Four years later, the published case study called it a
+                breakthrough. That experience changed the trajectory of everything you see here.
+              </p>
+            </ScrollReveal>
+
+            <ScrollReveal animation="slide-up" delay={300}>
+              <Link
+                href="/about"
+                className="inline-flex items-center px-6 py-3 text-sm font-medium rounded-md transition-all duration-300 hover:-translate-y-0.5"
+                style={{
+                  backgroundColor: '#fff',
+                  color: 'var(--color-ink)',
+                }}
+              >
+                Read the full story
+              </Link>
+            </ScrollReveal>
+          </div>
         </div>
       </section>
     </div>

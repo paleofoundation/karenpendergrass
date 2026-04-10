@@ -187,6 +187,15 @@ export function getVentures(): Venture[] {
       status: 'research',
     },
     {
+      name: 'WikiBiome',
+      slug: 'wikibiome',
+      url: 'https://wikibiome.com',
+      role: 'Founder',
+      tagline: 'Open microbiome knowledge platform',
+      description: 'A comprehensive open-access platform for microbiome research, making disease-associated microbiome signatures and microbial data accessible to researchers, clinicians, and the public.',
+      status: 'building',
+    },
+    {
       name: 'Tinies',
       slug: 'tinies',
       url: 'https://tinies.app',

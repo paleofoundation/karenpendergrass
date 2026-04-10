@@ -82,7 +82,7 @@ const boardDomains: { title: string; description: ReactNode; keywords: string }[
     title: 'AI-First Operations Design',
     description: (
       <>
-        Foundational operating principle applied across five organizations: if a job
+        Foundational operating principle applied across six organizations: if a job
         can be done by AI, it should be done by AI, with humans shifting to
         oversight. Built{' '}
         <Link href="/ventures" className="text-accent">
@@ -196,7 +196,7 @@ const credentials: { label: string; value: ReactNode }[] = [
     label: 'Organizations Founded',
     value: (
       <>
-        5 (
+        6 (
         <Link href="/ventures" className="text-accent">
           Paleo Foundation
         </Link>{' '}
@@ -234,6 +234,19 @@ const credentials: { label: string; value: ReactNode }[] = [
           className="text-accent"
         >
           microbialmetallomics.com
+        </a>
+        ),{' '}
+        <Link href="/ventures" className="text-accent">
+          WikiBiome
+        </Link>{' '}
+        (
+        <a
+          href="https://wikibiome.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-accent"
+        >
+          wikibiome.com
         </a>
         ),{' '}
         <Link href="/ventures" className="text-accent">

@@ -6,7 +6,7 @@ import SectionHeader from '@/components/SectionHeader';
 export const metadata: Metadata = {
   title: 'Ventures',
   description:
-    'The five organizations founded by Karen Pendergrass: Paleo Foundation, Microbiome Medicine, Journal of Food Metallomics, Tinies, and Gardens of St. Gertrude.',
+    'The six organizations founded by Karen Pendergrass: Paleo Foundation, Microbiome Medicine, Journal of Food Metallomics, WikiBiome, Tinies, and Gardens of St. Gertrude.',
   alternates: {
     canonical: '/ventures',
   },
@@ -25,7 +25,7 @@ export default function VenturesPage() {
     <div className="page-enter max-w-3xl mx-auto px-6 pt-16 pb-20">
       <SectionHeader
         label="Ventures"
-        title="Five organizations, one through-line"
+        title="Six organizations, one through-line"
         description={
           <>
             Every project connects back to translating complex systems science into

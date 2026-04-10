@@ -8,23 +8,28 @@ interface SectionHeaderProps {
 
 export default function SectionHeader({ label, title, description }: SectionHeaderProps) {
   return (
-    <div className="mb-10">
+    <div className="mb-12 md:mb-16">
       {label && (
         <p
-          className="text-xs font-semibold uppercase tracking-widest text-accent mb-3"
-          style={{ letterSpacing: '0.12em' }}
+          className="text-xs font-semibold uppercase tracking-[0.2em] mb-4"
+          style={{ color: 'var(--color-accent)' }}
         >
           {label}
         </p>
       )}
-      <h2
-        className="text-3xl md:text-4xl font-medium text-ink leading-tight"
-        style={{ fontFamily: 'var(--font-display)' }}
+      <h1
+        className="text-3xl md:text-4xl lg:text-5xl font-medium leading-tight"
+        style={{ fontFamily: 'var(--font-display)', color: 'var(--color-ink)' }}
       >
         {title}
-      </h2>
+      </h1>
       {description && (
-        <p className="mt-3 text-ink-light leading-relaxed max-w-2xl">{description}</p>
+        <p
+          className="mt-4 text-lg leading-relaxed max-w-2xl"
+          style={{ color: 'var(--color-ink-secondary)' }}
+        >
+          {description}
+        </p>
       )}
     </div>
   );

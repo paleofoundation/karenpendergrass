@@ -59,6 +59,7 @@ export default function ContactPage() {
                 { name: 'Paleo Foundation', url: 'https://paleofoundation.com' },
                 { name: 'Microbiome Medicine', url: 'https://microbiomemedicine.com' },
                 { name: 'Journal of Food Metallomics', url: 'https://microbialmetallomics.com' },
+                { name: 'WikiBiome', url: 'https://wikibiome.com' },
                 { name: 'Tinies', url: 'https://tinies.app' },
                 { name: 'Gardens of St. Gertrude', url: 'https://gardensofstgertrude.com' },
               ].map((org) => (

@@ -158,47 +158,57 @@ export default function ArticlePage({ params }: Props) {
         coverImage={post.meta.coverImage}
       />
 
-      {/* Article header */}
-      <header className="max-w-3xl mx-auto px-6 pt-16 pb-8">
-        <div className="flex items-center gap-3 mb-4">
-          <Link
-            href="/writing"
-            className="text-xs text-ink-muted hover:text-accent transition-colors"
-          >
-            ← Writing
-          </Link>
-          <span className="text-ink-muted text-xs">/</span>
-          <span
-            className="text-xs font-semibold uppercase tracking-widest text-accent"
-            style={{ letterSpacing: '0.1em' }}
-          >
-            {categoryLabels[post.meta.category] || post.meta.category}
-          </span>
-        </div>
-
-        <h1
-          className="text-3xl md:text-4xl font-medium text-ink leading-tight mb-4"
-          style={{ fontFamily: 'var(--font-display)' }}
-        >
-          {post.meta.title}
-        </h1>
-
-        <div className="flex items-center justify-between flex-wrap gap-4">
-          <div className="flex items-center gap-3 text-sm text-ink-muted">
-            <time>{formatDate(post.meta.date)}</time>
-            <span>·</span>
-            <span>{readingTime(post.content)}</span>
+      {/* Article header — wide editorial */}
+      <header
+        className="relative py-16 md:py-24"
+        style={{ borderBottom: '1px solid var(--color-border-light)' }}
+      >
+        <div className="absolute inset-0 graph-paper-overlay" />
+        <div className="relative z-10 max-w-3xl mx-auto px-6">
+          <div className="flex items-center gap-3 mb-6">
+            <Link
+              href="/writing"
+              className="text-xs hover:text-amber-700 transition-colors"
+              style={{ color: 'var(--color-ink-muted)' }}
+            >
+              ← Writing
+            </Link>
+            <span style={{ color: 'var(--color-ink-muted)' }} className="text-xs">/</span>
+            <span
+              className="text-xs font-semibold uppercase tracking-[0.15em]"
+              style={{ color: 'var(--color-accent)' }}
+            >
+              {categoryLabels[post.meta.category] || post.meta.category}
+            </span>
           </div>
-          <ShareButtons
-            url={`/writing/${post.meta.slug}`}
-            title={post.meta.title}
-          />
+
+          <h1
+            className="text-3xl md:text-4xl lg:text-5xl font-medium leading-[1.1] tracking-tight mb-6"
+            style={{ fontFamily: 'var(--font-display)', color: 'var(--color-ink)' }}
+          >
+            {post.meta.title}
+          </h1>
+
+          <div className="flex items-center justify-between flex-wrap gap-4">
+            <div
+              className="flex items-center gap-3 text-sm"
+              style={{ color: 'var(--color-ink-muted)' }}
+            >
+              <time>{formatDate(post.meta.date)}</time>
+              <span>·</span>
+              <span>{readingTime(post.content)}</span>
+            </div>
+            <ShareButtons
+              url={`/writing/${post.meta.slug}`}
+              title={post.meta.title}
+            />
+          </div>
         </div>
       </header>
 
       {/* Cover image */}
       {post.meta.coverImage && (
-        <div className="max-w-3xl mx-auto px-6 mb-8">
+        <div className="max-w-3xl mx-auto px-6 mt-10 mb-8">
           <img
             src={post.meta.coverImage}
             alt={post.meta.title}
@@ -216,14 +226,17 @@ export default function ArticlePage({ params }: Props) {
 
       {/* Article body */}
       <article
-        className="max-w-3xl mx-auto px-6 pb-10 prose"
+        className="max-w-3xl mx-auto px-6 py-10 prose"
         dangerouslySetInnerHTML={{ __html: htmlContent }}
       />
 
       {/* Bottom share buttons */}
       <div className="max-w-3xl mx-auto px-6 pb-8">
-        <div className="flex items-center justify-between border-t border-ink/5 pt-6">
-          <p className="text-xs text-ink-muted">
+        <div
+          className="flex items-center justify-between pt-6"
+          style={{ borderTop: '1px solid var(--color-border-light)' }}
+        >
+          <p className="text-xs" style={{ color: 'var(--color-ink-muted)' }}>
             If this was useful, share it with someone who needs to see it.
           </p>
           <ShareButtons
@@ -259,14 +272,17 @@ export default function ArticlePage({ params }: Props) {
       </div>
 
       {/* Prev / Next navigation */}
-      <nav className="max-w-3xl mx-auto px-6 pb-20 border-t border-ink/5 pt-8">
+      <nav
+        className="max-w-3xl mx-auto px-6 pb-20 pt-8"
+        style={{ borderTop: '1px solid var(--color-border-light)' }}
+      >
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           {prevPost && (
             <Link href={`/writing/${prevPost.meta.slug}`} className="group">
-              <p className="text-xs text-ink-muted mb-1">← Previous</p>
+              <p className="text-xs mb-1" style={{ color: 'var(--color-ink-muted)' }}>← Previous</p>
               <p
-                className="text-sm font-medium text-ink group-hover:text-accent transition-colors line-clamp-2"
-                style={{ fontFamily: 'var(--font-display)' }}
+                className="text-sm font-medium transition-colors duration-200 group-hover:text-amber-700 line-clamp-2"
+                style={{ fontFamily: 'var(--font-display)', color: 'var(--color-ink)' }}
               >
                 {prevPost.meta.title}
               </p>
@@ -277,10 +293,10 @@ export default function ArticlePage({ params }: Props) {
               href={`/writing/${nextPost.meta.slug}`}
               className="group text-right sm:col-start-2"
             >
-              <p className="text-xs text-ink-muted mb-1">Next →</p>
+              <p className="text-xs mb-1" style={{ color: 'var(--color-ink-muted)' }}>Next →</p>
               <p
-                className="text-sm font-medium text-ink group-hover:text-accent transition-colors line-clamp-2"
-                style={{ fontFamily: 'var(--font-display)' }}
+                className="text-sm font-medium transition-colors duration-200 group-hover:text-amber-700 line-clamp-2"
+                style={{ fontFamily: 'var(--font-display)', color: 'var(--color-ink)' }}
               >
                 {nextPost.meta.title}
               </p>

@@ -19,7 +19,7 @@ export default function AuthorBio() {
           </p>
           <p className="text-sm text-ink-light leading-relaxed mb-4">
             Standards developer, microbiome signatures researcher, and founder of
-            five organizations at the intersection of microbiome science,
+            six organizations at the intersection of microbiome science,
             translational medicine, and regulatory innovation. Creator of the{' '}
             <Link href="/frameworks/triangulation-method" className="text-accent underline underline-offset-2">
               Microbiome Signature Triangulation Method

@@ -38,6 +38,7 @@ export function PersonSchema() {
       'https://paleofoundation.com',
       'https://microbiomemedicine.com',
       'https://microbialmetallomics.com',
+      'https://wikibiome.com',
       'https://tinies.app',
       'https://gardensofstgertrude.com',
       'https://heavymetaltested.com',
@@ -63,6 +64,13 @@ export function PersonSchema() {
         url: 'https://microbialmetallomics.com',
         description:
           'Research publication integrating trace metal analysis into microbiome and food safety research.',
+      },
+      {
+        '@type': 'Organization',
+        name: 'WikiBiome',
+        url: 'https://wikibiome.com',
+        description:
+          'Open microbiome knowledge platform making disease-associated microbiome signatures and microbial data accessible to researchers, clinicians, and the public.',
       },
       {
         '@type': 'Organization',

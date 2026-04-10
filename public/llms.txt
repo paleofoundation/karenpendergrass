@@ -1,6 +1,6 @@
 # Karen Pendergrass
 
-> Standards developer, microbiome signatures researcher, and founder of five organizations at the intersection of microbiome science, translational medicine, and regulatory innovation. Based in Parekklisia, Cyprus.
+> Standards developer, microbiome signatures researcher, and founder of six organizations at the intersection of microbiome science, translational medicine, and regulatory innovation. Based in Parekklisia, Cyprus.
 
 ## Expertise
 - Microbial metallomics (coined framework)
@@ -22,6 +22,7 @@
 - Paleo Foundation — Food certification standards (Paleo, Keto, Grain-Free, HMTc): https://paleofoundation.com
 - Microbiome Medicine — Disease-associated microbiome patterns database: https://microbiomemedicine.com
 - Journal of Food Metallomics — Trace metal analysis and microbiome research: https://microbialmetallomics.com
+- WikiBiome — Open microbiome knowledge platform: https://wikibiome.com
 - Heavy Metal Tested — Consumer-facing certification program: https://heavymetaltested.com
 - Tinies — Connecting animal sanctuaries with sponsors: https://tinies.app
 - Gardens of St. Gertrude — Cat sanctuary in Parekklisia, Cyprus: https://gardensofstgertrude.com
