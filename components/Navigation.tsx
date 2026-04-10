@@ -22,52 +22,54 @@ export default function Navigation() {
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 0);
+      setIsScrolled(window.scrollY > 10);
     };
-
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const isActive = (href: string) => {
-    return pathname === href;
-  };
+  const isActive = (href: string) => pathname === href;
 
   return (
     <>
       <header
-        className={`sticky top-0 z-50 transition-all duration-300 ${
+        className={`sticky top-0 z-50 transition-all duration-500 ${
           isScrolled
-            ? 'bg-amber-50/80 backdrop-blur-md border-b border-neutral-900/10'
-            : 'bg-transparent border-b border-neutral-900/5'
+            ? 'bg-[#fafaf8]/90 backdrop-blur-xl shadow-sm'
+            : 'bg-transparent'
         }`}
+        style={{ borderBottom: isScrolled ? '1px solid var(--color-border-light)' : '1px solid transparent' }}
       >
-        <nav className="max-w-7xl mx-auto px-6 md:px-8 py-6 flex items-center justify-between">
+        <nav className="max-w-[1400px] mx-auto px-6 md:px-12 py-5 flex items-center justify-between">
           {/* Logo */}
-          <Link href="/" className="group flex items-baseline gap-2">
+          <Link href="/" className="group flex items-baseline gap-1.5">
             <span
-              className="font-display text-2xl font-light text-neutral-950 tracking-[0.15em]"
-              style={{ fontFamily: 'var(--font-display)' }}
+              className="text-xl font-medium tracking-[0.18em]"
+              style={{ fontFamily: 'var(--font-display)', color: 'var(--color-ink)' }}
             >
               KP
             </span>
+            <span
+              className="w-1.5 h-1.5 rounded-full"
+              style={{ backgroundColor: 'var(--color-accent)' }}
+            />
           </Link>
 
           {/* Desktop Navigation */}
-          <ul className="hidden lg:flex items-center gap-8">
+          <ul className="hidden lg:flex items-center gap-7">
             {navLinks.map((link) => (
               <li key={link.href}>
                 <Link
                   href={link.href}
-                  className={`text-xs font-light tracking-[0.12em] uppercase transition-all duration-300 relative pb-1 ${
+                  className={`text-[11px] tracking-[0.12em] uppercase transition-all duration-300 relative pb-1 ${
                     isActive(link.href)
-                      ? 'text-amber-700'
-                      : 'text-neutral-900/70 hover:text-amber-600'
+                      ? 'text-amber-700 font-medium'
+                      : 'text-neutral-500 hover:text-neutral-900 font-normal'
                   }`}
                 >
                   {link.label}
                   {isActive(link.href) && (
-                    <span className="absolute bottom-0 left-0 right-0 h-px bg-amber-600 transition-all duration-300" />
+                    <span className="absolute bottom-0 left-0 right-0 h-[1.5px] bg-amber-600" />
                   )}
                 </Link>
               </li>
@@ -77,59 +79,52 @@ export default function Navigation() {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
-            className="lg:hidden flex flex-col gap-1.5 p-2 transition-opacity"
+            className="lg:hidden flex flex-col gap-1.5 p-2"
             aria-label="Toggle menu"
             aria-expanded={mobileOpen}
           >
             <span
-              className={`block w-6 h-px bg-neutral-950 transition-all duration-300 ${
-                mobileOpen ? 'rotate-45 translate-y-2' : ''
+              className={`block w-5 h-[1px] bg-neutral-900 transition-all duration-300 ${
+                mobileOpen ? 'rotate-45 translate-y-[4px]' : ''
               }`}
             />
             <span
-              className={`block w-6 h-px bg-neutral-950 transition-opacity duration-300 ${
-                mobileOpen ? 'opacity-0' : 'opacity-100'
-              }`}
-            />
-            <span
-              className={`block w-6 h-px bg-neutral-950 transition-all duration-300 ${
-                mobileOpen ? '-rotate-45 -translate-y-2' : ''
+              className={`block w-5 h-[1px] bg-neutral-900 transition-all duration-300 ${
+                mobileOpen ? '-rotate-45 -translate-y-[3px]' : ''
               }`}
             />
           </button>
         </nav>
       </header>
 
-      {/* Mobile Menu - Full Screen Overlay */}
+      {/* Mobile Menu Overlay */}
       {mobileOpen && (
-        <div
-          className="fixed inset-0 z-40 bg-amber-50/95 backdrop-blur-sm lg:hidden animate-in fade-in duration-300"
-          style={{ top: '100%' }}
-        >
-          <div className="flex flex-col items-center justify-center min-h-screen px-6 py-16">
-            <ul className="w-full max-w-sm space-y-8">
+        <div className="fixed inset-0 z-40 bg-[#fafaf8] lg:hidden">
+          <div className="flex flex-col justify-center min-h-screen px-8 py-20">
+            <ul className="space-y-6">
               {navLinks.map((link, index) => (
                 <li
                   key={link.href}
-                  className="animate-in fade-in slide-in-from-bottom-4 duration-500"
                   style={{
-                    animationDelay: `${index * 50}ms`,
+                    animationDelay: `${index * 40}ms`,
                     animationFillMode: 'both',
                   }}
+                  className="animate-slide-up"
                 >
                   <Link
                     href={link.href}
                     onClick={() => setMobileOpen(false)}
-                    className={`block text-2xl font-light tracking-[0.08em] uppercase transition-all duration-300 pb-1 ${
+                    className={`block text-2xl font-light tracking-[0.06em] uppercase transition-all duration-300 ${
                       isActive(link.href)
                         ? 'text-amber-700'
-                        : 'text-neutral-900/80 hover:text-amber-600'
+                        : 'text-neutral-800 hover:text-amber-600'
                     }`}
+                    style={{ fontFamily: 'var(--font-display)' }}
                   >
+                    <span className="text-xs font-mono text-neutral-400 mr-4">
+                      {String(index + 1).padStart(2, '0')}
+                    </span>
                     {link.label}
-                    {isActive(link.href) && (
-                      <span className="block h-px bg-amber-600 mt-2" />
-                    )}
                   </Link>
                 </li>
               ))}

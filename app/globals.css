@@ -253,25 +253,11 @@ p {
 }
 
 /* ============================================
-   GRAPH PAPER BACKGROUND TEXTURE
+   GRAPH PAPER — VISIBLE design element, not hidden texture
+   Inspired by architectural blueprints / engineering paper
    ============================================ */
-@keyframes subtle-grid {
-  0% {
-    background-position: 0 0;
-  }
-}
 
-.graph-paper-bg {
-  position: relative;
-  background-image:
-    linear-gradient(0deg, var(--color-grid) 1px, transparent 1px),
-    linear-gradient(90deg, var(--color-grid) 1px, transparent 1px);
-  background-size: 40px 40px;
-  background-position: 0 0;
-  background-attachment: fixed;
-  opacity: 0.06;
-}
-
+/* Light graph paper for warm sections — VISIBLE grid */
 .graph-paper-overlay {
   position: relative;
 }
@@ -284,17 +270,69 @@ p {
   right: 0;
   bottom: 0;
   background-image:
-    linear-gradient(0deg, var(--color-grid) 1px, transparent 1px),
-    linear-gradient(90deg, var(--color-grid) 1px, transparent 1px);
-  background-size: 40px 40px;
+    /* Major grid lines */
+    linear-gradient(0deg, rgba(180, 160, 140, 0.12) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(180, 160, 140, 0.12) 1px, transparent 1px),
+    /* Minor grid lines (smaller) */
+    linear-gradient(0deg, rgba(180, 160, 140, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(180, 160, 140, 0.05) 1px, transparent 1px);
+  background-size: 80px 80px, 80px 80px, 20px 20px, 20px 20px;
   pointer-events: none;
-  opacity: 0.05;
   z-index: 0;
 }
 
 .graph-paper-overlay > * {
   position: relative;
   z-index: 1;
+}
+
+/* Decorative crosshair marks at grid intersections */
+.grid-crosshair {
+  position: relative;
+}
+
+.grid-crosshair::before,
+.grid-crosshair::after {
+  content: '';
+  position: absolute;
+  background: var(--color-accent);
+  opacity: 0.3;
+}
+
+.grid-crosshair::before {
+  width: 12px;
+  height: 1px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.grid-crosshair::after {
+  width: 1px;
+  height: 12px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* Horizontal rule with grid accent */
+.grid-rule {
+  border: none;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--color-border), transparent);
+  position: relative;
+}
+
+.grid-rule::before {
+  content: '+';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 10px;
+  color: var(--color-accent);
+  opacity: 0.5;
+  line-height: 1;
 }
 
 /* ============================================
