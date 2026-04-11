@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Contact | Karen Pendergrass</title>
+<meta name="description" content="Start a conversation with Karen Pendergrass. Reach out for advisory, speaking, research collaboration, or general inquiries." />
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+  :root {
+    --bg: #111110;
+    --bg-card: rgba(255, 255, 255, 0.02);
+    --accent: #d4845f;
+    --accent-light: rgba(212, 132, 95, 0.6);
+    --accent-glow: rgba(212, 132, 95, 0.15);
+    --ink: #ffffff;
+    --ink-muted: rgba(255, 255, 255, 0.5);
+    --ink-dim: rgba(255, 255, 255, 0.3);
+    --border: rgba(255, 255, 255, 0.08);
+    --font-display: 'Space Grotesk', sans-serif;
+    --font-body: 'Inter', sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    min-height: 100vh;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-body);
+  }
+
+  /* Subtle grid background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .contact-page {
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 80px 24px;
+  }
+
+  .contact-container {
+    width: 100%;
+    max-width: 640px;
+  }
+
+  /* ─── HEADER ─── */
+  .contact-header {
+    margin-bottom: 48px;
+  }
+
+  .contact-header h1 {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    margin-bottom: 16px;
+  }
+
+  .contact-header h1 .accent {
+    color: var(--accent);
+  }
+
+  .contact-header p {
+    color: var(--ink-muted);
+    font-size: 1.05rem;
+    line-height: 1.7;
+    max-width: 480px;
+  }
+
+  /* ─── FORM ─── */
+  .contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .form-group label {
+    font-family: var(--font-display);
+    font-size: 0.78rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-dim);
+  }
+
+  .form-group input,
+  .form-group textarea,
+  .form-group select {
+    width: 100%;
+    padding: 14px 18px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    line-height: 1.5;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    outline: none;
+  }
+
+  .form-group input:focus,
+  .form-group textarea:focus,
+  .form-group select:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-glow), 0 0 20px rgba(212, 132, 95, 0.05);
+  }
+
+  .form-group input::placeholder,
+  .form-group textarea::placeholder {
+    color: var(--ink-dim);
+  }
+
+  .form-group textarea {
+    min-height: 140px;
+    resize: vertical;
+  }
+
+  .form-group select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='rgba(255,255,255,0.3)' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    padding-right: 44px;
+    cursor: pointer;
+  }
+
+  .form-group select option {
+    background: #1a1a19;
+    color: var(--ink);
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  @media (max-width: 520px) {
+    .form-row {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* ─── SUBMIT BUTTON ─── */
+  .submit-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 16px 32px;
+    background: linear-gradient(135deg, var(--accent), rgba(212, 132, 95, 0.85));
+    color: #fff;
+    font-family: var(--font-display);
+    font-size: 0.95rem;
+    font-weight: 500;
+    letter-spacing: 0.03em;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative;
+    overflow: hidden;
+    margin-top: 8px;
+    align-self: flex-start;
+  }
+
+  .submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow:
+      0 8px 28px rgba(212, 132, 95, 0.3),
+      0 0 40px rgba(212, 132, 95, 0.1);
+  }
+
+  .submit-btn:active {
+    transform: translateY(0);
+  }
+
+  .submit-btn::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, transparent, rgba(255, 255, 255, 0.1));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .submit-btn:hover::after {
+    opacity: 1;
+  }
+
+  .btn-arrow {
+    font-size: 1.1rem;
+    transition: transform 0.3s ease;
+  }
+
+  .submit-btn:hover .btn-arrow {
+    transform: translateX(3px);
+  }
+
+  /* ─── DIRECT EMAIL FALLBACK ─── */
+  .email-fallback {
+    margin-top: 40px;
+    padding-top: 28px;
+    border-top: 1px solid var(--border);
+  }
+
+  .email-fallback p {
+    color: var(--ink-dim);
+    font-size: 0.85rem;
+    line-height: 1.6;
+  }
+
+  .email-fallback a {
+    color: var(--accent);
+    text-decoration: none;
+    transition: opacity 0.3s ease;
+  }
+
+  .email-fallback a:hover {
+    opacity: 0.8;
+  }
+
+  /* ─── SUCCESS STATE ─── */
+  .success-message {
+    display: none;
+    text-align: center;
+    padding: 60px 20px;
+  }
+
+  .success-message.active {
+    display: block;
+  }
+
+  .success-icon {
+    width: 56px;
+    height: 56px;
+    border: 2px solid var(--accent);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 24px;
+    color: var(--accent);
+    font-size: 1.5rem;
+    box-shadow: 0 0 24px var(--accent-glow);
+  }
+
+  .success-message h2 {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+
+  .success-message p {
+    color: var(--ink-muted);
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+</style>
+</head>
+<body>
+
+<div class="contact-page">
+  <div class="contact-container">
+
+    <div class="contact-header">
+      <h1>Start a <span class="accent">conversation</span></h1>
+      <p>Whether it's advisory work, a speaking engagement, research collaboration, or something else entirely — I'd like to hear from you.</p>
+    </div>
+
+    <!--
+      ═══════════════════════════════════════════════════
+      IMPLEMENTATION NOTE:
+
+      This form displays "hola@karenpendergrass.com" publicly,
+      but the form action should POST to a backend handler
+      (e.g., Vercel serverless function or Formspree/Resend)
+      that forwards all submissions to: karen@paleofoundation.com
+
+      Option A — Vercel API route (recommended):
+        Create /app/api/contact/route.ts that uses Resend or
+        Nodemailer to send to karen@paleofoundation.com
+
+      Option B — Formspree / Formspark:
+        Set the form action to your Formspree endpoint,
+        configure the destination email in Formspree dashboard
+        to karen@paleofoundation.com
+
+      The mailto: fallback link below also routes to the
+      actual inbox via hola@ (which should have a forward
+      rule to karen@paleofoundation.com set up in DNS/email).
+      ═══════════════════════════════════════════════════
+    -->
+
+    <form class="contact-form" id="contactForm" action="/api/contact" method="POST">
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="name">Name</label>
+          <input type="text" id="name" name="name" placeholder="Your name" required />
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" placeholder="you@example.com" required />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="subject">Subject</label>
+        <select id="subject" name="subject" required>
+          <option value="" disabled selected>What's this about?</option>
+          <option value="advisory">Advisory &amp; Consulting</option>
+          <option value="speaking">Speaking Engagement</option>
+          <option value="research">Research Collaboration</option>
+          <option value="certification">Certification Inquiry</option>
+          <option value="media">Media &amp; Press</option>
+          <option value="other">Something Else</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="message">Message</label>
+        <textarea id="message" name="message" placeholder="Tell me what's on your mind..." required></textarea>
+      </div>
+
+      <button type="submit" class="submit-btn">
+        Send message
+        <span class="btn-arrow">&rarr;</span>
+      </button>
+    </form>
+
+    <div class="email-fallback">
+      <p>Prefer email? Reach me directly at <a href="mailto:hola@karenpendergrass.com">hola@karenpendergrass.com</a></p>
+    </div>
+
+    <!-- Success state (shown after submission) -->
+    <div class="success-message" id="successMessage">
+      <div class="success-icon">&#10003;</div>
+      <h2>Message sent</h2>
+      <p>Thank you for reaching out. I'll get back to you as soon as I can.</p>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  // Demo: show success state on form submit
+  document.getElementById('contactForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    this.style.display = 'none';
+    document.querySelector('.email-fallback').style.display = 'none';
+    document.getElementById('successMessage').classList.add('active');
+  });
+</script>
+
+</body>
+</html>

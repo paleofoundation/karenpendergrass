@@ -1,0 +1,872 @@
+From 3d739da59c600514648f3590b506d7feb2721fce Mon Sep 17 00:00:00 2001
+From: Karen Pendergrass <karen@paleofoundation.com>
+Date: Fri, 10 Apr 2026 23:37:36 +0300
+Subject: [PATCH] Replace top nav with futuristic sidebar, add contact form
+ with email routing
+
+- New SidebarNav component: slide-in panel with full-body portrait, numbered
+  nav links, scan-line overlay, accent glow animations, and staggered entrance
+- Replaced top navigation bar with hamburger-triggered sidebar sitewide
+- New contact page with form (name, email, subject, message) and success state
+- API route /api/contact forwards submissions to karen@paleofoundation.com
+  via Resend (falls back to console log when RESEND_API_KEY not set)
+- Updated all public-facing email to hola@karenpendergrass.com
+
+Co-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>
+---
+ app/api/contact/route.ts    | 107 ++++++++++++
+ app/contact/ContactForm.tsx | 189 +++++++++++++++++++++
+ app/contact/page.tsx        | 118 ++++---------
+ app/layout.tsx              |   4 +-
+ components/IntakeForm.tsx   |   6 +-
+ components/SidebarNav.tsx   | 328 ++++++++++++++++++++++++++++++++++++
+ content/pages/contacts.mdx  |   2 +-
+ 7 files changed, 659 insertions(+), 95 deletions(-)
+ create mode 100644 app/api/contact/route.ts
+ create mode 100644 app/contact/ContactForm.tsx
+ create mode 100644 components/SidebarNav.tsx
+
+diff --git a/app/api/contact/route.ts b/app/api/contact/route.ts
+new file mode 100644
+index 0000000..469ab57
+--- /dev/null
++++ b/app/api/contact/route.ts
+@@ -0,0 +1,107 @@
++import { NextResponse } from 'next/server';
++
++/**
++ * Contact form API route.
++ *
++ * Accepts form submissions that display hola@karenpendergrass.com publicly
++ * but delivers messages to the actual inbox: karen@paleofoundation.com
++ *
++ * Uses Resend (https://resend.com) for delivery. Set RESEND_API_KEY in
++ * your Vercel environment variables.
++ *
++ * If Resend isn't configured yet, this falls back to a simple JSON log
++ * so the form still "works" during development.
++ */
++
++interface ContactPayload {
++  name: string;
++  email: string;
++  subject: string;
++  message: string;
++}
++
++const DESTINATION_EMAIL = 'karen@paleofoundation.com';
++const FROM_ADDRESS = 'Karen Pendergrass Website <noreply@karenpendergrass.com>';
++
++export async function POST(request: Request) {
++  try {
++    const body: ContactPayload = await request.json();
++    const { name, email, subject, message } = body;
++
++    // Basic validation
++    if (!name || !email || !subject || !message) {
++      return NextResponse.json(
++        { error: 'All fields are required' },
++        { status: 400 }
++      );
++    }
++
++    const RESEND_API_KEY = process.env.RESEND_API_KEY;
++
++    if (RESEND_API_KEY) {
++      // ─── Production: send via Resend ───
++      const res = await fetch('https://api.resend.com/emails', {
++        method: 'POST',
++        headers: {
++          'Content-Type': 'application/json',
++          Authorization: `Bearer ${RESEND_API_KEY}`,
++        },
++        body: JSON.stringify({
++          from: FROM_ADDRESS,
++          to: DESTINATION_EMAIL,
++          reply_to: email,
++          subject: `[KP Contact] ${subject} — from ${name}`,
++          html: `
++            <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; max-width: 600px;">
++              <h2 style="color: #1a1a1a; margin-bottom: 4px;">New message from karenpendergrass.com</h2>
++              <hr style="border: none; border-top: 1px solid #e5ddd5; margin: 16px 0;" />
++              <p><strong>Name:</strong> ${escapeHtml(name)}</p>
++              <p><strong>Email:</strong> <a href="mailto:${escapeHtml(email)}">${escapeHtml(email)}</a></p>
++              <p><strong>Subject:</strong> ${escapeHtml(subject)}</p>
++              <hr style="border: none; border-top: 1px solid #e5ddd5; margin: 16px 0;" />
++              <div style="white-space: pre-wrap; color: #4a4a4a; line-height: 1.7;">
++                ${escapeHtml(message)}
++              </div>
++            </div>
++          `,
++        }),
++      });
++
++      if (!res.ok) {
++        console.error('Resend API error:', await res.text());
++        return NextResponse.json(
++          { error: 'Failed to send message' },
++          { status: 500 }
++        );
++      }
++
++      return NextResponse.json({ success: true });
++    } else {
++      // ─── Development fallback: log to console ───
++      console.log('─── Contact form submission (no RESEND_API_KEY set) ───');
++      console.log(`Name: ${name}`);
++      console.log(`Email: ${email}`);
++      console.log(`Subject: ${subject}`);
++      console.log(`Message: ${message}`);
++      console.log(`Would deliver to: ${DESTINATION_EMAIL}`);
++      console.log('─────────────────────────────────────────────────────');
++
++      return NextResponse.json({ success: true });
++    }
++  } catch (error) {
++    console.error('Contact form error:', error);
++    return NextResponse.json(
++      { error: 'Internal server error' },
++      { status: 500 }
++    );
++  }
++}
++
++function escapeHtml(str: string): string {
++  return str
++    .replace(/&/g, '&amp;')
++    .replace(/</g, '&lt;')
++    .replace(/>/g, '&gt;')
++    .replace(/"/g, '&quot;')
++    .replace(/'/g, '&#039;');
++}
+diff --git a/app/contact/ContactForm.tsx b/app/contact/ContactForm.tsx
+new file mode 100644
+index 0000000..2f39bf7
+--- /dev/null
++++ b/app/contact/ContactForm.tsx
+@@ -0,0 +1,189 @@
++'use client';
++
++import { useState, FormEvent } from 'react';
++
++export default function ContactForm() {
++  const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle');
++
++  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
++    e.preventDefault();
++    setStatus('sending');
++
++    const form = e.currentTarget;
++    const data = {
++      name: (form.elements.namedItem('name') as HTMLInputElement).value,
++      email: (form.elements.namedItem('email') as HTMLInputElement).value,
++      subject: (form.elements.namedItem('subject') as HTMLSelectElement).value,
++      message: (form.elements.namedItem('message') as HTMLTextAreaElement).value,
++    };
++
++    try {
++      const res = await fetch('/api/contact', {
++        method: 'POST',
++        headers: { 'Content-Type': 'application/json' },
++        body: JSON.stringify(data),
++      });
++
++      if (res.ok) {
++        setStatus('sent');
++      } else {
++        setStatus('error');
++      }
++    } catch {
++      setStatus('error');
++    }
++  }
++
++  if (status === 'sent') {
++    return (
++      <div className="text-center py-16">
++        <div
++          className="w-14 h-14 rounded-full border-2 flex items-center justify-center mx-auto mb-6 text-2xl"
++          style={{
++            borderColor: 'var(--color-accent)',
++            color: 'var(--color-accent)',
++            boxShadow: '0 0 24px rgba(184,101,46,0.15)',
++          }}
++        >
++          &#10003;
++        </div>
++        <h2
++          className="text-2xl font-medium mb-3"
++          style={{ fontFamily: 'var(--font-display)' }}
++        >
++          Message sent
++        </h2>
++        <p className="text-ink-secondary">
++          Thank you for reaching out. I&rsquo;ll get back to you as soon as I can.
++        </p>
++      </div>
++    );
++  }
++
++  return (
++    <form onSubmit={handleSubmit} className="flex flex-col gap-6">
++      {/* Name + Email row */}
++      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
++        <div className="flex flex-col gap-2">
++          <label
++            htmlFor="contact-name"
++            className="text-xs font-semibold uppercase tracking-[0.08em] text-ink-muted"
++            style={{ fontFamily: 'var(--font-display)' }}
++          >
++            Name
++          </label>
++          <input
++            type="text"
++            id="contact-name"
++            name="name"
++            required
++            placeholder="Your name"
++            className="w-full px-4 py-3.5 rounded-lg border border-border bg-surface text-ink text-sm outline-none transition-all duration-300 focus:border-accent focus:shadow-[0_0_0_3px_rgba(184,101,46,0.1)]"
++            style={{ fontFamily: 'var(--font-body)' }}
++          />
++        </div>
++        <div className="flex flex-col gap-2">
++          <label
++            htmlFor="contact-email"
++            className="text-xs font-semibold uppercase tracking-[0.08em] text-ink-muted"
++            style={{ fontFamily: 'var(--font-display)' }}
++          >
++            Email
++          </label>
++          <input
++            type="email"
++            id="contact-email"
++            name="email"
++            required
++            placeholder="you@example.com"
++            className="w-full px-4 py-3.5 rounded-lg border border-border bg-surface text-ink text-sm outline-none transition-all duration-300 focus:border-accent focus:shadow-[0_0_0_3px_rgba(184,101,46,0.1)]"
++            style={{ fontFamily: 'var(--font-body)' }}
++          />
++        </div>
++      </div>
++
++      {/* Subject */}
++      <div className="flex flex-col gap-2">
++        <label
++          htmlFor="contact-subject"
++          className="text-xs font-semibold uppercase tracking-[0.08em] text-ink-muted"
++          style={{ fontFamily: 'var(--font-display)' }}
++        >
++          Subject
++        </label>
++        <select
++          id="contact-subject"
++          name="subject"
++          required
++          defaultValue=""
++          className="w-full px-4 py-3.5 rounded-lg border border-border bg-surface text-ink text-sm outline-none transition-all duration-300 focus:border-accent focus:shadow-[0_0_0_3px_rgba(184,101,46,0.1)] appearance-none cursor-pointer"
++          style={{
++            fontFamily: 'var(--font-body)',
++            backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%237a7a7a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E")`,
++            backgroundRepeat: 'no-repeat',
++            backgroundPosition: 'right 16px center',
++            paddingRight: '44px',
++          }}
++        >
++          <option value="" disabled>
++            What&rsquo;s this about?
++          </option>
++          <option value="advisory">Advisory &amp; Consulting</option>
++          <option value="speaking">Speaking Engagement</option>
++          <option value="research">Research Collaboration</option>
++          <option value="certification">Certification Inquiry</option>
++          <option value="media">Media &amp; Press</option>
++          <option value="other">Something Else</option>
++        </select>
++      </div>
++
++      {/* Message */}
++      <div className="flex flex-col gap-2">
++        <label
++          htmlFor="contact-message"
++          className="text-xs font-semibold uppercase tracking-[0.08em] text-ink-muted"
++          style={{ fontFamily: 'var(--font-display)' }}
++        >
++          Message
++        </label>
++        <textarea
++          id="contact-message"
++          name="message"
++          required
++          rows={5}
++          placeholder="Tell me what's on your mind..."
++          className="w-full px-4 py-3.5 rounded-lg border border-border bg-surface text-ink text-sm outline-none transition-all duration-300 focus:border-accent focus:shadow-[0_0_0_3px_rgba(184,101,46,0.1)] resize-y min-h-[140px]"
++          style={{ fontFamily: 'var(--font-body)' }}
++        />
++      </div>
++
++      {/* Submit */}
++      <button
++        type="submit"
++        disabled={status === 'sending'}
++        className="group self-start inline-flex items-center gap-2.5 px-7 py-4 rounded-lg text-white font-medium transition-all duration-300 hover:-translate-y-0.5 disabled:opacity-60 disabled:cursor-not-allowed mt-2"
++        style={{
++          background: 'linear-gradient(135deg, var(--color-accent), rgba(184,101,46,0.85))',
++          fontFamily: 'var(--font-display)',
++          fontSize: '0.95rem',
++          letterSpacing: '0.03em',
++        }}
++      >
++        {status === 'sending' ? 'Sending...' : 'Send message'}
++        <span className="text-lg transition-transform duration-300 group-hover:translate-x-1">
++          &rarr;
++        </span>
++      </button>
++
++      {status === 'error' && (
++        <p className="text-sm text-red-600">
++          Something went wrong. Please try emailing{' '}
++          <a href="mailto:hola@karenpendergrass.com" className="underline">
++            hola@karenpendergrass.com
++          </a>{' '}
++          directly.
++        </p>
++      )}
++    </form>
++  );
++}
+diff --git a/app/contact/page.tsx b/app/contact/page.tsx
+index d5725cc..fc3d821 100644
+--- a/app/contact/page.tsx
++++ b/app/contact/page.tsx
+@@ -1,10 +1,10 @@
+ import type { Metadata } from 'next';
+-import SectionHeader from '@/components/SectionHeader';
++import ContactForm from './ContactForm';
+ 
+ export const metadata: Metadata = {
+   title: 'Contact',
+   description:
+-    'Get in touch with Karen Pendergrass for speaking, advisory, research collaboration, or consulting inquiries.',
++    'Start a conversation with Karen Pendergrass. Reach out for advisory, speaking, research collaboration, or general inquiries.',
+   alternates: {
+     canonical: '/contact',
+   },
+@@ -12,97 +12,37 @@ export const metadata: Metadata = {
+ 
+ export default function ContactPage() {
+   return (
+-    <div className="page-enter max-w-3xl mx-auto px-6 pt-16 pb-20">
+-      <SectionHeader
+-        label="Contact"
+-        title="Get in touch"
+-        description="For speaking inquiries, advisory board positions, research collaboration, or consulting on food safety certification."
+-      />
++    <div className="page-enter min-h-screen flex items-center justify-center px-6 py-20">
++      <div className="w-full max-w-2xl">
++        {/* Header */}
++        <div className="mb-12">
++          <h1
++            className="text-4xl md:text-5xl font-medium tracking-tight mb-4"
++            style={{ fontFamily: 'var(--font-display)', letterSpacing: '-0.02em' }}
++          >
++            Start a <span className="text-accent">conversation</span>
++          </h1>
++          <p className="text-ink-secondary text-lg leading-relaxed max-w-lg">
++            Whether it&rsquo;s advisory work, a speaking engagement, research
++            collaboration, or something else entirely &mdash; I&rsquo;d like to
++            hear from you.
++          </p>
++        </div>
+ 
+-      <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+-        {/* Contact info */}
+-        <div>
+-          <div className="mb-8">
+-            <h3
+-              className="text-sm font-semibold uppercase tracking-widest text-ink-muted mb-3"
+-              style={{ letterSpacing: '0.1em' }}
+-            >
+-              Email
+-            </h3>
++        {/* Form */}
++        <ContactForm />
++
++        {/* Direct email fallback */}
++        <div className="mt-10 pt-7 border-t border-border">
++          <p className="text-sm text-ink-muted">
++            Prefer email? Reach me directly at{' '}
+             <a
+-              href="mailto:karen@paleofoundation.com"
+-              className="text-accent link-animate"
++              href="mailto:hola@karenpendergrass.com"
++              className="text-accent hover:text-accent-dark transition-colors"
+             >
+-              karen@paleofoundation.com
++              hola@karenpendergrass.com
+             </a>
+-          </div>
+-
+-          <div className="mb-8">
+-            <h3
+-              className="text-sm font-semibold uppercase tracking-widest text-ink-muted mb-3"
+-              style={{ letterSpacing: '0.1em' }}
+-            >
+-              Location
+-            </h3>
+-            <p className="text-ink-light">Parekklisia, Cyprus</p>
+-          </div>
+-
+-          <div className="mb-8">
+-            <h3
+-              className="text-sm font-semibold uppercase tracking-widest text-ink-muted mb-3"
+-              style={{ letterSpacing: '0.1em' }}
+-            >
+-              Organizations
+-            </h3>
+-            <div className="flex flex-col gap-2">
+-              {[
+-                { name: 'Paleo Foundation', url: 'https://paleofoundation.com' },
+-                { name: 'Microbiome Medicine', url: 'https://microbiomemedicine.com' },
+-                { name: 'Journal of Food Metallomics', url: 'https://microbialmetallomics.com' },
+-                { name: 'WikiBiome', url: 'https://wikibiome.com' },
+-                { name: 'Tinies', url: 'https://tinies.app' },
+-                { name: 'Gardens of St. Gertrude', url: 'https://gardensofstgertrude.com' },
+-              ].map((org) => (
+-                <a
+-                  key={org.name}
+-                  href={org.url}
+-                  target="_blank"
+-                  rel="noopener noreferrer"
+-                  className="text-sm text-ink-light hover:text-accent transition-colors"
+-                >
+-                  {org.name} ↗
+-                </a>
+-              ))}
+-            </div>
+-          </div>
+-        </div>
+-
+-        {/* I'm available for */}
+-        <div className="bg-paper-warm rounded-lg border border-ink/5 p-6">
+-          <h3
+-            className="text-sm font-semibold uppercase tracking-widest text-ink-muted mb-4"
+-            style={{ letterSpacing: '0.1em' }}
+-          >
+-            Available for
+-          </h3>
+-          <div className="flex flex-col gap-4 text-sm text-ink-light leading-relaxed">
+-            <div>
+-              <p className="font-medium text-ink">Advisory Boards</p>
+-              <p>Microbiome science, food safety, regulatory strategy, and AI-first operations.</p>
+-            </div>
+-            <div>
+-              <p className="font-medium text-ink">Speaking</p>
+-              <p>Conferences, podcasts, and panels on microbiome-targeted interventions, metallomics, and certification design.</p>
+-            </div>
+-            <div>
+-              <p className="font-medium text-ink">Research Collaboration</p>
+-              <p>Microbiome signatures, microbial metallomics, and translational medicine frameworks.</p>
+-            </div>
+-            <div>
+-              <p className="font-medium text-ink">Consulting</p>
+-              <p>Food safety certification program design and ALARA-based standards development.</p>
+-            </div>
+-          </div>
++          </p>
+         </div>
+       </div>
+     </div>
+diff --git a/app/layout.tsx b/app/layout.tsx
+index f8627bd..3a7822c 100644
+--- a/app/layout.tsx
++++ b/app/layout.tsx
+@@ -1,6 +1,6 @@
+ import type { Metadata } from 'next';
+ import './globals.css';
+-import Navigation from '@/components/Navigation';
++import SidebarNav from '@/components/SidebarNav';
+ import Footer from '@/components/Footer';
+ import { PersonSchema } from '@/components/JsonLd';
+ 
+@@ -67,7 +67,7 @@ export default function RootLayout({
+     <html lang="en">
+       <body className="min-h-screen flex flex-col">
+         <PersonSchema />
+-        <Navigation />
++        <SidebarNav />
+         <main className="flex-1">{children}</main>
+         <Footer />
+       </body>
+diff --git a/components/IntakeForm.tsx b/components/IntakeForm.tsx
+index c29b154..109ab7e 100644
+--- a/components/IntakeForm.tsx
++++ b/components/IntakeForm.tsx
+@@ -39,7 +39,7 @@ export default function IntakeForm() {
+     const body = encodeURIComponent(
+       `Name: ${formData.name}\nEmail: ${formData.email}\nOrganization: ${formData.organization}\nRole: ${formData.role}\nEngagement type: ${formData.engagementType}\n\nMessage:\n${formData.message}`
+     );
+-    window.location.href = `mailto:karen@paleofoundation.com?subject=${subject}&body=${body}`;
++    window.location.href = `mailto:hola@karenpendergrass.com?subject=${subject}&body=${body}`;
+     setSubmitted(true);
+   };
+ 
+@@ -55,8 +55,8 @@ export default function IntakeForm() {
+         <p className="text-sm text-ink-light">
+           Your email client should have opened with a pre-filled message.
+           If it didn't, you can email me directly at{' '}
+-          <a href="mailto:karen@paleofoundation.com" className="text-accent underline underline-offset-2">
+-            karen@paleofoundation.com
++          <a href="mailto:hola@karenpendergrass.com" className="text-accent underline underline-offset-2">
++            hola@karenpendergrass.com
+           </a>
+           .
+         </p>
+diff --git a/components/SidebarNav.tsx b/components/SidebarNav.tsx
+new file mode 100644
+index 0000000..a66ecfd
+--- /dev/null
++++ b/components/SidebarNav.tsx
+@@ -0,0 +1,328 @@
++'use client';
++
++import Link from 'next/link';
++import Image from 'next/image';
++import { useState, useEffect, useCallback } from 'react';
++import { usePathname } from 'next/navigation';
++
++const navLinks = [
++  { href: '/about', label: 'About' },
++  { href: '/ventures', label: 'Ventures' },
++  { href: '/frameworks', label: 'Frameworks' },
++  { href: '/publications', label: 'Publications' },
++  { href: '/writing', label: 'Writing' },
++  { href: '/roundtable', label: 'Roundtable' },
++  { href: '/speaking', label: 'Speaking' },
++  { href: '/advisory', label: 'Advisory' },
++];
++
++export default function SidebarNav() {
++  const [isOpen, setIsOpen] = useState(false);
++  const pathname = usePathname();
++
++  const toggle = useCallback(() => {
++    setIsOpen((prev) => !prev);
++  }, []);
++
++  // Close sidebar on route change
++  useEffect(() => {
++    setIsOpen(false);
++  }, [pathname]);
++
++  // Lock body scroll when open
++  useEffect(() => {
++    document.body.style.overflow = isOpen ? 'hidden' : '';
++    return () => {
++      document.body.style.overflow = '';
++    };
++  }, [isOpen]);
++
++  // Close on Escape
++  useEffect(() => {
++    const handleKey = (e: KeyboardEvent) => {
++      if (e.key === 'Escape' && isOpen) setIsOpen(false);
++    };
++    window.addEventListener('keydown', handleKey);
++    return () => window.removeEventListener('keydown', handleKey);
++  }, [isOpen]);
++
++  const isActive = (href: string) => pathname === href;
++
++  return (
++    <>
++      {/* ─── Hamburger trigger ─── */}
++      <button
++        onClick={toggle}
++        className="fixed top-7 left-7 z-[1000] w-12 h-12 flex flex-col items-center justify-center gap-[5px] rounded-xl border cursor-pointer transition-all duration-400"
++        style={{
++          borderColor: isOpen ? 'var(--color-accent)' : 'var(--color-border)',
++          background: isOpen ? 'rgba(0,0,0,0.3)' : 'rgba(250,250,248,0.85)',
++          backdropFilter: 'blur(12px)',
++          WebkitBackdropFilter: 'blur(12px)',
++          boxShadow: isOpen
++            ? '0 0 30px rgba(184,101,46,0.15)'
++            : '0 2px 8px rgba(0,0,0,0.04)',
++        }}
++        aria-label={isOpen ? 'Close navigation' : 'Open navigation'}
++        aria-expanded={isOpen}
++      >
++        <span
++          className="block w-5 transition-all duration-300"
++          style={{
++            height: '1.5px',
++            backgroundColor: isOpen ? '#fff' : 'var(--color-ink)',
++            transform: isOpen ? 'rotate(45deg) translate(4.5px, 4.5px)' : 'none',
++            transformOrigin: 'center',
++          }}
++        />
++        <span
++          className="block w-5 transition-all duration-300"
++          style={{
++            height: '1.5px',
++            backgroundColor: isOpen ? '#fff' : 'var(--color-ink)',
++            opacity: isOpen ? 0 : 1,
++            transform: isOpen ? 'scaleX(0)' : 'none',
++          }}
++        />
++        <span
++          className="block w-5 transition-all duration-300"
++          style={{
++            height: '1.5px',
++            backgroundColor: isOpen ? '#fff' : 'var(--color-ink)',
++            transform: isOpen ? 'rotate(-45deg) translate(4.5px, -4.5px)' : 'none',
++            transformOrigin: 'center',
++          }}
++        />
++      </button>
++
++      {/* ─── Overlay ─── */}
++      <div
++        onClick={() => setIsOpen(false)}
++        className="fixed inset-0 z-[900] transition-opacity duration-500"
++        style={{
++          background: 'rgba(0,0,0,0.6)',
++          backdropFilter: 'blur(4px)',
++          WebkitBackdropFilter: 'blur(4px)',
++          opacity: isOpen ? 1 : 0,
++          pointerEvents: isOpen ? 'all' : 'none',
++        }}
++      />
++
++      {/* ─── Sidebar ─── */}
++      <nav
++        className="fixed top-0 left-0 h-dvh z-[950] flex flex-col sm:flex-row overflow-hidden"
++        style={{
++          width: 'min(480px, 100vw)',
++          background: '#0a0a09',
++          transform: isOpen ? 'translateX(0)' : 'translateX(-100%)',
++          transition: 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
++        }}
++        role="navigation"
++        aria-label="Main navigation"
++      >
++        {/* ─── Image Column ─── */}
++        <div className="relative overflow-hidden flex-shrink-0 sm:w-[45%] h-[35vh] sm:h-full">
++          <Image
++            src="/images/Karen_Pendergrass.png"
++            alt="Karen Pendergrass"
++            fill
++            className="object-cover object-top"
++            style={{
++              filter: isOpen ? 'grayscale(0%) contrast(1.05)' : 'grayscale(15%) contrast(1.05)',
++              transition: 'filter 0.6s ease',
++            }}
++            sizes="(max-width: 640px) 100vw, 216px"
++            priority
++          />
++          {/* Scan-line overlay */}
++          <div
++            className="absolute inset-0 pointer-events-none mix-blend-overlay"
++            style={{
++              background: 'linear-gradient(180deg, transparent 0%, rgba(184,101,46,0.03) 50%, transparent 100%)',
++              backgroundSize: '100% 4px',
++              animation: 'sidebar-scanlines 8s linear infinite',
++            }}
++          />
++          {/* Bottom gradient fade */}
++          <div
++            className="absolute bottom-0 left-0 right-0 h-[40%] pointer-events-none z-[2] sm:block hidden"
++            style={{
++              background: 'linear-gradient(to top, #0a0a09 0%, transparent 100%)',
++            }}
++          />
++          {/* Right edge fade for desktop */}
++          <div
++            className="absolute top-0 bottom-0 right-0 w-[30%] pointer-events-none z-[2] hidden sm:block"
++            style={{
++              background: 'linear-gradient(to left, #0a0a09 0%, transparent 100%)',
++            }}
++          />
++        </div>
++
++        {/* ─── Nav Column ─── */}
++        <div className="flex-1 flex flex-col justify-center px-6 sm:px-7 sm:pl-5 py-6 sm:py-12 relative overflow-y-auto">
++          {/* Accent line */}
++          <div
++            className="absolute top-[10%] bottom-[10%] left-0 w-px hidden sm:block"
++            style={{
++              background: 'linear-gradient(to bottom, transparent, var(--color-accent) 30%, var(--color-accent) 70%, transparent)',
++              opacity: 0.3,
++            }}
++          />
++
++          {/* Corner brackets */}
++          <div
++            className="absolute top-5 right-5 w-4 h-4 pointer-events-none"
++            style={{
++              borderTop: '1px solid var(--color-accent)',
++              borderRight: '1px solid var(--color-accent)',
++              opacity: 0.15,
++            }}
++          />
++          <div
++            className="absolute bottom-5 left-5 w-4 h-4 pointer-events-none hidden sm:block"
++            style={{
++              borderBottom: '1px solid var(--color-accent)',
++              borderLeft: '1px solid var(--color-accent)',
++              opacity: 0.15,
++            }}
++          />
++
++          {/* Nav links */}
++          <ul className="flex flex-col gap-0.5">
++            {navLinks.map((link, i) => (
++              <li
++                key={link.href}
++                style={{
++                  opacity: isOpen ? 1 : 0,
++                  transform: isOpen ? 'translateX(0)' : 'translateX(-20px)',
++                  transition: `all 0.4s cubic-bezier(0.16, 1, 0.3, 1)`,
++                  transitionDelay: isOpen ? `${0.15 + i * 0.05}s` : '0s',
++                }}
++              >
++                <Link
++                  href={link.href}
++                  onClick={() => setIsOpen(false)}
++                  className="group flex items-center gap-3 py-3 px-4 rounded-lg relative overflow-hidden transition-all duration-300"
++                  style={{
++                    color: isActive(link.href) ? '#ffffff' : 'rgba(255,255,255,0.5)',
++                    fontFamily: 'var(--font-display)',
++                    fontSize: '1.05rem',
++                    fontWeight: 500,
++                    letterSpacing: '0.02em',
++                  }}
++                >
++                  {/* Hover glow bar */}
++                  <span
++                    className="absolute left-0 top-1/2 w-0.5 rounded-sm transition-transform duration-300 group-hover:scale-y-100"
++                    style={{
++                      height: '60%',
++                      transform: 'translateY(-50%) scaleY(0)',
++                      background: 'var(--color-accent)',
++                      boxShadow: '0 0 8px rgba(184,101,46,0.15)',
++                    }}
++                  />
++                  {/* Active indicator */}
++                  {isActive(link.href) && (
++                    <span
++                      className="absolute left-0 top-1/2 w-0.5 rounded-sm"
++                      style={{
++                        height: '60%',
++                        transform: 'translateY(-50%)',
++                        background: 'var(--color-accent)',
++                        boxShadow: '0 0 8px rgba(184,101,46,0.3)',
++                      }}
++                    />
++                  )}
++                  <span
++                    className="text-[0.65rem] tracking-widest min-w-[20px] transition-colors duration-300 group-hover:text-[var(--color-accent)]"
++                    style={{
++                      color: isActive(link.href)
++                        ? 'var(--color-accent)'
++                        : 'rgba(255,255,255,0.3)',
++                    }}
++                  >
++                    {String(i + 1).padStart(2, '0')}
++                  </span>
++                  <span className="transition-colors duration-300 group-hover:text-white">
++                    {link.label}
++                  </span>
++                </Link>
++              </li>
++            ))}
++          </ul>
++
++          {/* CTA */}
++          <div
++            className="mt-8 pt-6"
++            style={{
++              borderTop: '1px solid rgba(255,255,255,0.08)',
++              opacity: isOpen ? 1 : 0,
++              transform: isOpen ? 'translateY(0)' : 'translateY(10px)',
++              transition: 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
++              transitionDelay: isOpen ? '0.55s' : '0s',
++            }}
++          >
++            <Link
++              href="/contact"
++              onClick={() => setIsOpen(false)}
++              className="group inline-flex items-center gap-2.5 px-5 py-3 rounded-lg text-white transition-all duration-300 hover:-translate-y-0.5"
++              style={{
++                background: 'linear-gradient(135deg, var(--color-accent), rgba(184,101,46,0.8))',
++                fontFamily: 'var(--font-display)',
++                fontSize: '0.9rem',
++                fontWeight: 500,
++                letterSpacing: '0.03em',
++              }}
++            >
++              Start a conversation
++              <span className="text-lg transition-transform duration-300 group-hover:translate-x-1">
++                &rarr;
++              </span>
++            </Link>
++          </div>
++
++          {/* Email */}
++          <div
++            style={{
++              marginTop: '16px',
++              opacity: isOpen ? 1 : 0,
++              transition: 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
++              transitionDelay: isOpen ? '0.6s' : '0s',
++            }}
++          >
++            <a
++              href="mailto:hola@karenpendergrass.com"
++              className="text-xs tracking-widest transition-colors duration-300 hover:text-[var(--color-accent)]"
++              style={{ color: 'rgba(255,255,255,0.3)' }}
++            >
++              hola@karenpendergrass.com
++            </a>
++          </div>
++
++          {/* Status dot */}
++          <div
++            className="absolute bottom-7 right-7 w-1.5 h-1.5 rounded-full"
++            style={{
++              background: 'var(--color-accent)',
++              boxShadow: '0 0 8px rgba(184,101,46,0.15)',
++              animation: 'sidebar-pulse 3s ease-in-out infinite',
++            }}
++          />
++        </div>
++      </nav>
++
++      {/* Keyframe animations */}
++      <style jsx global>{`
++        @keyframes sidebar-scanlines {
++          0% { background-position: 0 0; }
++          100% { background-position: 0 200%; }
++        }
++        @keyframes sidebar-pulse {
++          0%, 100% { opacity: 0.4; }
++          50% { opacity: 1; }
++        }
++      `}</style>
++    </>
++  );
++}
+diff --git a/content/pages/contacts.mdx b/content/pages/contacts.mdx
+index 50f5a26..8eb29ac 100644
+--- a/content/pages/contacts.mdx
++++ b/content/pages/contacts.mdx
+@@ -118,4 +118,4 @@ openGraph:
+ 
+ 		
+ 
+-			karen@paleofoundation.com
+\ No newline at end of file
++			hola@karenpendergrass.com
+\ No newline at end of file
+-- 
+2.34.1
+
