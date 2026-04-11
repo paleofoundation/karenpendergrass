@@ -8,7 +8,7 @@ const footerSections = [
       { href: '/ventures', label: 'Ventures' },
       { href: '/frameworks', label: 'Frameworks' },
       { href: '/writing', label: 'Writing' },
-      { href: '/research', label: 'Research' },
+      { href: '/publications', label: 'Publications' },
       { href: '/advisory', label: 'Advisory & Board' },
     ],
   },

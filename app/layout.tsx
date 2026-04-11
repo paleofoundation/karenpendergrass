@@ -6,8 +6,12 @@ import { PersonSchema } from '@/components/JsonLd';
 
 export const metadata: Metadata = {
   title: {
-    default: 'Karen Pendergrass',
+    default: 'Karen Pendergrass — Standards Developer & Microbiome Researcher',
     template: '%s | Karen Pendergrass',
+  },
+  icons: {
+    icon: '/favicon.svg',
+    apple: '/favicon.svg',
   },
   description:
     'Standards developer, microbiome signatures researcher, and founder at the intersection of microbiome science, translational medicine, and regulatory innovation.',
@@ -66,9 +70,17 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="min-h-screen flex flex-col">
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:absolute focus:z-[9999] focus:top-4 focus:left-4 focus:px-4 focus:py-2 focus:bg-white focus:text-black focus:rounded focus:shadow-lg"
+        >
+          Skip to content
+        </a>
         <PersonSchema />
-        <SidebarNav />
-        <main className="flex-1">{children}</main>
+        <header>
+          <SidebarNav />
+        </header>
+        <main id="main-content" className="flex-1">{children}</main>
         <Footer />
       </body>
     </html>

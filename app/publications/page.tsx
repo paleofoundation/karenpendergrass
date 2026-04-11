@@ -35,6 +35,15 @@ interface Publication {
 const publications: Publication[] = [
   // 2026
   {
+    title: 'The Counterproductive Consequences of Public Exposé Testing: How Unstructured Disclosure Undermines Heavy Metal Contamination Reduction',
+    authors: 'Pendergrass, K.',
+    venue: 'Journal of Food Metallomics',
+    year: '2026',
+    doi: '10.5281/zenodo.19470572',
+    type: 'journal',
+    description: 'Argues that unstructured public exposé testing of consumer products for heavy metals is systematically counterproductive. Drawing on compliance theory, game theory, chilling-effects research, and regulatory science, demonstrates that public gotcha testing suppresses industry transparency, impedes data sharing, concentrates reputational damage on brands that may be the cleanest in their category, and provides litigation scaffolding while failing to address upstream supply chain contamination.',
+  },
+  {
     title: 'Certification as a Framework for Reducing Heavy Metal Exposure in Infant and Child Foods: Integrating Legal Defensibility, Scientific Rigor, and Commercial Viability',
     authors: 'Pendergrass, K.',
     venue: 'Zenodo',

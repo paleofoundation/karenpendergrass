@@ -4,7 +4,7 @@ import Link from 'next/link';
 import ScrollReveal from '@/components/ScrollReveal';
 
 export const metadata: Metadata = {
-  title: 'Karen Pendergrass',
+  title: 'Karen Pendergrass — Standards Developer & Microbiome Researcher',
   description:
     'Founder of six organizations. Frameworks in microbiome science, food safety, and translational medicine.',
   alternates: {

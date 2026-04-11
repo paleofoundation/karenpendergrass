@@ -70,26 +70,26 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       url: ogUrl,
       publishedTime: post.meta.date,
       authors: [authorName],
-      ...(post.meta.coverImage
-        ? {
-            images: [
-              {
-                url: `https://karenpendergrass.com${post.meta.coverImage}`,
-                width: 1200,
-                height: 630,
-                alt: post.meta.title,
-              },
-            ],
-          }
-        : {}),
+      images: [
+        {
+          url: post.meta.coverImage
+            ? `https://karenpendergrass.com${post.meta.coverImage}`
+            : 'https://karenpendergrass.com/images/Karen_Pendergrass.png',
+          width: 1200,
+          height: 630,
+          alt: post.meta.title,
+        },
+      ],
     },
     twitter: {
       card: 'summary_large_image',
       title: post.meta.title,
       description,
-      ...(post.meta.coverImage
-        ? { images: [`https://karenpendergrass.com${post.meta.coverImage}`] }
-        : {}),
+      images: [
+        post.meta.coverImage
+          ? `https://karenpendergrass.com${post.meta.coverImage}`
+          : 'https://karenpendergrass.com/images/Karen_Pendergrass.png',
+      ],
     },
   };
 }

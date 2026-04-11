@@ -28,7 +28,13 @@
 - Gardens of St. Gertrude — Cat sanctuary in Parekklisia, Cyprus: https://gardensofstgertrude.com
 
 ## Key Publications
-- Writing: https://karenpendergrass.com/writing
+- The Counterproductive Consequences of Public Exposé Testing (2026): https://doi.org/10.5281/zenodo.19470572
+- Certification as a Framework for Reducing Heavy Metal Exposure in Infant and Child Foods (2026): https://doi.org/10.5281/zenodo.18905821
+- Microbial Metallomics and Parkinson's Disease (2025): https://doi.org/10.5281/zenodo.17830082
+- Nickel as a Catalytic Driver of Necrotizing Enterocolitis (2026): https://doi.org/10.5281/zenodo.18200348
+- Heavy Metals, Microbial Metallomics, and the US Obesity Epidemic (2026): https://doi.org/10.5281/zenodo.18434951
+- Full writing archive: https://karenpendergrass.com/writing
+- Full publications list: https://karenpendergrass.com/publications
 - ORCID: https://orcid.org/0000-0002-2348-7259
 
 ## Citation Format
