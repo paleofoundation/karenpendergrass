@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, ReactNode } from 'react';
+import { useEffect, useRef, useState, ReactNode } from 'react';
 
 interface ScrollRevealProps {
   children: ReactNode;
@@ -18,17 +18,35 @@ export default function ScrollReveal({
   threshold = 0.15,
 }: ScrollRevealProps) {
   const ref = useRef<HTMLDivElement>(null);
+  const [mounted, setMounted] = useState(false);
 
+  // Step 1: Mark as mounted so we can add scroll-hidden (JS-only)
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Step 2: Observe for intersection
   useEffect(() => {
     const el = ref.current;
-    if (!el) return;
+    if (!el || !mounted) return;
+
+    // If IntersectionObserver isn't available, show immediately
+    if (typeof IntersectionObserver === 'undefined') {
+      el.classList.remove('scroll-hidden');
+      el.classList.add('is-visible');
+      return;
+    }
 
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
           if (delay) {
-            setTimeout(() => el.classList.add('is-visible'), delay);
+            setTimeout(() => {
+              el.classList.remove('scroll-hidden');
+              el.classList.add('is-visible');
+            }, delay);
           } else {
+            el.classList.remove('scroll-hidden');
             el.classList.add('is-visible');
           }
           observer.unobserve(el);
@@ -39,12 +57,14 @@ export default function ScrollReveal({
 
     observer.observe(el);
     return () => observer.disconnect();
-  }, [delay, threshold]);
+  }, [delay, threshold, mounted]);
 
   const animClass = `scroll-${animation}`;
+  // Only add scroll-hidden after JS mounts — SSR/no-JS keeps content visible
+  const hiddenClass = mounted ? 'scroll-hidden' : '';
 
   return (
-    <div ref={ref} className={`${animClass} ${className}`}>
+    <div ref={ref} className={`${animClass} ${hiddenClass} ${className}`}>
       {children}
     </div>
   );

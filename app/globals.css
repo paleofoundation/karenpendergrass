@@ -257,11 +257,9 @@ p {
    Inspired by architectural blueprints / engineering paper
    ============================================ */
 
-/* Light graph paper for warm sections — VISIBLE grid */
-.graph-paper-overlay {
-  position: relative;
-}
-
+/* Light graph paper for warm sections — VISIBLE grid
+   NOTE: This class MUST NOT set position — it's used on elements that
+   also carry Tailwind's `absolute` class and CSS-order wins would break layout. */
 .graph-paper-overlay::before {
   content: '';
   position: absolute;
@@ -279,11 +277,6 @@ p {
   background-size: 80px 80px, 80px 80px, 20px 20px, 20px 20px;
   pointer-events: none;
   z-index: 0;
-}
-
-.graph-paper-overlay > * {
-  position: relative;
-  z-index: 1;
 }
 
 /* Decorative crosshair marks at grid intersections */
@@ -440,58 +433,49 @@ p {
 
 /* ============================================
    SCROLL-TRIGGERED ANIMATIONS (Intersection Observer)
+   Progressive enhancement: content is visible by default.
+   JS adds .scroll-hidden to hide, then .is-visible to reveal.
+   If JS fails, everything stays visible.
    ============================================ */
-.scroll-fade-in {
+.scroll-fade-in,
+.scroll-slide-up,
+.scroll-slide-left,
+.scroll-slide-right,
+.scroll-scale-up {
+  transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+}
+
+.scroll-fade-in.scroll-hidden {
   opacity: 0;
-  transition: opacity var(--transition-slow) ease-out;
 }
 
-.scroll-fade-in.is-visible {
-  opacity: 1;
-}
-
-.scroll-slide-up {
+.scroll-slide-up.scroll-hidden {
   opacity: 0;
   transform: translateY(24px);
-  transition: opacity var(--transition-slow) ease-out, transform var(--transition-slow) ease-out;
 }
 
-.scroll-slide-up.is-visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.scroll-slide-left {
+.scroll-slide-left.scroll-hidden {
   opacity: 0;
   transform: translateX(-24px);
-  transition: opacity var(--transition-slow) ease-out, transform var(--transition-slow) ease-out;
 }
 
-.scroll-slide-left.is-visible {
-  opacity: 1;
-  transform: translateX(0);
-}
-
-.scroll-slide-right {
+.scroll-slide-right.scroll-hidden {
   opacity: 0;
   transform: translateX(24px);
-  transition: opacity var(--transition-slow) ease-out, transform var(--transition-slow) ease-out;
 }
 
-.scroll-slide-right.is-visible {
-  opacity: 1;
-  transform: translateX(0);
-}
-
-.scroll-scale-up {
+.scroll-scale-up.scroll-hidden {
   opacity: 0;
   transform: scale(0.95);
-  transition: opacity var(--transition-slow) ease-out, transform var(--transition-slow) ease-out;
 }
 
+.scroll-fade-in.is-visible,
+.scroll-slide-up.is-visible,
+.scroll-slide-left.is-visible,
+.scroll-slide-right.is-visible,
 .scroll-scale-up.is-visible {
   opacity: 1;
-  transform: scale(1);
+  transform: none;
 }
 
 /* ============================================
