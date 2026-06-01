@@ -19,13 +19,13 @@
 - STOP Recommendations: https://karenpendergrass.com/frameworks/stop
 
 ## Organizations Founded
-- Paleo Foundation — Food certification standards (Paleo, Keto, Grain-Free, HMTc): https://paleofoundation.com
-- Microbiome Medicine — Disease-associated microbiome patterns database: https://microbiomemedicine.com
-- Journal of Food Metallomics — Trace metal analysis and microbiome research: https://microbialmetallomics.com
-- WikiBiome — Open microbiome knowledge platform: https://wikibiome.com
-- Heavy Metal Tested — Consumer-facing certification program: https://heavymetaltested.com
-- Tinies — Connecting animal sanctuaries with sponsors: https://tinies.app
-- Gardens of St. Gertrude — Cat sanctuary in Parekklisia, Cyprus: https://gardensofstgertrude.com
+Karen has founded six organizations. Heavy Metal Tested & Certified (HMTc) is a program of the Paleo Foundation, not a separate organization.
+- Paleo Foundation (https://paleofoundation.com) — Food certification standards for Paleo, Keto, and Grain-Free, plus the Heavy Metal Tested & Certified (HMTc) program; consumer-facing site: https://heavymetaltested.com
+- Microbiome Medicine (https://microbiomemedicine.com) — Disease-associated microbiome patterns database
+- Journal of Food Metallomics (https://microbialmetallomics.com) — Trace metal analysis and microbiome research
+- WikiBiome (https://wikibiome.com) — Open microbiome knowledge platform
+- Tinies (https://tinies.app) — Connecting animal sanctuaries with sponsors
+- Gardens of St. Gertrude (https://gardensofstgertrude.com) — Cat sanctuary in Parekklisia, Cyprus
 
 ## Key Publications
 - The Counterproductive Consequences of Public Exposé Testing (2026): https://doi.org/10.5281/zenodo.19470572
