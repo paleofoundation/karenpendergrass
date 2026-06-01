@@ -93,7 +93,18 @@ Make `/karens-brain` (or a newsletter) the explicit **free** top-of-ladder, then
 ---
 
 ## 6. Executed on this branch (`expert-secrets-pass`)
-- Dynamic OG image generation (default site card + per-article cards) via `next/og`.
-- This plan + the org-level strategy doc.
 
-Nothing pushed to `main`. `main` auto-deploys to production (Vercel), and this is Karen's outward-facing personal brand — so all changes stay on the branch / PR for her review and merge.
+Done (hybrid tone, per Karen's call):
+- **OG images** — dynamic `next/og` cards (default + per-article) closing the last SEO/LLMO gap.
+- **Hero (homepage)** — added an explicit future-based Cause line and collapsed to one dominant CTA (`Start here` → `/start`); kept the headline and the Fred Hart social proof.
+- **`/start` "Start Here" page** — value-ladder map (Free → Advisory $1.5k → Roundtable $75k+ → Board), light audience self-identification, explicit Cause, newsletter rung.
+- **`/manifesto` page** — restrained "What I believe" creed (enemy = causal reductionism / credentialism / institutional lag, never a named person or brand).
+- **Newsletter made functional** — `NewsletterSignup` now POSTs to the working `/api/contact` (Resend → karen@paleofoundation.com) instead of silently discarding emails; safe to surface site-wide. Closes the README TODO.
+- **Wiring** — `/start` + `/manifesto` added to SidebarNav, Footer, and the sitemap.
+- **Consistency** — resolved the six-vs-seven ventures contradiction in `llms.txt` (HMTc is a Paleo Foundation program, not a 7th org; heavymetaltested.com URL preserved).
+
+Remaining backlog (recommended next pass — deliberately deferred for quality):
+- **Framework FAQ / "Key definitions" blocks** on the six `/frameworks/*` pages + `FAQPage` JSON-LD. Deferred because it must *reuse* existing on-page definitions, not re-author Karen's coined-framework science.
+- **In-body cross-article links** across the 27 writing pieces (the standing content task). Deferred because it touches prose in 27 files and deserves a careful editorial pass.
+
+Nothing pushed to `main`. `main` auto-deploys to production (Vercel); these changes live on the branch / PR (which builds a Vercel **preview**) for Karen's review and merge.

@@ -6,6 +6,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { usePathname } from 'next/navigation';
 
 const navLinks = [
+  { href: '/start', label: 'Start Here' },
   { href: '/about', label: 'About' },
   { href: '/ventures', label: 'Ventures' },
   { href: '/frameworks', label: 'Frameworks' },

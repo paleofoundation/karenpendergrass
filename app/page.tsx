@@ -170,22 +170,30 @@ export default function HomePage() {
                 </p>
               </blockquote>
               <p
-                className="text-xs mb-12 pl-5 md:pl-6 tracking-wider uppercase"
+                className="text-xs mb-6 pl-5 md:pl-6 tracking-wider uppercase"
                 style={{ color: 'var(--color-ink-muted)' }}
               >
                 Fred Hart · Partner, Interact
               </p>
 
+              <p
+                className="text-base md:text-lg leading-relaxed max-w-xl mb-10"
+                style={{ color: 'var(--color-ink-secondary)' }}
+              >
+                Right now that means the problem most people still ignore: the heavy metals in what
+                we eat, and the certification standard the food system doesn&apos;t have yet.
+              </p>
+
               <div className="flex flex-wrap items-center gap-4">
                 <Link
-                  href="/contact"
+                  href="/start"
                   className="inline-flex items-center px-7 py-3.5 text-sm font-medium tracking-wide rounded transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg"
                   style={{
                     backgroundColor: 'var(--color-ink)',
                     color: '#fff',
                   }}
                 >
-                  Start a conversation
+                  Start here
                 </Link>
                 <Link
                   href="/about"

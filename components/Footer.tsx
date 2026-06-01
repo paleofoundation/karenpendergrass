@@ -4,7 +4,9 @@ const footerSections = [
   {
     title: 'Navigate',
     links: [
+      { href: '/start', label: 'Start Here' },
       { href: '/about', label: 'About' },
+      { href: '/manifesto', label: 'Manifesto' },
       { href: '/ventures', label: 'Ventures' },
       { href: '/frameworks', label: 'Frameworks' },
       { href: '/writing', label: 'Writing' },
