@@ -53,6 +53,11 @@ const ventureRows: { name: string; url: string; description: string; tag: string
 
 const currentArticles = [
   {
+    slug: 'heavy-metal-index-tracing-food-contamination-to-source',
+    title: 'The Heavy Metal Index: Tracing Food Contamination to the Evidence',
+    meta: 'Analysis · 6 min',
+  },
+  {
     slug: 'microbial-metallomics-and-heavy-metal-contamination',
     title: 'Microbial Metallomics: The Missing Link in Heavy Metal Contamination',
     meta: 'Microbiome Research · 13 min',
