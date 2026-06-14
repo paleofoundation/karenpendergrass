@@ -20,7 +20,7 @@
 
 ## Organizations Founded
 Karen has founded six organizations. Heavy Metal Tested & Certified (HMTc) is a program of the Paleo Foundation, not a separate organization.
-- Paleo Foundation (https://paleofoundation.com) — Food certification standards for Paleo, Keto, and Grain-Free, plus the Heavy Metal Tested & Certified (HMTc) program; consumer-facing site: https://heavymetaltested.com
+- Paleo Foundation (https://paleofoundation.com) — Food certification standards for Paleo, Keto, and Grain-Free, plus the Heavy Metal Tested & Certified (HMTc) program; consumer-facing site: https://heavymetaltested.com; public evidence database: https://heavymetalindex.com
 - Microbiome Medicine (https://microbiomemedicine.com) — Disease-associated microbiome patterns database
 - Journal of Food Metallomics (https://microbialmetallomics.com) — Trace metal analysis and microbiome research
 - WikiBiome (https://wikibiome.com) — Open microbiome knowledge platform

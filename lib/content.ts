@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
+import { ventures } from './ventures';
 
 const contentDirectory = path.join(process.cwd(), 'content');
 
@@ -79,7 +80,7 @@ export function getAllPosts(): Post[] {
   
   // Sort by date, newest first
   return posts
-    .filter(p => p.meta.status === 'publish')
+    .filter(p => p.meta.status === 'publish' || p.meta.status === 'published')
     .sort((a, b) => new Date(b.meta.date).getTime() - new Date(a.meta.date).getTime());
 }
 
@@ -146,74 +147,11 @@ export function getPage(slug: string): Page | null {
   };
 }
 
-// Venture data (these are structured, not from WordPress)
-export interface Venture {
-  name: string;
-  slug: string;
-  url: string;
-  role: string;
-  tagline: string;
-  description: string;
-  status: 'active' | 'building' | 'research';
-}
+// Venture data lives in a single source of truth: lib/ventures.ts
+export type { Venture } from './ventures';
 
-export function getVentures(): Venture[] {
-  return [
-    {
-      name: 'Paleo Foundation',
-      slug: 'paleo-foundation',
-      url: 'https://paleofoundation.com',
-      role: 'Founder & CEO',
-      tagline: 'Certification standards for Paleo, Keto, Grain-Free, and Heavy Metal Tested products',
-      description: 'For over 15 years, the Paleo Foundation has designed and implemented food certification standards used globally by manufacturers and brands. The Heavy Metal Tested and Certified (HMTc) program establishes category-specific contaminant limits using ALARA-based principles and statistical risk matrices for food, supplements, and personal care products.',
-      status: 'active',
-    },
-    {
-      name: 'Microbiome Medicine',
-      slug: 'microbiome-medicine',
-      url: 'https://microbiomemedicine.com',
-      role: 'Founder & Lead Researcher',
-      tagline: 'Formalizing disease-associated microbiome patterns for clinical translation',
-      description: 'A clinician- and researcher-facing database designed to formalize disease-associated microbiome patterns through Major Microbial Associations (MMAs) and facilitate intervention development using a structured Microbial Shift and Realignment Process (MSRP). The validation framework requires interventions to both restore altered taxa and yield clinical improvement, co-validating the intervention and the underlying microbial signature.',
-      status: 'active',
-    },
-    {
-      name: 'Journal of Food Metallomics',
-      slug: 'journal-of-food-metallomics',
-      url: 'https://microbialmetallomics.com',
-      role: 'Founder & Editor',
-      tagline: 'Integrating trace metal analysis into microbiome and food safety research',
-      description: 'Foundational work introducing microbial metallomics as a critical lens to interpret pathogen virulence, microbial selection pressure, and nutrient-immune interactions in chronic diseases. Research focuses on the differential acquisition, utilization, and detoxification of trace elements among taxa enriched in disease states.',
-      status: 'research',
-    },
-    {
-      name: 'WikiBiome',
-      slug: 'wikibiome',
-      url: 'https://wikibiome.com',
-      role: 'Founder',
-      tagline: 'Open microbiome knowledge platform',
-      description: 'A comprehensive open-access platform for microbiome research, making disease-associated microbiome signatures and microbial data accessible to researchers, clinicians, and the public.',
-      status: 'building',
-    },
-    {
-      name: 'Tinies',
-      slug: 'tinies',
-      url: 'https://tinies.app',
-      role: 'Founder',
-      tagline: 'Connecting animal sanctuaries with sponsors and supporters worldwide',
-      description: 'A platform built from the ground up to connect animal sanctuaries with sponsors and supporters. Born from running Gardens of St. Gertrude, a cat sanctuary in Cyprus caring for 92 cats, Tinies addresses the operational and fundraising challenges that sanctuaries face globally.',
-      status: 'building',
-    },
-    {
-      name: 'Gardens of St. Gertrude',
-      slug: 'gardens-of-st-gertrude',
-      url: 'https://gardensofstgertrude.com',
-      role: 'Founder',
-      tagline: 'A cat sanctuary in Parekklisia, Cyprus',
-      description: 'A cat sanctuary in Parekklisia, Cyprus, caring for 92 cats. Gardens of St. Gertrude provides permanent shelter, veterinary care, and adoption services for stray and abandoned cats in the Limassol district.',
-      status: 'active',
-    },
-  ];
+export function getVentures() {
+  return ventures;
 }
 
 // Format a date string nicely

@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { formatDate, readingTime } from '@/lib/content';
 
 interface ArticleCardProps {
@@ -41,11 +42,13 @@ export default function ArticleCard({
       <article className="group">
         <Link href={`/writing/${slug}`} className="block">
           {coverImage && (
-            <div className="mb-4 overflow-hidden rounded-lg aspect-[16/10]">
-              <img
+            <div className="relative mb-4 overflow-hidden rounded-lg aspect-[16/10]">
+              <Image
                 src={coverImage}
                 alt={title}
-                className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-300"
+                fill
+                className="object-cover group-hover:scale-[1.02] transition-transform duration-300"
+                sizes="(max-width: 768px) 100vw, 50vw"
               />
             </div>
           )}

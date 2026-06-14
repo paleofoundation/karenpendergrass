@@ -5,16 +5,16 @@
 /* ============================================
    FONTS: Newsreader (editorial serif display) + Source Sans 3 (clean body)
    ============================================ */
-@import url('https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,300;1,6..72,400;1,6..72,500&family=Source+Sans+3:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=JetBrains+Mono:wght@400;500&display=swap');
+/* Fonts are self-hosted via next/font (see app/layout.tsx) — no render-blocking @import. */
 
 /* ============================================
    CSS CUSTOM PROPERTIES: Color System & Design Tokens
    ============================================ */
 :root {
   /* Typography */
-  --font-display: 'Newsreader', 'Georgia', serif;
-  --font-body: 'Source Sans 3', 'Helvetica Neue', sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
+  --font-display: var(--font-display-src), 'Newsreader', 'Georgia', serif;
+  --font-body: var(--font-body-src), 'Source Sans 3', 'Helvetica Neue', sans-serif;
+  --font-mono: var(--font-mono-src), 'JetBrains Mono', monospace;
 
   /* Color Palette - Warm Neutrals */
   --color-bg: #fafaf8;
@@ -565,6 +565,20 @@ select:focus {
   outline: none;
   border-color: var(--color-accent);
   box-shadow: 0 0 0 3px rgba(184, 101, 46, 0.1);
+}
+
+/* Keyboard-only focus ring for every interactive element (mouse clicks stay clean) */
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+a:focus-visible,
+button:focus-visible,
+[role='button']:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
 }
 
 /* ============================================

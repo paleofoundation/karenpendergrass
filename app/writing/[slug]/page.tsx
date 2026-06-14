@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { unified } from 'unified';
 import remarkParse from 'remark-parse';
@@ -70,26 +71,28 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       url: ogUrl,
       publishedTime: post.meta.date,
       authors: [authorName],
-      images: [
-        {
-          url: post.meta.coverImage
-            ? `https://karenpendergrass.com${post.meta.coverImage}`
-            : 'https://karenpendergrass.com/images/Karen_Pendergrass.png',
-          width: 1200,
-          height: 630,
-          alt: post.meta.title,
-        },
-      ],
+      // When there's no cover image, fall through to the dynamic
+      // app/writing/[slug]/opengraph-image.tsx card (correct 1200x630).
+      ...(post.meta.coverImage
+        ? {
+            images: [
+              {
+                url: `https://karenpendergrass.com${post.meta.coverImage}`,
+                width: 1200,
+                height: 630,
+                alt: post.meta.title,
+              },
+            ],
+          }
+        : {}),
     },
     twitter: {
       card: 'summary_large_image',
       title: post.meta.title,
       description,
-      images: [
-        post.meta.coverImage
-          ? `https://karenpendergrass.com${post.meta.coverImage}`
-          : 'https://karenpendergrass.com/images/Karen_Pendergrass.png',
-      ],
+      ...(post.meta.coverImage
+        ? { images: [`https://karenpendergrass.com${post.meta.coverImage}`] }
+        : {}),
     },
   };
 }
@@ -209,11 +212,16 @@ export default function ArticlePage({ params }: Props) {
       {/* Cover image */}
       {post.meta.coverImage && (
         <div className="max-w-3xl mx-auto px-6 mt-10 mb-8">
-          <img
-            src={post.meta.coverImage}
-            alt={post.meta.title}
-            className="w-full rounded-lg"
-          />
+          <div className="relative overflow-hidden rounded-lg aspect-[16/9]">
+            <Image
+              src={post.meta.coverImage}
+              alt={post.meta.title}
+              fill
+              className="object-cover"
+              sizes="(max-width: 768px) 100vw, 768px"
+              priority
+            />
+          </div>
         </div>
       )}
 

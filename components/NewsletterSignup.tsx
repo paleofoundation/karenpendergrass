@@ -25,6 +25,7 @@ export default function NewsletterSignup() {
           email,
           subject: 'Newsletter signup',
           message: `Newsletter subscription request from ${email}.`,
+          company: '',
         }),
       });
       if (!res.ok) throw new Error('request failed');
@@ -64,7 +65,7 @@ export default function NewsletterSignup() {
           placeholder="your@email.com"
           required
           disabled={status === 'loading'}
-          className="flex-1 px-3 py-2 text-sm border border-ink/10 rounded-md bg-white focus:outline-none focus:border-accent/40 placeholder:text-ink-muted/50 disabled:opacity-60"
+          className="flex-1 px-3 py-2 text-sm border border-ink/10 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-accent/40 focus:border-accent placeholder:text-ink-muted/50 disabled:opacity-60"
         />
         <button
           type="submit"

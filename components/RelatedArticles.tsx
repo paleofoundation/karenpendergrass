@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { formatDate, readingTime } from '@/lib/content';
 import type { Post } from '@/lib/content';
 
@@ -31,11 +32,13 @@ export default function RelatedArticles({ articles }: RelatedArticlesProps) {
             className="group block"
           >
             {post.meta.coverImage && (
-              <div className="mb-3 overflow-hidden rounded-lg aspect-[16/10]">
-                <img
+              <div className="relative mb-3 overflow-hidden rounded-lg aspect-[16/10]">
+                <Image
                   src={post.meta.coverImage}
                   alt={post.meta.title}
-                  className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-300"
+                  fill
+                  className="object-cover group-hover:scale-[1.02] transition-transform duration-300"
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                 />
               </div>
             )}

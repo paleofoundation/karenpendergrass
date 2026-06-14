@@ -2,8 +2,9 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { usePathname } from 'next/navigation';
+import SocialLinks from './SocialLinks';
 
 const navLinks = [
   { href: '/start', label: 'Start Here' },
@@ -20,6 +21,9 @@ const navLinks = [
 export default function SidebarNav() {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
+
+  const panelRef = useRef<HTMLElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
 
   const toggle = useCallback(() => {
     setIsOpen((prev) => !prev);
@@ -38,10 +42,42 @@ export default function SidebarNav() {
     };
   }, [isOpen]);
 
-  // Close on Escape
+  // Pull the closed panel out of the tab order / AT tree; move focus into it on open.
   useEffect(() => {
+    const panel = panelRef.current;
+    if (!panel) return;
+    if (isOpen) {
+      panel.removeAttribute('inert');
+      panel.querySelector<HTMLElement>('a[href], button')?.focus();
+    } else {
+      panel.setAttribute('inert', '');
+    }
+  }, [isOpen]);
+
+  // Escape to close (returning focus to the trigger) + Tab focus-trap while open.
+  useEffect(() => {
+    if (!isOpen) return;
     const handleKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && isOpen) setIsOpen(false);
+      if (e.key === 'Escape') {
+        setIsOpen(false);
+        triggerRef.current?.focus();
+        return;
+      }
+      if (e.key === 'Tab' && panelRef.current) {
+        const focusables = Array.from(
+          panelRef.current.querySelectorAll<HTMLElement>('a[href], button')
+        );
+        if (focusables.length === 0) return;
+        const firstEl = focusables[0];
+        const lastEl = focusables[focusables.length - 1];
+        if (e.shiftKey && document.activeElement === firstEl) {
+          e.preventDefault();
+          lastEl.focus();
+        } else if (!e.shiftKey && document.activeElement === lastEl) {
+          e.preventDefault();
+          firstEl.focus();
+        }
+      }
     };
     window.addEventListener('keydown', handleKey);
     return () => window.removeEventListener('keydown', handleKey);
@@ -53,6 +89,7 @@ export default function SidebarNav() {
     <>
       {/* ─── Hamburger trigger ─── */}
       <button
+        ref={triggerRef}
         onClick={toggle}
         className="fixed top-7 left-7 z-[1000] w-12 h-12 flex flex-col items-center justify-center gap-[5px] rounded-xl border cursor-pointer transition-all duration-400"
         style={{
@@ -111,6 +148,8 @@ export default function SidebarNav() {
 
       {/* ─── Sidebar ─── */}
       <nav
+        ref={panelRef}
+        aria-hidden={!isOpen}
         className="fixed top-0 left-0 h-dvh z-[950] flex flex-col sm:flex-row overflow-hidden"
         style={{
           width: 'min(480px, 100vw)',
@@ -299,6 +338,18 @@ export default function SidebarNav() {
             >
               hola@karenpendergrass.com
             </a>
+          </div>
+
+          {/* Social */}
+          <div
+            style={{
+              marginTop: '20px',
+              opacity: isOpen ? 1 : 0,
+              transition: 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
+              transitionDelay: isOpen ? '0.65s' : '0s',
+            }}
+          >
+            <SocialLinks linkClassName="text-white/40 hover:text-white" />
           </div>
 
           {/* Status dot */}

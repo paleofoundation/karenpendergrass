@@ -1,8 +1,27 @@
 import type { Metadata } from 'next';
+import { Newsreader, Source_Sans_3, JetBrains_Mono } from 'next/font/google';
 import './globals.css';
 import SidebarNav from '@/components/SidebarNav';
 import Footer from '@/components/Footer';
 import { PersonSchema } from '@/components/JsonLd';
+
+const newsreader = Newsreader({
+  subsets: ['latin'],
+  style: ['normal', 'italic'],
+  display: 'swap',
+  variable: '--font-display-src',
+});
+const sourceSans = Source_Sans_3({
+  subsets: ['latin'],
+  style: ['normal', 'italic'],
+  display: 'swap',
+  variable: '--font-body-src',
+});
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-mono-src',
+});
 
 export const metadata: Metadata = {
   title: {
@@ -39,21 +58,12 @@ export const metadata: Metadata = {
     siteName: 'Karen Pendergrass',
     locale: 'en_US',
     type: 'website',
-    images: [
-      {
-        url: '/images/Karen_Pendergrass.png',
-        width: 1200,
-        height: 630,
-        alt: 'Karen Pendergrass',
-      },
-    ],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Karen Pendergrass',
     description:
       'Standards developer, microbiome signatures researcher, and founder at the intersection of microbiome science, translational medicine, and regulatory innovation.',
-    images: ['/images/Karen_Pendergrass.png'],
   },
   authors: [{ name: 'Karen Pendergrass', url: 'https://karenpendergrass.com' }],
   robots: {
@@ -68,7 +78,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" className={`${newsreader.variable} ${sourceSans.variable} ${jetbrainsMono.variable}`}>
       <body className="min-h-screen flex flex-col">
         <a
           href="#main-content"

@@ -11,27 +11,82 @@ import { NextResponse } from 'next/server';
  *
  * If Resend isn't configured yet, this falls back to a simple JSON log
  * so the form still "works" during development.
+ *
+ * Abuse protection (this is an unauthenticated public endpoint):
+ *  - honeypot field ("company") silently drops bots
+ *  - per-IP sliding-window rate limit
+ *  - field length caps to reject oversized payloads
  */
+
+export const runtime = 'nodejs';
 
 interface ContactPayload {
   name: string;
   email: string;
   subject: string;
   message: string;
+  company?: string; // honeypot — real users never fill this
 }
 
 const DESTINATION_EMAIL = 'karen@paleofoundation.com';
 const FROM_ADDRESS = 'Karen Pendergrass Website <noreply@karenpendergrass.com>';
 
+// ─── Simple in-memory per-IP rate limiter ───
+// Note: on serverless this is per-warm-instance, not globally shared. It blunts
+// burst abuse from a single source; pair with a Redis/KV limiter for hard global
+// guarantees if traffic grows.
+const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000; // 10 minutes
+const RATE_LIMIT_MAX = 5;
+const hits = new Map<string, number[]>();
+
+function isRateLimited(ip: string): boolean {
+  const now = Date.now();
+  const recent = (hits.get(ip) ?? []).filter((t) => now - t < RATE_LIMIT_WINDOW_MS);
+  recent.push(now);
+  hits.set(ip, recent);
+  return recent.length > RATE_LIMIT_MAX;
+}
+
+const MAX_FIELD = 1000;
+const MAX_MESSAGE = 5000;
+
 export async function POST(request: Request) {
   try {
+    const ip =
+      request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
+
+    if (isRateLimited(ip)) {
+      return NextResponse.json(
+        { error: 'Too many requests. Please try again later.' },
+        { status: 429 }
+      );
+    }
+
     const body: ContactPayload = await request.json();
-    const { name, email, subject, message } = body;
+    const { name, email, subject, message, company } = body;
+
+    // Honeypot: a filled "company" field means a bot. Pretend success, send nothing.
+    if (company) {
+      return NextResponse.json({ success: true });
+    }
 
     // Basic validation
     if (!name || !email || !subject || !message) {
       return NextResponse.json(
         { error: 'All fields are required' },
+        { status: 400 }
+      );
+    }
+
+    // Length caps
+    if (
+      name.length > MAX_FIELD ||
+      email.length > MAX_FIELD ||
+      subject.length > MAX_FIELD ||
+      message.length > MAX_MESSAGE
+    ) {
+      return NextResponse.json(
+        { error: 'Submission too large' },
         { status: 400 }
       );
     }

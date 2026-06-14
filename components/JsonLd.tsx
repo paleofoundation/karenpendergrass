@@ -1,3 +1,5 @@
+import { ventures } from '@/lib/ventures';
+
 // Person schema for Karen Pendergrass - appears on every page via layout
 export function PersonSchema() {
   const schema = {
@@ -35,6 +37,9 @@ export function PersonSchema() {
     ],
     sameAs: [
       'https://orcid.org/0000-0002-2348-7259',
+      'https://www.linkedin.com/in/karenpendergras/',
+      'https://x.com/PendergrassKP',
+      'https://www.instagram.com/5wordsorlesskp/',
       'https://paleofoundation.com',
       'https://microbiomemedicine.com',
       'https://microbialmetallomics.com',
@@ -42,50 +47,14 @@ export function PersonSchema() {
       'https://tinies.app',
       'https://gardensofstgertrude.com',
       'https://heavymetaltested.com',
+      'https://heavymetalindex.com',
     ],
-    founder: [
-      {
-        '@type': 'Organization',
-        name: 'Paleo Foundation',
-        url: 'https://paleofoundation.com',
-        description:
-          'Food certification standards organization for Paleo, Keto, Grain-Free, and Heavy Metal Tested & Certified (HMTc) programs.',
-      },
-      {
-        '@type': 'Organization',
-        name: 'Microbiome Medicine',
-        url: 'https://microbiomemedicine.com',
-        description:
-          'Clinician-facing database formalizing disease-associated microbiome patterns through Major Microbial Associations (MMAs).',
-      },
-      {
-        '@type': 'Organization',
-        name: 'Journal of Food Metallomics',
-        url: 'https://microbialmetallomics.com',
-        description:
-          'Research publication integrating trace metal analysis into microbiome and food safety research.',
-      },
-      {
-        '@type': 'Organization',
-        name: 'WikiBiome',
-        url: 'https://wikibiome.com',
-        description:
-          'Open microbiome knowledge platform making disease-associated microbiome signatures and microbial data accessible to researchers, clinicians, and the public.',
-      },
-      {
-        '@type': 'Organization',
-        name: 'Tinies',
-        url: 'https://tinies.app',
-        description:
-          'Platform connecting animal sanctuaries with sponsors and supporters worldwide.',
-      },
-      {
-        '@type': 'Organization',
-        name: 'Gardens of St. Gertrude',
-        url: 'https://gardensofstgertrude.com',
-        description: 'Cat sanctuary in Parekklisia, Cyprus, caring for 92 cats.',
-      },
-    ],
+    founder: ventures.map((v) => ({
+      '@type': 'Organization',
+      name: v.name,
+      url: v.url,
+      description: v.schemaDescription,
+    })),
     address: {
       '@type': 'PostalAddress',
       addressLocality: 'Parekklisia',

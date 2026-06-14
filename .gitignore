@@ -2,3 +2,6 @@ node_modules
 .next
 tsconfig.tsbuildinfo
 .DS_Store
+
+# Stale WordPress-era scratch tree (kept locally, not part of the app)
+KarenPendergrass.com/

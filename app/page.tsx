@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 import ScrollReveal from '@/components/ScrollReveal';
+import { ventures } from '@/lib/ventures';
 
 export const metadata: Metadata = {
   title: 'Karen Pendergrass — Standards Developer & Microbiome Researcher',
@@ -11,45 +12,6 @@ export const metadata: Metadata = {
     canonical: '/',
   },
 };
-
-const ventureRows: { name: string; url: string; description: string; tag: string }[] = [
-  {
-    name: 'Paleo Foundation',
-    url: 'https://paleofoundation.com',
-    description: 'Certification standards for Paleo, Keto, Grain-Free, HMTc',
-    tag: 'Standards',
-  },
-  {
-    name: 'Microbiome Medicine',
-    url: 'https://microbiomemedicine.com',
-    description: 'Disease-associated microbiome patterns for clinical translation',
-    tag: 'Research',
-  },
-  {
-    name: 'Journal of Food Metallomics',
-    url: 'https://microbialmetallomics.com',
-    description: 'Trace metal analysis meets microbiome and food safety',
-    tag: 'Publication',
-  },
-  {
-    name: 'WikiBiome',
-    url: 'https://wikibiome.com',
-    description: 'Open microbiome knowledge platform for researchers and clinicians',
-    tag: 'Platform',
-  },
-  {
-    name: 'Tinies',
-    url: 'https://tinies.app',
-    description: 'Connecting animal sanctuaries with sponsors worldwide',
-    tag: 'Social Impact',
-  },
-  {
-    name: 'Gardens of St. Gertrude',
-    url: 'https://gardensofstgertrude.com',
-    description: 'Cat sanctuary in Parekklisia, Cyprus. 92 cats.',
-    tag: 'Sanctuary',
-  },
-];
 
 const currentArticles = [
   {
@@ -231,7 +193,6 @@ export default function HomePage() {
                     alt="Karen Pendergrass"
                     fill
                     sizes="(max-width: 768px) 100vw, 40vw"
-                    quality={100}
                     className="object-cover object-top"
                     priority
                   />
@@ -472,37 +433,75 @@ export default function HomePage() {
           </ScrollReveal>
 
           <div style={{ borderTop: '1px solid var(--color-border)' }}>
-            {ventureRows.map((row, i) => (
+            {ventures.map((row, i) => (
               <ScrollReveal key={row.name} animation="slide-up" delay={i * 60}>
-                <a
-                  href={row.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-6 py-5 no-underline transition-colors duration-200"
-                  style={{ borderBottom: '1px solid var(--color-border-light)' }}
-                >
-                  <span
-                    className="text-[10px] font-mono uppercase tracking-[0.15em] shrink-0 w-20 hidden sm:block"
-                    style={{ color: 'var(--color-ink-muted)' }}
+                <div style={{ borderBottom: '1px solid var(--color-border-light)' }}>
+                  <a
+                    href={row.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={`group flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-6 pt-5 ${
+                      row.subLinks ? 'pb-3' : 'pb-5'
+                    } no-underline transition-colors duration-200`}
                   >
-                    {row.tag}
-                  </span>
-                  <span
-                    className="font-medium text-lg transition-colors duration-200 group-hover:text-amber-700"
-                    style={{ fontFamily: 'var(--font-display)', color: 'var(--color-ink)' }}
-                  >
-                    {row.name}
-                  </span>
-                  <span className="text-sm flex-1 hidden md:block" style={{ color: 'var(--color-ink-muted)' }}>
-                    {row.description}
-                  </span>
-                  <span
-                    className="text-lg shrink-0 transition-transform duration-200 group-hover:translate-x-1"
-                    style={{ color: 'var(--color-ink-muted)' }}
-                  >
-                    ↗
-                  </span>
-                </a>
+                    <span
+                      className="text-[10px] font-mono uppercase tracking-[0.15em] shrink-0 w-20 hidden sm:block"
+                      style={{ color: 'var(--color-ink-muted)' }}
+                    >
+                      {row.tag}
+                    </span>
+                    <span
+                      className="font-medium text-lg transition-colors duration-200 group-hover:text-amber-700"
+                      style={{ fontFamily: 'var(--font-display)', color: 'var(--color-ink)' }}
+                    >
+                      {row.name}
+                    </span>
+                    <span className="text-sm flex-1 hidden md:block" style={{ color: 'var(--color-ink-muted)' }}>
+                      {row.homeDescription}
+                    </span>
+                    <span
+                      className="text-lg shrink-0 transition-transform duration-200 group-hover:translate-x-1"
+                      style={{ color: 'var(--color-ink-muted)' }}
+                    >
+                      ↗
+                    </span>
+                  </a>
+
+                  {row.subLinks && (
+                    <div className="pb-5 pl-1 sm:pl-[6.5rem]">
+                      <div
+                        className="flex flex-col gap-2.5 border-l pl-4"
+                        style={{ borderColor: 'var(--color-border)' }}
+                      >
+                        {row.subLinks.map((sub) => (
+                          <a
+                            key={sub.name}
+                            href={sub.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="group flex items-center gap-3 no-underline transition-colors duration-200"
+                          >
+                            <span
+                              className="font-medium text-sm transition-colors duration-200 group-hover:text-amber-700"
+                              style={{ fontFamily: 'var(--font-display)', color: 'var(--color-ink)' }}
+                            >
+                              {sub.name}
+                            </span>
+                            <span className="text-xs flex-1 hidden md:block" style={{ color: 'var(--color-ink-muted)' }}>
+                              {sub.note}
+                            </span>
+                            <span
+                              className="text-sm shrink-0 transition-transform duration-200 group-hover:translate-x-1"
+                              style={{ color: 'var(--color-ink-muted)' }}
+                            >
+                              ↗
+                            </span>
+                          </a>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
               </ScrollReveal>
             ))}
           </div>

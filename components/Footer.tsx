@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import SocialLinks from './SocialLinks';
 
 const footerSections = [
   {
@@ -61,6 +62,7 @@ export default function Footer() {
             Standards developer, microbiome signatures researcher, and founder.
             Based in Cyprus. Available for board and advisory roles.
           </p>
+          <SocialLinks className="mt-7" linkClassName="text-white/50 hover:text-white" />
         </div>
 
         {/* Main Grid Content */}

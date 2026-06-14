@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
+import SocialLinks from './SocialLinks';
 
 const navLinks = [
   { href: '/about', label: 'About' },
@@ -129,6 +130,10 @@ export default function Navigation() {
                 </li>
               ))}
             </ul>
+
+            <div className="mt-14 pt-8 border-t border-neutral-200">
+              <SocialLinks linkClassName="text-neutral-500 hover:text-amber-600" />
+            </div>
           </div>
         </div>
       )}

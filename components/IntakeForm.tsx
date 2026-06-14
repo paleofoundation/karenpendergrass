@@ -84,74 +84,79 @@ export default function IntakeForm() {
         determine fit and define deliverables.
       </p>
 
-      <div className="flex flex-col gap-4">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label className="block text-xs font-medium text-ink-muted mb-1.5">
+            <label htmlFor="intake-name" className="block text-xs font-medium text-ink-muted mb-1.5">
               Your name *
             </label>
             <input
               type="text"
+              id="intake-name"
               name="name"
               required
               value={formData.name}
               onChange={handleChange}
-              className="w-full px-3 py-2.5 text-sm border border-ink/10 rounded-md bg-white focus:outline-none focus:border-accent/40"
+              className="w-full px-3 py-2.5 text-sm border border-ink/10 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-accent/40 focus:border-accent"
             />
           </div>
           <div>
-            <label className="block text-xs font-medium text-ink-muted mb-1.5">
+            <label htmlFor="intake-email" className="block text-xs font-medium text-ink-muted mb-1.5">
               Email *
             </label>
             <input
               type="email"
+              id="intake-email"
               name="email"
               required
               value={formData.email}
               onChange={handleChange}
-              className="w-full px-3 py-2.5 text-sm border border-ink/10 rounded-md bg-white focus:outline-none focus:border-accent/40"
+              className="w-full px-3 py-2.5 text-sm border border-ink/10 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-accent/40 focus:border-accent"
             />
           </div>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label className="block text-xs font-medium text-ink-muted mb-1.5">
+            <label htmlFor="intake-organization" className="block text-xs font-medium text-ink-muted mb-1.5">
               Organization *
             </label>
             <input
               type="text"
+              id="intake-organization"
               name="organization"
               required
               value={formData.organization}
               onChange={handleChange}
-              className="w-full px-3 py-2.5 text-sm border border-ink/10 rounded-md bg-white focus:outline-none focus:border-accent/40"
+              className="w-full px-3 py-2.5 text-sm border border-ink/10 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-accent/40 focus:border-accent"
             />
           </div>
           <div>
-            <label className="block text-xs font-medium text-ink-muted mb-1.5">
+            <label htmlFor="intake-role" className="block text-xs font-medium text-ink-muted mb-1.5">
               Your role
             </label>
             <input
               type="text"
+              id="intake-role"
               name="role"
               value={formData.role}
               onChange={handleChange}
-              className="w-full px-3 py-2.5 text-sm border border-ink/10 rounded-md bg-white focus:outline-none focus:border-accent/40"
+              className="w-full px-3 py-2.5 text-sm border border-ink/10 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-accent/40 focus:border-accent"
             />
           </div>
         </div>
 
         <div>
-          <label className="block text-xs font-medium text-ink-muted mb-1.5">
+          <label htmlFor="intake-engagement-type" className="block text-xs font-medium text-ink-muted mb-1.5">
             What are you interested in? *
           </label>
           <select
+            id="intake-engagement-type"
             name="engagementType"
             required
             value={formData.engagementType}
             onChange={handleChange}
-            className="w-full px-3 py-2.5 text-sm border border-ink/10 rounded-md bg-white focus:outline-none focus:border-accent/40"
+            className="w-full px-3 py-2.5 text-sm border border-ink/10 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-accent/40 focus:border-accent"
           >
             <option value="">Select engagement type</option>
             {engagementTypes.map((type) => (
@@ -163,27 +168,27 @@ export default function IntakeForm() {
         </div>
 
         <div>
-          <label className="block text-xs font-medium text-ink-muted mb-1.5">
+          <label htmlFor="intake-message" className="block text-xs font-medium text-ink-muted mb-1.5">
             Tell me more about what you need
           </label>
           <textarea
+            id="intake-message"
             name="message"
             rows={4}
             value={formData.message}
             onChange={handleChange}
             placeholder="What condition or problem are you focused on? What outcome would make this engagement successful?"
-            className="w-full px-3 py-2.5 text-sm border border-ink/10 rounded-md bg-white focus:outline-none focus:border-accent/40 placeholder:text-ink-muted/50 resize-none"
+            className="w-full px-3 py-2.5 text-sm border border-ink/10 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-accent/40 focus:border-accent placeholder:text-ink-muted/50 resize-none"
           />
         </div>
 
         <button
-          type="button"
-          onClick={handleSubmit}
+          type="submit"
           className="self-start px-6 py-2.5 bg-ink text-paper text-sm font-medium rounded-md hover:bg-ink-light transition-colors"
         >
           Send inquiry
         </button>
-      </div>
+      </form>
     </div>
   );
 }
