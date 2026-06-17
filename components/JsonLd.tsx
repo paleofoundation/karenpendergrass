@@ -102,13 +102,20 @@ export function ArticleSchema({
   date,
   excerpt,
   coverImage,
+  author,
 }: {
   title: string;
   slug: string;
   date: string;
   excerpt: string;
   coverImage?: string;
+  /** Overrides the article author (defaults to Karen Pendergrass). */
+  author?: { name: string; url?: string };
 }) {
+  const articleAuthor = author
+    ? { '@type': 'Person', name: author.name, ...(author.url ? { url: author.url } : {}) }
+    : { '@type': 'Person', name: 'Karen Pendergrass', url: 'https://karenpendergrass.com' };
+
   const schema = {
     '@context': 'https://schema.org',
     '@type': 'Article',
@@ -116,11 +123,7 @@ export function ArticleSchema({
     url: `https://karenpendergrass.com/writing/${slug}`,
     datePublished: date,
     dateModified: date,
-    author: {
-      '@type': 'Person',
-      name: 'Karen Pendergrass',
-      url: 'https://karenpendergrass.com',
-    },
+    author: articleAuthor,
     publisher: {
       '@type': 'Person',
       name: 'Karen Pendergrass',

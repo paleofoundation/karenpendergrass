@@ -6,14 +6,25 @@ interface CitationBlockProps {
   title: string;
   date: string;
   slug: string;
+  /** Citation author segment (defaults to "Pendergrass, K."). */
+  author?: string;
+  /** Optional "Directed by" attribution appended after the title. */
+  directedBy?: string;
 }
 
-export default function CitationBlock({ title, date, slug }: CitationBlockProps) {
+export default function CitationBlock({
+  title,
+  date,
+  slug,
+  author = 'Pendergrass, K.',
+  directedBy,
+}: CitationBlockProps) {
   const [copied, setCopied] = useState(false);
   const year = new Date(date).getFullYear();
   const url = `https://karenpendergrass.com/writing/${slug}`;
 
-  const citation = `Pendergrass, K. (${year}). ${title}. karenpendergrass.com. ${url}`;
+  const direction = directedBy ? ` Directed by ${directedBy}.` : '';
+  const citation = `${author} (${year}). ${title}.${direction} karenpendergrass.com. ${url}`;
 
   const handleCopy = async () => {
     try {
