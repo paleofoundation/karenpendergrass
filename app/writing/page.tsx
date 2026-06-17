@@ -16,6 +16,7 @@ const categoryLabels: Record<string, string> = {
   'microbiome-research': 'Microbiome Research',
   analysis: 'Analysis',
   essays: 'Essays',
+  'essays-by-claude': 'Essays by Claude',
 };
 
 export default function WritingPage() {

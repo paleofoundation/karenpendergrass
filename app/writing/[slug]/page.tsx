@@ -101,11 +101,16 @@ const categoryLabels: Record<string, string> = {
   'microbiome-research': 'Microbiome Research',
   analysis: 'Analysis',
   essays: 'Essays',
+  'essays-by-claude': 'Essays by Claude',
 };
 
 export default function ArticlePage({ params }: Props) {
   const post = getPostBySlug(params.slug);
   if (!post) notFound();
+
+  // Essays in the "Essays by Claude" section are authored by Claude, written
+  // at Karen's direction. Karen remains the site owner / publisher.
+  const byClaude = post.meta.category === 'essays-by-claude';
 
   const allPosts = getAllPosts();
   const currentIndex = allPosts.findIndex((p) => p.meta.slug === params.slug);
@@ -159,6 +164,7 @@ export default function ArticlePage({ params }: Props) {
             .slice(0, 160)
         }
         coverImage={post.meta.coverImage}
+        author={byClaude ? { name: 'Claude (Anthropic)' } : undefined}
       />
 
       {/* Article header — wide editorial */}
@@ -261,6 +267,8 @@ export default function ArticlePage({ params }: Props) {
           title={post.meta.title}
           date={post.meta.date}
           slug={post.meta.slug}
+          author={byClaude ? 'Claude (Anthropic)' : undefined}
+          directedBy={byClaude ? 'K. Pendergrass' : undefined}
         />
       </div>
 
@@ -271,7 +279,7 @@ export default function ArticlePage({ params }: Props) {
 
       {/* Author bio */}
       <div className="max-w-3xl mx-auto px-6 pb-10">
-        <AuthorBio />
+        <AuthorBio variant={byClaude ? 'claude' : 'karen'} />
       </div>
 
       {/* Related articles */}
