@@ -3,7 +3,7 @@ import { getAllPosts } from '@/lib/content';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const posts = getAllPosts();
-  const baseUrl = 'https://karenpendergrass.com';
+  const baseUrl = 'https://www.karenpendergrass.com';
 
   const staticPages: MetadataRoute.Sitemap = [
     { url: baseUrl, lastModified: new Date(), changeFrequency: 'weekly', priority: 1 },

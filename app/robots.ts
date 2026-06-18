@@ -64,6 +64,6 @@ export default function robots(): MetadataRoute.Robots {
         allow: '/',
       },
     ],
-    sitemap: 'https://karenpendergrass.com/sitemap.xml',
+    sitemap: 'https://www.karenpendergrass.com/sitemap.xml',
   };
 }
