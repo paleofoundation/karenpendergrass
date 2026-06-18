@@ -21,7 +21,7 @@ export default function CitationBlock({
 }: CitationBlockProps) {
   const [copied, setCopied] = useState(false);
   const year = new Date(date).getFullYear();
-  const url = `https://karenpendergrass.com/writing/${slug}`;
+  const url = `https://www.karenpendergrass.com/writing/${slug}`;
 
   const direction = directedBy ? ` Directed by ${directedBy}.` : '';
   const citation = `${author} (${year}). ${title}.${direction} karenpendergrass.com. ${url}`;

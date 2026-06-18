@@ -6,7 +6,7 @@ export function PersonSchema() {
     '@context': 'https://schema.org',
     '@type': 'Person',
     name: 'Karen Pendergrass',
-    url: 'https://karenpendergrass.com',
+    url: 'https://www.karenpendergrass.com',
     jobTitle:
       'Standards Developer and Microbiome Signatures Researcher',
     description:
@@ -77,13 +77,13 @@ export function WebSiteSchema() {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
     name: 'Karen Pendergrass',
-    url: 'https://karenpendergrass.com',
+    url: 'https://www.karenpendergrass.com',
     description:
       'Standards developer, microbiome signatures researcher, and founder at the intersection of microbiome science, translational medicine, and regulatory innovation.',
     author: {
       '@type': 'Person',
       name: 'Karen Pendergrass',
-      url: 'https://karenpendergrass.com',
+      url: 'https://www.karenpendergrass.com',
     },
   };
 
@@ -114,28 +114,28 @@ export function ArticleSchema({
 }) {
   const articleAuthor = author
     ? { '@type': 'Person', name: author.name, ...(author.url ? { url: author.url } : {}) }
-    : { '@type': 'Person', name: 'Karen Pendergrass', url: 'https://karenpendergrass.com' };
+    : { '@type': 'Person', name: 'Karen Pendergrass', url: 'https://www.karenpendergrass.com' };
 
   const schema = {
     '@context': 'https://schema.org',
     '@type': 'Article',
     headline: title,
-    url: `https://karenpendergrass.com/writing/${slug}`,
+    url: `https://www.karenpendergrass.com/writing/${slug}`,
     datePublished: date,
     dateModified: date,
     author: articleAuthor,
     publisher: {
       '@type': 'Person',
       name: 'Karen Pendergrass',
-      url: 'https://karenpendergrass.com',
+      url: 'https://www.karenpendergrass.com',
     },
     description: excerpt || title,
     ...(coverImage
-      ? { image: `https://karenpendergrass.com${coverImage}` }
+      ? { image: `https://www.karenpendergrass.com${coverImage}` }
       : {}),
     mainEntityOfPage: {
       '@type': 'WebPage',
-      '@id': `https://karenpendergrass.com/writing/${slug}`,
+      '@id': `https://www.karenpendergrass.com/writing/${slug}`,
     },
   };
 
@@ -163,18 +163,18 @@ export function FrameworkSchema({
     '@context': 'https://schema.org',
     '@type': 'DefinedTerm',
     name,
-    url: `https://karenpendergrass.com/frameworks/${slug}`,
+    url: `https://www.karenpendergrass.com/frameworks/${slug}`,
     description,
     ...(alternateName ? { alternateName } : {}),
     inDefinedTermSet: {
       '@type': 'DefinedTermSet',
       name: 'Karen Pendergrass Research Frameworks',
-      url: 'https://karenpendergrass.com/frameworks',
+      url: 'https://www.karenpendergrass.com/frameworks',
     },
     creator: {
       '@type': 'Person',
       name: 'Karen Pendergrass',
-      url: 'https://karenpendergrass.com',
+      url: 'https://www.karenpendergrass.com',
     },
   };
 
@@ -192,13 +192,13 @@ export function AdvisorySchema() {
     '@context': 'https://schema.org',
     '@type': 'ProfessionalService',
     name: 'Karen Pendergrass Advisory & Board Services',
-    url: 'https://karenpendergrass.com/advisory',
+    url: 'https://www.karenpendergrass.com/advisory',
     description:
       'Board advisory services, consulting, and expert guidance in microbiome science, food safety certification, heavy metal risk assessment, and AI-first operations design.',
     provider: {
       '@type': 'Person',
       name: 'Karen Pendergrass',
-      url: 'https://karenpendergrass.com',
+      url: 'https://www.karenpendergrass.com',
     },
     areaServed: 'Worldwide',
     hasOfferCatalog: {
