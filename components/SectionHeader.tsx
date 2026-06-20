@@ -12,7 +12,7 @@ export default function SectionHeader({ label, title, description }: SectionHead
       {label && (
         <p
           className="text-xs font-semibold uppercase tracking-[0.2em] mb-4"
-          style={{ color: 'var(--color-accent)' }}
+          style={{ color: 'var(--color-accent-dark)' }}
         >
           {label}
         </p>

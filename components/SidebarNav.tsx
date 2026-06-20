@@ -98,7 +98,7 @@ export default function SidebarNav() {
           backdropFilter: 'blur(12px)',
           WebkitBackdropFilter: 'blur(12px)',
           boxShadow: isOpen
-            ? '0 0 30px rgba(184,101,46,0.15)'
+            ? '0 0 30px rgba(var(--color-accent-rgb),0.15)'
             : '0 2px 8px rgba(0,0,0,0.04)',
         }}
         aria-label={isOpen ? 'Close navigation' : 'Open navigation'}
@@ -153,7 +153,7 @@ export default function SidebarNav() {
         className="fixed top-0 left-0 h-dvh z-[950] flex flex-col sm:flex-row overflow-hidden"
         style={{
           width: 'min(480px, 100vw)',
-          background: '#0a0a09',
+          background: '#0f2030',
           transform: isOpen ? 'translateX(0)' : 'translateX(-100%)',
           transition: 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
         }}
@@ -178,7 +178,7 @@ export default function SidebarNav() {
           <div
             className="absolute inset-0 pointer-events-none mix-blend-overlay"
             style={{
-              background: 'linear-gradient(180deg, transparent 0%, rgba(184,101,46,0.03) 50%, transparent 100%)',
+              background: 'linear-gradient(180deg, transparent 0%, rgba(var(--color-accent-rgb),0.03) 50%, transparent 100%)',
               backgroundSize: '100% 4px',
               animation: 'sidebar-scanlines 8s linear infinite',
             }}
@@ -187,14 +187,14 @@ export default function SidebarNav() {
           <div
             className="absolute bottom-0 left-0 right-0 h-[40%] pointer-events-none z-[2] sm:block hidden"
             style={{
-              background: 'linear-gradient(to top, #0a0a09 0%, transparent 100%)',
+              background: 'linear-gradient(to top, #0f2030 0%, transparent 100%)',
             }}
           />
           {/* Right edge fade for desktop */}
           <div
             className="absolute top-0 bottom-0 right-0 w-[30%] pointer-events-none z-[2] hidden sm:block"
             style={{
-              background: 'linear-gradient(to left, #0a0a09 0%, transparent 100%)',
+              background: 'linear-gradient(to left, #0f2030 0%, transparent 100%)',
             }}
           />
         </div>
@@ -259,7 +259,7 @@ export default function SidebarNav() {
                       height: '60%',
                       transform: 'translateY(-50%) scaleY(0)',
                       background: 'var(--color-accent)',
-                      boxShadow: '0 0 8px rgba(184,101,46,0.15)',
+                      boxShadow: '0 0 8px rgba(var(--color-accent-rgb),0.15)',
                     }}
                   />
                   {/* Active indicator */}
@@ -270,7 +270,7 @@ export default function SidebarNav() {
                         height: '60%',
                         transform: 'translateY(-50%)',
                         background: 'var(--color-accent)',
-                        boxShadow: '0 0 8px rgba(184,101,46,0.3)',
+                        boxShadow: '0 0 8px rgba(var(--color-accent-rgb),0.3)',
                       }}
                     />
                   )}
@@ -308,7 +308,7 @@ export default function SidebarNav() {
               onClick={() => setIsOpen(false)}
               className="group inline-flex items-center gap-2.5 px-5 py-3 rounded-lg text-white transition-all duration-300 hover:-translate-y-0.5"
               style={{
-                background: 'linear-gradient(135deg, var(--color-accent), rgba(184,101,46,0.8))',
+                background: 'linear-gradient(135deg, var(--color-accent), rgba(var(--color-accent-rgb),0.8))',
                 fontFamily: 'var(--font-display)',
                 fontSize: '0.9rem',
                 fontWeight: 500,
@@ -357,7 +357,7 @@ export default function SidebarNav() {
             className="absolute bottom-7 right-7 w-1.5 h-1.5 rounded-full"
             style={{
               background: 'var(--color-accent)',
-              boxShadow: '0 0 8px rgba(184,101,46,0.15)',
+              boxShadow: '0 0 8px rgba(var(--color-accent-rgb),0.15)',
               animation: 'sidebar-pulse 3s ease-in-out infinite',
             }}
           />

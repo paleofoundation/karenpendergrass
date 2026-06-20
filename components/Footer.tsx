@@ -38,7 +38,7 @@ const footerSections = [
 
 export default function Footer() {
   return (
-    <footer className="relative bg-[#111110] text-white overflow-hidden">
+    <footer className="relative bg-[var(--color-ink-deep)] text-white overflow-hidden">
       {/* Decorative grid accent — subtle but visible */}
       <div
         className="absolute inset-0 pointer-events-none"

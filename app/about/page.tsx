@@ -23,7 +23,7 @@ export default function AboutPage() {
         <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-10">
           <p
             className="text-xs font-semibold uppercase tracking-[0.2em] mb-4"
-            style={{ color: 'var(--color-accent)' }}
+            style={{ color: 'var(--color-accent-dark)' }}
           >
             About
           </p>

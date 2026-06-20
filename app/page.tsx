@@ -77,23 +77,24 @@ export default function HomePage() {
           ═══════════════════════════════════════════ */}
       <section className="relative min-h-[100svh] flex items-center overflow-hidden">
         {/* VISIBLE graph paper grid */}
-        <div className="graph-paper-overlay absolute inset-0" />
+        <div className="graph-paper-overlay absolute inset-0" aria-hidden="true" />
 
         {/* Decorative crosshair marks */}
-        <div className="absolute top-20 right-[20%] w-0 h-0 hidden lg:block">
+        <div className="absolute top-20 right-[20%] w-0 h-0 hidden lg:block" aria-hidden="true">
           <div className="relative">
-            <span className="absolute -translate-x-1/2 -translate-y-1/2 text-[10px] text-amber-700/30 select-none">+</span>
+            <span className="absolute -translate-x-1/2 -translate-y-1/2 text-[10px] text-[#faaa1f]/40 select-none">+</span>
           </div>
         </div>
-        <div className="absolute bottom-32 left-[15%] w-0 h-0 hidden lg:block">
+        <div className="absolute bottom-32 left-[15%] w-0 h-0 hidden lg:block" aria-hidden="true">
           <div className="relative">
-            <span className="absolute -translate-x-1/2 -translate-y-1/2 text-[10px] text-amber-700/30 select-none">+</span>
+            <span className="absolute -translate-x-1/2 -translate-y-1/2 text-[10px] text-[#faaa1f]/40 select-none">+</span>
           </div>
         </div>
 
         {/* Vertical accent line */}
         <div
           className="absolute top-0 bottom-0 hidden lg:block"
+          aria-hidden="true"
           style={{ left: 'calc(50% + 80px)', width: '1px', background: 'linear-gradient(to bottom, transparent, var(--color-accent), transparent)', opacity: 0.15 }}
         />
 
@@ -103,11 +104,11 @@ export default function HomePage() {
             <div className="order-2 lg:order-1 lg:col-span-7 max-w-2xl">
               {/* Decorative index number */}
               <div className="flex items-center gap-4 mb-8">
-                <span className="text-[11px] font-mono text-amber-700/50 tracking-wider">01</span>
-                <span className="block w-12 h-px bg-amber-700/30" />
+                <span className="text-[11px] font-mono text-[#faaa1f]/60 tracking-wider">01</span>
+                <span className="block w-12 h-px bg-[#faaa1f]/40" />
                 <span
                   className="text-[11px] font-semibold uppercase tracking-[0.2em]"
-                  style={{ color: 'var(--color-accent)' }}
+                  style={{ color: 'var(--color-accent-dark)' }}
                 >
                   Standards · Research · Frameworks
                 </span>
@@ -121,7 +122,7 @@ export default function HomePage() {
                 <br className="hidden md:block" />{' '}
                 that become the standard
                 <br className="hidden md:block" />{' '}
-                <span style={{ color: 'var(--color-accent)' }}>before there&apos;s a market.</span>
+                <span style={{ color: 'var(--color-accent-dark)' }}>before there&apos;s a market.</span>
               </h1>
 
               <blockquote
@@ -179,12 +180,12 @@ export default function HomePage() {
             <div className="order-1 lg:order-2 lg:col-span-5 relative">
               <div className="relative w-full max-w-sm mx-auto lg:max-w-none lg:ml-auto">
                 {/* Geometric frame accent */}
-                <div className="absolute -top-4 -right-4 w-full h-full rounded border border-amber-700/15 hidden lg:block" />
-                <div className="absolute -top-8 -right-8 w-24 h-24 border border-amber-700/10 rounded-sm hidden lg:block" />
+                <div className="absolute -top-4 -right-4 w-full h-full rounded border border-[#faaa1f]/25 hidden lg:block" />
+                <div className="absolute -top-8 -right-8 w-24 h-24 border border-[#faaa1f]/20 rounded-sm hidden lg:block" />
 
                 {/* Coordinate label */}
                 <div className="absolute -top-6 left-0 hidden lg:flex items-center gap-2">
-                  <span className="text-[9px] font-mono text-amber-700/40 tracking-wider">34.6847°N, 33.1442°E</span>
+                  <span className="text-[9px] font-mono text-[#faaa1f]/50 tracking-wider">34.6847°N, 33.1442°E</span>
                 </div>
 
                 <div className="relative aspect-[3/4] overflow-hidden rounded">
@@ -208,7 +209,7 @@ export default function HomePage() {
         </div>
 
         {/* Scroll indicator */}
-        <div className="absolute bottom-8 left-12 flex items-center gap-3 opacity-40 hidden lg:flex">
+        <div className="absolute bottom-8 left-12 flex items-center gap-3 opacity-40 hidden lg:flex" aria-hidden="true">
           <div className="w-px h-10" style={{ backgroundColor: 'var(--color-ink-muted)' }} />
           <span className="text-[9px] uppercase tracking-[0.25em] font-mono" style={{ color: 'var(--color-ink-muted)' }}>
             Scroll
@@ -219,7 +220,7 @@ export default function HomePage() {
       {/* ═══════════════════════════════════════════
           THE RECEIPTS — Dark panel, timeline grid
           ═══════════════════════════════════════════ */}
-      <section className="relative bg-[#111110] text-white py-24 md:py-32 overflow-hidden">
+      <section className="relative bg-[var(--color-ink-deep)] text-white py-24 md:py-32 overflow-hidden">
         {/* Grid pattern on dark */}
         <div
           className="absolute inset-0 pointer-events-none"
@@ -235,7 +236,7 @@ export default function HomePage() {
             <div className="flex items-center gap-4 mb-14">
               <span className="text-[11px] font-mono text-white/30 tracking-wider">02</span>
               <span className="block w-12 h-px bg-white/20" />
-              <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-amber-500/80">
+              <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#faaa1f]/80">
                 The Receipts
               </span>
             </div>
@@ -254,7 +255,7 @@ export default function HomePage() {
                     className="text-3xl md:text-4xl font-medium mb-3 tracking-tight"
                     style={{
                       fontFamily: 'var(--font-display)',
-                      color: item.isFuture ? 'rgba(212, 132, 95, 0.6)' : '#d4845f',
+                      color: item.isFuture ? 'rgba(250, 170, 31, 0.55)' : '#faaa1f',
                     }}
                   >
                     {item.year}
@@ -275,7 +276,7 @@ export default function HomePage() {
           WORK WITH ME — Service tiers on light with grid
           ═══════════════════════════════════════════ */}
       <section className="relative py-24 md:py-32 overflow-hidden">
-        <div className="graph-paper-overlay absolute inset-0" />
+        <div className="graph-paper-overlay absolute inset-0" aria-hidden="true" />
 
         <div className="relative z-10 max-w-[1400px] mx-auto px-6 md:px-12">
           <ScrollReveal animation="fade-in">
@@ -284,7 +285,7 @@ export default function HomePage() {
               <span className="block w-12 h-px" style={{ backgroundColor: 'var(--color-border)' }} />
               <span
                 className="text-[11px] font-semibold uppercase tracking-[0.2em]"
-                style={{ color: 'var(--color-accent)' }}
+                style={{ color: 'var(--color-accent-dark)' }}
               >
                 Work with me
               </span>
@@ -346,7 +347,7 @@ export default function HomePage() {
                   }}
                 />
                 <div className="relative z-10 flex flex-col h-full">
-                  <p className="text-[11px] font-mono tracking-wider mb-5 text-amber-500/70">
+                  <p className="text-[11px] font-mono tracking-wider mb-5 text-[#faaa1f]/80">
                     02 / Roundtable
                   </p>
                   <p
@@ -413,7 +414,7 @@ export default function HomePage() {
               <span className="block w-12 h-px" style={{ backgroundColor: 'var(--color-border)' }} />
               <span
                 className="text-[11px] font-semibold uppercase tracking-[0.2em]"
-                style={{ color: 'var(--color-accent)' }}
+                style={{ color: 'var(--color-accent-dark)' }}
               >
                 Ventures
               </span>
@@ -451,7 +452,7 @@ export default function HomePage() {
                       {row.tag}
                     </span>
                     <span
-                      className="font-medium text-lg transition-colors duration-200 group-hover:text-amber-700"
+                      className="font-medium text-lg transition-colors duration-200 group-hover:text-[var(--color-accent-dark)]"
                       style={{ fontFamily: 'var(--font-display)', color: 'var(--color-ink)' }}
                     >
                       {row.name}
@@ -482,7 +483,7 @@ export default function HomePage() {
                             className="group flex items-center gap-3 no-underline transition-colors duration-200"
                           >
                             <span
-                              className="font-medium text-sm transition-colors duration-200 group-hover:text-amber-700"
+                              className="font-medium text-sm transition-colors duration-200 group-hover:text-[var(--color-accent-dark)]"
                               style={{ fontFamily: 'var(--font-display)', color: 'var(--color-ink)' }}
                             >
                               {sub.name}
@@ -512,7 +513,7 @@ export default function HomePage() {
           CURRENT THINKING — Articles
           ═══════════════════════════════════════════ */}
       <section className="relative py-24 md:py-32 overflow-hidden">
-        <div className="graph-paper-overlay absolute inset-0" />
+        <div className="graph-paper-overlay absolute inset-0" aria-hidden="true" />
 
         <div className="relative z-10 max-w-[1400px] mx-auto px-6 md:px-12">
           <ScrollReveal animation="fade-in">
@@ -521,7 +522,7 @@ export default function HomePage() {
               <span className="block w-12 h-px" style={{ backgroundColor: 'var(--color-border)' }} />
               <span
                 className="text-[11px] font-semibold uppercase tracking-[0.2em]"
-                style={{ color: 'var(--color-accent)' }}
+                style={{ color: 'var(--color-accent-dark)' }}
               >
                 Current thinking
               </span>
@@ -536,7 +537,7 @@ export default function HomePage() {
               <Link
                 href="/writing"
                 className="text-sm font-medium link-animate shrink-0"
-                style={{ color: 'var(--color-accent)' }}
+                style={{ color: 'var(--color-accent-dark)' }}
               >
                 All writing →
               </Link>
@@ -557,7 +558,7 @@ export default function HomePage() {
                     {article.meta}
                   </span>
                   <span
-                    className="block font-medium text-xl md:text-2xl leading-snug transition-colors duration-200 group-hover:text-amber-700"
+                    className="block font-medium text-xl md:text-2xl leading-snug transition-colors duration-200 group-hover:text-[var(--color-accent-dark)]"
                     style={{ fontFamily: 'var(--font-display)', color: 'var(--color-ink)' }}
                   >
                     {article.title}
@@ -572,7 +573,7 @@ export default function HomePage() {
       {/* ═══════════════════════════════════════════
           ORIGIN STORY — Dark cinematic panel
           ═══════════════════════════════════════════ */}
-      <section className="relative bg-[#111110] overflow-hidden">
+      <section className="relative bg-[var(--color-ink-deep)] overflow-hidden">
         {/* Grid on dark */}
         <div
           className="absolute inset-0 pointer-events-none"
@@ -584,7 +585,7 @@ export default function HomePage() {
         />
 
         {/* Accent line */}
-        <div className="absolute top-0 left-12 w-px h-20 bg-gradient-to-b from-amber-700/40 to-transparent hidden lg:block" />
+        <div className="absolute top-0 left-12 w-px h-20 bg-gradient-to-b from-[#faaa1f]/50 to-transparent hidden lg:block" />
 
         <div className="relative z-10 max-w-[1400px] mx-auto px-6 md:px-12 py-24 md:py-32">
           <div className="max-w-3xl">
@@ -592,7 +593,7 @@ export default function HomePage() {
               <div className="flex items-center gap-4 mb-14">
                 <span className="text-[11px] font-mono text-white/30 tracking-wider">06</span>
                 <span className="block w-12 h-px bg-white/20" />
-                <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-amber-500/80">
+                <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#faaa1f]/80">
                   Origin
                 </span>
               </div>
