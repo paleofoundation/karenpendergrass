@@ -18,6 +18,7 @@
 
   /* Brand Palette — deep blue dominant, warm orange accent */
   --color-bg: #f6f8fa;
+  --color-bg-rgb: 246, 248, 250;
   --color-bg-alt: #eaeff4;
   --color-surface: #ffffff;
 

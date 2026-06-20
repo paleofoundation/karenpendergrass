@@ -78,6 +78,16 @@ export default function HomePage() {
       <section className="relative min-h-[100svh] flex items-center overflow-hidden">
         {/* VISIBLE graph paper grid */}
         <div className="graph-paper-overlay absolute inset-0" aria-hidden="true" />
+        {/* Legibility scrim — fades the grid back behind the headline (kept visible
+            on the portrait side) so the text reads cleanly without losing the motif. */}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          aria-hidden="true"
+          style={{
+            background:
+              'linear-gradient(100deg, rgba(var(--color-bg-rgb),0.95) 0%, rgba(var(--color-bg-rgb),0.85) 42%, rgba(var(--color-bg-rgb),0.45) 75%, rgba(var(--color-bg-rgb),0.15) 100%)',
+          }}
+        />
 
         {/* Decorative crosshair marks */}
         <div className="absolute top-20 right-[20%] w-0 h-0 hidden lg:block" aria-hidden="true">
@@ -178,7 +188,7 @@ export default function HomePage() {
 
             {/* Right: Portrait — takes 5 cols */}
             <div className="order-1 lg:order-2 lg:col-span-5 relative">
-              <div className="relative w-full max-w-sm mx-auto lg:max-w-none lg:ml-auto">
+              <div className="relative w-full max-w-sm mx-auto lg:max-w-[420px] lg:ml-auto">
                 {/* Geometric frame accent */}
                 <div className="absolute -top-4 -right-4 w-full h-full rounded border border-[#faaa1f]/25 hidden lg:block" />
                 <div className="absolute -top-8 -right-8 w-24 h-24 border border-[#faaa1f]/20 rounded-sm hidden lg:block" />
@@ -193,7 +203,8 @@ export default function HomePage() {
                     src="/images/Karen_Pendergrass.png"
                     alt="Karen Pendergrass"
                     fill
-                    sizes="(max-width: 768px) 100vw, 40vw"
+                    sizes="(max-width: 1024px) 384px, 420px"
+                    quality={90}
                     className="object-cover object-top"
                     priority
                   />
