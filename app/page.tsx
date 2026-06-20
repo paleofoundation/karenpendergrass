@@ -76,6 +76,8 @@ export default function HomePage() {
           HERO — Full viewport, architectural grid, portrait
           ═══════════════════════════════════════════ */}
       <section className="relative min-h-[100svh] flex items-center overflow-hidden">
+        {/* Ambient brand-color aurora for depth */}
+        <div className="aurora" aria-hidden="true" />
         {/* VISIBLE graph paper grid */}
         <div className="graph-paper-overlay absolute inset-0" aria-hidden="true" />
         {/* Legibility scrim — fades the grid back behind the headline (kept visible

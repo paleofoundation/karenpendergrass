@@ -532,6 +532,66 @@ p {
   border-color: var(--color-accent);
 }
 
+/* ============================================
+   AMBIENT AURORA — slow drifting brand-color glow for depth (futuristic)
+   Disabled automatically under prefers-reduced-motion (see below).
+   ============================================ */
+.aurora {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.aurora::before,
+.aurora::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+}
+
+.aurora::before {
+  width: 46vw;
+  height: 46vw;
+  left: -6vw;
+  top: -12vw;
+  background: radial-gradient(circle, rgba(var(--color-ink-rgb), 0.45), transparent 70%);
+  opacity: 0.55;
+  animation: aurora-drift-1 24s ease-in-out infinite alternate;
+}
+
+.aurora::after {
+  width: 42vw;
+  height: 42vw;
+  right: -8vw;
+  bottom: -14vw;
+  background: radial-gradient(circle, rgba(var(--color-accent-rgb), 0.32), transparent 70%);
+  opacity: 0.6;
+  animation: aurora-drift-2 30s ease-in-out infinite alternate;
+}
+
+/* Brighter blobs read well on dark panels */
+.aurora-dark::before {
+  background: radial-gradient(circle, rgba(var(--color-accent-rgb), 0.22), transparent 70%);
+  opacity: 0.7;
+}
+.aurora-dark::after {
+  background: radial-gradient(circle, rgba(80, 140, 220, 0.28), transparent 70%);
+  opacity: 0.6;
+}
+
+@keyframes aurora-drift-1 {
+  from { transform: translate(0, 0) scale(1); }
+  to { transform: translate(7vw, 5vw) scale(1.08); }
+}
+
+@keyframes aurora-drift-2 {
+  from { transform: translate(0, 0) scale(1); }
+  to { transform: translate(-6vw, -4vw) scale(1.1); }
+}
+
 /* Button Hover States */
 button,
 a.button,
