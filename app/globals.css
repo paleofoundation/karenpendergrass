@@ -592,6 +592,34 @@ p {
   to { transform: translate(-6vw, -4vw) scale(1.1); }
 }
 
+/* ============================================
+   PORTRAIT (transparent cutout) — glow halo + contact shadow
+   ============================================ */
+.portrait-glow {
+  position: absolute;
+  inset: -6% -4% 6% -4%;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(52% 46% at 52% 34%, rgba(var(--color-accent-rgb), 0.20), transparent 70%),
+    radial-gradient(66% 64% at 50% 58%, rgba(var(--color-ink-rgb), 0.20), transparent 72%);
+  filter: blur(22px);
+}
+
+.portrait-shadow {
+  position: absolute;
+  left: 50%;
+  bottom: 1%;
+  transform: translateX(-50%);
+  width: 60%;
+  height: 26px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at center, rgba(var(--color-ink-rgb), 0.28), transparent 70%);
+  filter: blur(9px);
+  z-index: 0;
+  pointer-events: none;
+}
+
 /* Button Hover States */
 button,
 a.button,

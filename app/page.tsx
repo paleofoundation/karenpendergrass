@@ -190,27 +190,30 @@ export default function HomePage() {
 
             {/* Right: Portrait — takes 5 cols */}
             <div className="order-1 lg:order-2 lg:col-span-5 relative">
-              <div className="relative w-full max-w-sm mx-auto lg:max-w-[420px] lg:ml-auto">
-                {/* Geometric frame accent */}
-                <div className="absolute -top-4 -right-4 w-full h-full rounded border border-[#faaa1f]/25 hidden lg:block" />
-                <div className="absolute -top-8 -right-8 w-24 h-24 border border-[#faaa1f]/20 rounded-sm hidden lg:block" />
-
+              <div className="relative w-full max-w-xs mx-auto lg:max-w-[460px] lg:ml-auto">
                 {/* Coordinate label */}
-                <div className="absolute -top-6 left-0 hidden lg:flex items-center gap-2">
-                  <span className="text-[9px] font-mono text-[#faaa1f]/50 tracking-wider">34.6847°N, 33.1442°E</span>
+                <div className="absolute top-0 left-0 hidden lg:flex items-center gap-2 z-10" aria-hidden="true">
+                  <span className="text-[9px] font-mono text-[#faaa1f]/60 tracking-wider">34.6847°N, 33.1442°E</span>
                 </div>
 
-                <div className="relative aspect-[3/4] overflow-hidden rounded">
+                {/* Brand glow halo behind the cutout */}
+                <div className="portrait-glow" aria-hidden="true" />
+
+                {/* Transparent cutout — free-standing figure */}
+                <div className="relative aspect-[2/3]">
                   <Image
                     src="/images/Karen_Pendergrass.png"
                     alt="Karen Pendergrass"
                     fill
-                    sizes="(max-width: 1024px) 384px, 420px"
+                    sizes="(max-width: 1024px) 320px, 460px"
                     quality={90}
-                    className="object-cover object-top"
+                    className="object-contain object-bottom relative z-[1]"
                     priority
                   />
                 </div>
+
+                {/* Contact shadow grounds the figure */}
+                <div className="portrait-shadow" aria-hidden="true" />
 
                 {/* Caption below image */}
                 <p className="mt-3 text-[10px] font-mono tracking-wider text-right" style={{ color: 'var(--color-ink-muted)' }}>
