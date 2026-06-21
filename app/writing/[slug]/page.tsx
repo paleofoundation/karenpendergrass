@@ -177,7 +177,7 @@ export default function ArticlePage({ params }: Props) {
           <div className="flex items-center gap-3 mb-6">
             <Link
               href="/writing"
-              className="text-xs hover:text-amber-700 transition-colors"
+              className="text-xs hover:text-[var(--color-accent-dark)] transition-colors"
               style={{ color: 'var(--color-ink-muted)' }}
             >
               ← Writing
@@ -185,7 +185,7 @@ export default function ArticlePage({ params }: Props) {
             <span style={{ color: 'var(--color-ink-muted)' }} className="text-xs">/</span>
             <span
               className="text-xs font-semibold uppercase tracking-[0.15em]"
-              style={{ color: 'var(--color-accent)' }}
+              style={{ color: 'var(--color-accent-dark)' }}
             >
               {categoryLabels[post.meta.category] || post.meta.category}
             </span>
@@ -297,7 +297,7 @@ export default function ArticlePage({ params }: Props) {
             <Link href={`/writing/${prevPost.meta.slug}`} className="group">
               <p className="text-xs mb-1" style={{ color: 'var(--color-ink-muted)' }}>← Previous</p>
               <p
-                className="text-sm font-medium transition-colors duration-200 group-hover:text-amber-700 line-clamp-2"
+                className="text-sm font-medium transition-colors duration-200 group-hover:text-[var(--color-accent-dark)] line-clamp-2"
                 style={{ fontFamily: 'var(--font-display)', color: 'var(--color-ink)' }}
               >
                 {prevPost.meta.title}
@@ -311,7 +311,7 @@ export default function ArticlePage({ params }: Props) {
             >
               <p className="text-xs mb-1" style={{ color: 'var(--color-ink-muted)' }}>Next →</p>
               <p
-                className="text-sm font-medium transition-colors duration-200 group-hover:text-amber-700 line-clamp-2"
+                className="text-sm font-medium transition-colors duration-200 group-hover:text-[var(--color-accent-dark)] line-clamp-2"
                 style={{ fontFamily: 'var(--font-display)', color: 'var(--color-ink)' }}
               >
                 {nextPost.meta.title}

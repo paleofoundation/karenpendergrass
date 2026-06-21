@@ -53,7 +53,7 @@ export default function StartHerePage() {
         <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-10">
           <p
             className="text-xs font-semibold uppercase tracking-[0.2em] mb-4"
-            style={{ color: 'var(--color-accent)' }}
+            style={{ color: 'var(--color-accent-dark)' }}
           >
             Start Here
           </p>
@@ -130,7 +130,7 @@ export default function StartHerePage() {
                   <Link
                     href={rung.href}
                     className="inline-flex items-center text-sm font-medium link-animate"
-                    style={{ color: 'var(--color-accent)' }}
+                    style={{ color: 'var(--color-accent-dark)' }}
                   >
                     {rung.cta} &rarr;
                   </Link>
@@ -162,7 +162,7 @@ export default function StartHerePage() {
           </ScrollReveal>
           <NewsletterSignup />
           <p className="mt-6 text-sm">
-            <Link href="/manifesto" className="link-animate" style={{ color: 'var(--color-accent)' }}>
+            <Link href="/manifesto" className="link-animate" style={{ color: 'var(--color-accent-dark)' }}>
               Or read what I believe &rarr;
             </Link>
           </p>

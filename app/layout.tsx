@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Newsreader, Source_Sans_3, JetBrains_Mono } from 'next/font/google';
 import './globals.css';
 import SidebarNav from '@/components/SidebarNav';
+import TopBar from '@/components/TopBar';
 import Footer from '@/components/Footer';
 import { PersonSchema } from '@/components/JsonLd';
 
@@ -89,6 +90,7 @@ export default function RootLayout({
         <PersonSchema />
         <header>
           <SidebarNav />
+          <TopBar />
         </header>
         <main id="main-content" className="flex-1">{children}</main>
         <Footer />

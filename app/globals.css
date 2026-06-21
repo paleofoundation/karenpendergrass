@@ -16,25 +16,29 @@
   --font-body: var(--font-body-src), 'Source Sans 3', 'Helvetica Neue', sans-serif;
   --font-mono: var(--font-mono-src), 'JetBrains Mono', monospace;
 
-  /* Color Palette - Warm Neutrals */
-  --color-bg: #fafaf8;
-  --color-bg-alt: #f5f0eb;
+  /* Brand Palette — deep blue dominant, warm orange accent */
+  --color-bg: #f6f8fa;
+  --color-bg-rgb: 246, 248, 250;
+  --color-bg-alt: #eaeff4;
   --color-surface: #ffffff;
 
-  /* Typography Colors */
-  --color-ink: #1a1a1a;
-  --color-ink-secondary: #4a4a4a;
-  --color-ink-muted: #7a7a7a;
+  /* Typography Colors — deep blue ink */
+  --color-ink: #1d384f;            /* brand deep blue — dominant */
+  --color-ink-secondary: #3a5266;  /* body copy */
+  --color-ink-muted: #5c7282;      /* muted; meets AA on light bg */
+  --color-ink-deep: #122536;       /* near-black navy for dark panels */
+  --color-ink-rgb: 29, 56, 79;
 
-  /* Accent & Highlights */
-  --color-accent: #b8652e;
-  --color-accent-light: #d4845f;
-  --color-accent-dark: #8c3a22;
+  /* Accent & Highlights — brand orange */
+  --color-accent: #faaa1f;         /* brand orange — fills, bars, dots, dark-bg text */
+  --color-accent-light: #ffc24d;
+  --color-accent-dark: #9a5d08;    /* AA-readable orange for accent text/links on light bg */
+  --color-accent-rgb: 250, 170, 31;
 
   /* Borders & Dividers */
-  --color-border: #e5ddd5;
-  --color-border-light: #f0ebe5;
-  --color-grid: #c4b8b0;
+  --color-border: #dbe2e8;
+  --color-border-light: #eaeff4;
+  --color-grid: #b9c6d0;
 
   /* Typography Scale */
   --text-xs: 0.75rem;
@@ -174,15 +178,17 @@ p {
 }
 
 .prose a {
-  color: var(--color-accent);
+  color: var(--color-ink);
   text-decoration: underline;
+  text-decoration-color: var(--color-accent);
   text-underline-offset: 4px;
-  text-decoration-thickness: 1.5px;
-  transition: color var(--transition-fast);
+  text-decoration-thickness: 2px;
+  transition: color var(--transition-fast), text-decoration-color var(--transition-fast);
 }
 
 .prose a:hover {
   color: var(--color-accent-dark);
+  text-decoration-color: var(--color-accent-dark);
 }
 
 .prose strong {
@@ -206,7 +212,7 @@ p {
   font-family: var(--font-mono);
   font-size: 0.875em;
   background: var(--color-bg-alt);
-  color: var(--color-accent);
+  color: var(--color-accent-dark);
   padding: 0.2em 0.5em;
   border-radius: 3px;
   border: 1px solid var(--color-border-light);
@@ -269,11 +275,11 @@ p {
   bottom: 0;
   background-image:
     /* Major grid lines */
-    linear-gradient(0deg, rgba(180, 160, 140, 0.12) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(180, 160, 140, 0.12) 1px, transparent 1px),
+    linear-gradient(0deg, rgba(var(--color-ink-rgb), 0.09) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(var(--color-ink-rgb), 0.09) 1px, transparent 1px),
     /* Minor grid lines (smaller) */
-    linear-gradient(0deg, rgba(180, 160, 140, 0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(180, 160, 140, 0.05) 1px, transparent 1px);
+    linear-gradient(0deg, rgba(var(--color-ink-rgb), 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(var(--color-ink-rgb), 0.04) 1px, transparent 1px);
   background-size: 80px 80px, 80px 80px, 20px 20px, 20px 20px;
   pointer-events: none;
   z-index: 0;
@@ -486,7 +492,7 @@ p {
 .link-animate {
   position: relative;
   text-decoration: none;
-  color: var(--color-accent);
+  color: var(--color-accent-dark);
   transition: color var(--transition-fast);
 }
 
@@ -526,6 +532,94 @@ p {
   border-color: var(--color-accent);
 }
 
+/* ============================================
+   AMBIENT AURORA — slow drifting brand-color glow for depth (futuristic)
+   Disabled automatically under prefers-reduced-motion (see below).
+   ============================================ */
+.aurora {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.aurora::before,
+.aurora::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+}
+
+.aurora::before {
+  width: 46vw;
+  height: 46vw;
+  left: -6vw;
+  top: -12vw;
+  background: radial-gradient(circle, rgba(var(--color-ink-rgb), 0.45), transparent 70%);
+  opacity: 0.55;
+  animation: aurora-drift-1 24s ease-in-out infinite alternate;
+}
+
+.aurora::after {
+  width: 42vw;
+  height: 42vw;
+  right: -8vw;
+  bottom: -14vw;
+  background: radial-gradient(circle, rgba(var(--color-accent-rgb), 0.32), transparent 70%);
+  opacity: 0.6;
+  animation: aurora-drift-2 30s ease-in-out infinite alternate;
+}
+
+/* Brighter blobs read well on dark panels */
+.aurora-dark::before {
+  background: radial-gradient(circle, rgba(var(--color-accent-rgb), 0.22), transparent 70%);
+  opacity: 0.7;
+}
+.aurora-dark::after {
+  background: radial-gradient(circle, rgba(80, 140, 220, 0.28), transparent 70%);
+  opacity: 0.6;
+}
+
+@keyframes aurora-drift-1 {
+  from { transform: translate(0, 0) scale(1); }
+  to { transform: translate(7vw, 5vw) scale(1.08); }
+}
+
+@keyframes aurora-drift-2 {
+  from { transform: translate(0, 0) scale(1); }
+  to { transform: translate(-6vw, -4vw) scale(1.1); }
+}
+
+/* ============================================
+   PORTRAIT (transparent cutout) — glow halo + contact shadow
+   ============================================ */
+.portrait-glow {
+  position: absolute;
+  inset: -6% -4% 6% -4%;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(52% 46% at 52% 34%, rgba(var(--color-accent-rgb), 0.20), transparent 70%),
+    radial-gradient(66% 64% at 50% 58%, rgba(var(--color-ink-rgb), 0.20), transparent 72%);
+  filter: blur(22px);
+}
+
+.portrait-shadow {
+  position: absolute;
+  left: 50%;
+  bottom: 1%;
+  transform: translateX(-50%);
+  width: 60%;
+  height: 26px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at center, rgba(var(--color-ink-rgb), 0.28), transparent 70%);
+  filter: blur(9px);
+  z-index: 0;
+  pointer-events: none;
+}
+
 /* Button Hover States */
 button,
 a.button,
@@ -563,13 +657,14 @@ input:focus,
 textarea:focus,
 select:focus {
   outline: none;
-  border-color: var(--color-accent);
-  box-shadow: 0 0 0 3px rgba(184, 101, 46, 0.1);
+  border-color: var(--color-ink);
+  box-shadow: 0 0 0 3px rgba(var(--color-ink-rgb), 0.25);
 }
 
-/* Keyboard-only focus ring for every interactive element (mouse clicks stay clean) */
+/* Keyboard-only focus ring for every interactive element (mouse clicks stay clean).
+   Uses high-contrast deep blue (the bright orange accent fails WCAG 1.4.11 / 2.4.7). */
 :focus-visible {
-  outline: 2px solid var(--color-accent);
+  outline: 2px solid var(--color-ink);
   outline-offset: 2px;
   border-radius: 2px;
 }
@@ -577,7 +672,7 @@ select:focus {
 a:focus-visible,
 button:focus-visible,
 [role='button']:focus-visible {
-  outline: 2px solid var(--color-accent);
+  outline: 2px solid var(--color-ink);
   outline-offset: 2px;
 }
 
@@ -608,6 +703,11 @@ button:focus-visible,
 }
 
 .text-accent {
+  color: var(--color-accent-dark);
+}
+
+/* Bright brand orange — only safe for large text or text on dark surfaces */
+.text-accent-bright {
   color: var(--color-accent);
 }
 
@@ -697,11 +797,28 @@ button:focus-visible,
    SELECTION STYLING
    ============================================ */
 ::selection {
-  background: var(--color-accent);
-  color: white;
+  background: var(--color-ink);
+  color: #fff;
 }
 
 ::-moz-selection {
-  background: var(--color-accent);
-  color: white;
+  background: var(--color-ink);
+  color: #fff;
+}
+
+/* ============================================
+   REDUCED MOTION — honor user preference (WCAG 2.3.3)
+   ============================================ */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
 }

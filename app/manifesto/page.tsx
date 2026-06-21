@@ -30,7 +30,7 @@ export default function ManifestoPage() {
         <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-10">
           <p
             className="text-xs font-semibold uppercase tracking-[0.2em] mb-4"
-            style={{ color: 'var(--color-accent)' }}
+            style={{ color: 'var(--color-accent-dark)' }}
           >
             Manifesto
           </p>
@@ -51,7 +51,7 @@ export default function ManifestoPage() {
               <li className="flex gap-5 items-start">
                 <span
                   className="text-[11px] font-mono mt-3 shrink-0"
-                  style={{ color: 'var(--color-accent)' }}
+                  style={{ color: 'var(--color-accent-dark)' }}
                 >
                   {String(i + 1).padStart(2, '0')}
                 </span>

@@ -42,8 +42,8 @@ export default function ContactForm() {
           className="w-14 h-14 rounded-full border-2 flex items-center justify-center mx-auto mb-6 text-2xl"
           style={{
             borderColor: 'var(--color-accent)',
-            color: 'var(--color-accent)',
-            boxShadow: '0 0 24px rgba(184,101,46,0.15)',
+            color: 'var(--color-accent-dark)',
+            boxShadow: '0 0 24px rgba(var(--color-accent-rgb),0.15)',
           }}
         >
           &#10003;
@@ -89,7 +89,7 @@ export default function ContactForm() {
             name="name"
             required
             placeholder="Your name"
-            className="w-full px-4 py-3.5 rounded-lg border border-border bg-surface text-ink text-sm outline-none transition-all duration-300 focus:border-accent focus:shadow-[0_0_0_3px_rgba(184,101,46,0.1)]"
+            className="w-full px-4 py-3.5 rounded-lg border border-border bg-surface text-ink text-sm outline-none transition-all duration-300 focus:border-ink focus:shadow-[0_0_0_3px_rgba(var(--color-ink-rgb),0.25)]"
             style={{ fontFamily: 'var(--font-body)' }}
           />
         </div>
@@ -107,7 +107,7 @@ export default function ContactForm() {
             name="email"
             required
             placeholder="you@example.com"
-            className="w-full px-4 py-3.5 rounded-lg border border-border bg-surface text-ink text-sm outline-none transition-all duration-300 focus:border-accent focus:shadow-[0_0_0_3px_rgba(184,101,46,0.1)]"
+            className="w-full px-4 py-3.5 rounded-lg border border-border bg-surface text-ink text-sm outline-none transition-all duration-300 focus:border-ink focus:shadow-[0_0_0_3px_rgba(var(--color-ink-rgb),0.25)]"
             style={{ fontFamily: 'var(--font-body)' }}
           />
         </div>
@@ -127,7 +127,7 @@ export default function ContactForm() {
           name="subject"
           required
           defaultValue=""
-          className="w-full px-4 py-3.5 rounded-lg border border-border bg-surface text-ink text-sm outline-none transition-all duration-300 focus:border-accent focus:shadow-[0_0_0_3px_rgba(184,101,46,0.1)] appearance-none cursor-pointer"
+          className="w-full px-4 py-3.5 rounded-lg border border-border bg-surface text-ink text-sm outline-none transition-all duration-300 focus:border-ink focus:shadow-[0_0_0_3px_rgba(var(--color-ink-rgb),0.25)] appearance-none cursor-pointer"
           style={{
             fontFamily: 'var(--font-body)',
             backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%237a7a7a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E")`,
@@ -163,7 +163,7 @@ export default function ContactForm() {
           required
           rows={5}
           placeholder="Tell me what's on your mind..."
-          className="w-full px-4 py-3.5 rounded-lg border border-border bg-surface text-ink text-sm outline-none transition-all duration-300 focus:border-accent focus:shadow-[0_0_0_3px_rgba(184,101,46,0.1)] resize-y min-h-[140px]"
+          className="w-full px-4 py-3.5 rounded-lg border border-border bg-surface text-ink text-sm outline-none transition-all duration-300 focus:border-ink focus:shadow-[0_0_0_3px_rgba(var(--color-ink-rgb),0.25)] resize-y min-h-[140px]"
           style={{ fontFamily: 'var(--font-body)' }}
         />
       </div>
@@ -174,7 +174,7 @@ export default function ContactForm() {
         disabled={status === 'sending'}
         className="group self-start inline-flex items-center gap-2.5 px-7 py-4 rounded-lg text-white font-medium transition-all duration-300 hover:-translate-y-0.5 disabled:opacity-60 disabled:cursor-not-allowed mt-2"
         style={{
-          background: 'linear-gradient(135deg, var(--color-accent), rgba(184,101,46,0.85))',
+          background: 'linear-gradient(135deg, var(--color-accent), rgba(var(--color-accent-rgb),0.85))',
           fontFamily: 'var(--font-display)',
           fontSize: '0.95rem',
           letterSpacing: '0.03em',
