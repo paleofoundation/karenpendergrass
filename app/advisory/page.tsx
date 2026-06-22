@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 import Link from 'next/link';
 import IntakeForm from '@/components/IntakeForm';
+import PageHero from '@/components/PageHero';
 import { AdvisorySchema } from '@/components/JsonLd';
 
 export const metadata: Metadata = {
@@ -327,37 +328,22 @@ export default function AdvisoryPage() {
       <AdvisorySchema />
 
       {/* Hero */}
-      <section className="max-w-3xl mx-auto px-6 pt-16 pb-12">
-        <p
-          className="text-xs font-semibold uppercase tracking-widest text-accent mb-4"
-          style={{ letterSpacing: '0.15em' }}
-        >
-          Advisory & Board
-        </p>
-        <h1
-          className="text-3xl md:text-4xl font-medium text-ink leading-tight mb-6"
-          style={{ fontFamily: 'var(--font-display)' }}
-        >
-          Strategic expertise for organizations navigating microbiome science, food safety, and regulatory innovation
-        </h1>
-        <p className="text-lg text-ink-light leading-relaxed max-w-2xl">
-          I bring 15+ years of standards development, original research in{' '}
-          <Link href="/frameworks/microbial-metallomics" className="text-accent">
-            microbial metallomics
-          </Link>{' '}
-          and{' '}
-          <Link href="/frameworks/mbti-validation-criteria" className="text-accent">
-            microbiome-targeted interventions
-          </Link>
-          , and operational experience running five{' '}
-          <Link href="/ventures" className="text-accent">
-            organizations
-          </Link>{' '}
-          to board and advisory roles. My work sits at intersections that most experts
-          never bridge: bench science and regulatory policy, food safety and
-          microbiome medicine, AI systems and human oversight.
-        </p>
-      </section>
+      <PageHero
+        caps={false}
+        eyebrow="Advisory & Board"
+        title="Strategic expertise for organizations navigating microbiome science, food safety, and regulatory innovation"
+        description={
+          <>
+            I bring 15+ years of standards development, original research in{' '}
+            <Link href="/frameworks/microbial-metallomics">microbial metallomics</Link> and{' '}
+            <Link href="/frameworks/mbti-validation-criteria">microbiome-targeted interventions</Link>,
+            and operational experience running five <Link href="/ventures">organizations</Link> to board
+            and advisory roles. My work sits at intersections that most experts never bridge: bench
+            science and regulatory policy, food safety and microbiome medicine, AI systems and human
+            oversight.
+          </>
+        }
+      />
 
       {/* Board domains */}
       <section className="max-w-3xl mx-auto px-6 pb-16">

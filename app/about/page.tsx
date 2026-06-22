@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import ScrollReveal from '@/components/ScrollReveal';
+import PageHero from '@/components/PageHero';
 
 export const metadata: Metadata = {
   title: 'About',
@@ -14,27 +15,7 @@ export const metadata: Metadata = {
 export default function AboutPage() {
   return (
     <div className="page-enter">
-      {/* Wide editorial header */}
-      <section
-        className="relative py-20 md:py-28"
-        style={{ borderBottom: '1px solid var(--color-border-light)' }}
-      >
-        <div className="absolute inset-0 graph-paper-overlay" />
-        <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-10">
-          <p
-            className="text-xs font-semibold uppercase tracking-[0.2em] mb-4"
-            style={{ color: 'var(--color-accent-dark)' }}
-          >
-            About
-          </p>
-          <h1
-            className="text-4xl md:text-5xl lg:text-6xl font-medium leading-[1.1] tracking-tight max-w-4xl"
-            style={{ fontFamily: 'var(--font-display)', color: 'var(--color-ink)' }}
-          >
-            The long version
-          </h1>
-        </div>
-      </section>
+      <PageHero eyebrow="About" title="The long version" />
 
       {/* Prose body */}
       <article className="max-w-3xl mx-auto px-6 md:px-10 py-16 md:py-20 prose">

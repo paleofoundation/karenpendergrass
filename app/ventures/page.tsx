@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { getVentures } from '@/lib/content';
-import SectionHeader from '@/components/SectionHeader';
+import PageHero from '@/components/PageHero';
 
 export const metadata: Metadata = {
   title: 'Ventures',
@@ -22,27 +22,21 @@ export default function VenturesPage() {
   const ventures = getVentures();
 
   return (
-    <div className="page-enter max-w-3xl mx-auto px-6 pt-16 pb-20">
-      <SectionHeader
-        label="Ventures"
+    <div className="page-enter">
+      <PageHero
+        eyebrow="Ventures"
         title="Six organizations, one through-line"
         description={
           <>
             Every project connects back to translating complex systems science into
             frameworks that people can actually use. From{' '}
-            <Link href="/frameworks/hmtc" className="text-accent">
-              food safety certification
-            </Link>{' '}
-            to{' '}
-            <Link href="/publications" className="text-accent">
-              microbiome research
-            </Link>{' '}
-            to animal welfare.
+            <Link href="/frameworks/hmtc">food safety certification</Link> to{' '}
+            <Link href="/publications">microbiome research</Link> to animal welfare.
           </>
         }
       />
 
-      <div className="flex flex-col gap-12">
+      <div className="max-w-3xl mx-auto px-6 py-16 md:py-20 flex flex-col gap-12">
         {ventures.map((venture) => {
           const status = statusStyles[venture.status] || statusStyles.active;
           return (
