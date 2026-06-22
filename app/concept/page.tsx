@@ -62,9 +62,9 @@ export default function ConceptPage() {
       {/* ───────────── HERO (navy) ───────────── */}
       <section className="relative overflow-hidden" style={{ background: NAVY, color: PAPER }}>
         <div
-          className="cc-ghost absolute left-1/2 top-[42%] -translate-x-1/2 -translate-y-1/2 select-none"
+          className="cc-ghost absolute left-1/2 bottom-0 -translate-x-1/2 translate-y-[30%] select-none pointer-events-none"
           aria-hidden="true"
-          style={{ color: 'rgba(255,255,255,0.06)' }}
+          style={{ color: 'rgba(255,255,255,0.035)' }}
         >
           PENDERGRASS
         </div>

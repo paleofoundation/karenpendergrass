@@ -833,7 +833,8 @@ button:focus-visible,
   text-transform: uppercase;
   line-height: 0.9;
   letter-spacing: -0.015em;
-  font-size: clamp(2.75rem, 9vw, 8.5rem);
+  font-size: clamp(2.75rem, 8vw, 7.5rem);
+  color: inherit; /* take the section's color (overrides global h1 navy) */
 }
 
 .cc-ghost {
@@ -842,7 +843,7 @@ button:focus-visible,
   text-transform: uppercase;
   line-height: 0.78;
   letter-spacing: -0.02em;
-  font-size: clamp(4.5rem, 24vw, 22rem);
+  font-size: clamp(3.5rem, 15vw, 14rem);
   white-space: nowrap;
 }
 
@@ -859,6 +860,7 @@ button:focus-visible,
   line-height: 0.95;
   letter-spacing: -0.01em;
   font-size: clamp(1.5rem, 2.6vw, 2.4rem);
+  color: inherit; /* take the section's color (overrides global h-tag navy) */
 }
 
 /* Duotone (navy) imagery — the "engraving" look on opaque images */
