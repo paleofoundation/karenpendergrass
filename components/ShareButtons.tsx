@@ -70,6 +70,34 @@ export default function ShareButtons({ url, title, compact = false }: ShareButto
         {!compact && <span>X</span>}
       </a>
 
+      {/* Reddit */}
+      <a
+        href={`https://www.reddit.com/submit?url=${encodedUrl}&title=${encodedTitle}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={buttonClass}
+        title="Share on Reddit"
+      >
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 0C5.373 0 0 5.373 0 12c0 6.627 5.373 12 12 12s12-5.373 12-12C24 5.373 18.627 0 12 0zm5.01 13.205c.022.156.033.315.033.476 0 2.432-2.832 4.405-6.327 4.405-3.494 0-6.326-1.973-6.326-4.405 0-.164.012-.325.034-.483a1.387 1.387 0 1 1 1.52-2.243 6.84 6.84 0 0 1 3.71-1.175l.7-3.292a.29.29 0 0 1 .342-.224l2.317.492a.969.969 0 1 1-.094.452l-2.075-.441-.624 2.939a6.83 6.83 0 0 1 3.66 1.18 1.387 1.387 0 1 1 1.524 2.246zM8.16 12.794a.97.97 0 1 0 1.94 0 .97.97 0 0 0-1.94 0zm5.59 2.66c-.532.532-1.555.576-1.855.576-.3 0-1.323-.044-1.854-.576a.203.203 0 0 1 .287-.287c.335.335 1.052.454 1.567.454.516 0 1.233-.119 1.568-.454a.203.203 0 1 1 .287.287zm-.134-1.69a.97.97 0 1 1 0-1.94.97.97 0 0 1 0 1.94z"/>
+        </svg>
+        {!compact && <span>Reddit</span>}
+      </a>
+
+      {/* Facebook */}
+      <a
+        href={`https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={buttonClass}
+        title="Share on Facebook"
+      >
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+        </svg>
+        {!compact && <span>Facebook</span>}
+      </a>
+
       {/* Copy link */}
       <button
         onClick={handleCopy}
