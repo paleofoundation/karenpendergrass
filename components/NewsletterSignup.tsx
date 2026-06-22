@@ -77,11 +77,7 @@ export default function NewsletterSignup() {
       </form>
       {status === 'error' && (
         <p className="text-xs text-ink-muted mt-2">
-          Something went wrong. Email{' '}
-          <a href="mailto:hola@karenpendergrass.com" className="underline">
-            hola@karenpendergrass.com
-          </a>{' '}
-          and I&apos;ll add you.
+          Something went wrong. Please try again in a moment.
         </p>
       )}
     </div>

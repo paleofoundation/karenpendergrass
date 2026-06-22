@@ -3,6 +3,7 @@ import { Newsreader, Source_Sans_3, JetBrains_Mono } from 'next/font/google';
 import './globals.css';
 import SidebarNav from '@/components/SidebarNav';
 import TopBar from '@/components/TopBar';
+import AnnouncementBar from '@/components/AnnouncementBar';
 import Footer from '@/components/Footer';
 import { PersonSchema } from '@/components/JsonLd';
 
@@ -92,6 +93,7 @@ export default function RootLayout({
           <SidebarNav />
           <TopBar />
         </header>
+        <AnnouncementBar />
         <main id="main-content" className="flex-1">{children}</main>
         <Footer />
       </body>

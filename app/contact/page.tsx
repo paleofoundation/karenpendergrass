@@ -32,16 +32,19 @@ export default function ContactPage() {
         {/* Form */}
         <ContactForm />
 
-        {/* Direct email fallback */}
+        {/* Alternative channel */}
         <div className="mt-10 pt-7 border-t border-border">
           <p className="text-sm text-ink-muted">
-            Prefer email? Reach me directly at{' '}
+            Prefer not to use the form? Connect on{' '}
             <a
-              href="mailto:hola@karenpendergrass.com"
+              href="https://www.linkedin.com/in/karenpendergras/"
+              target="_blank"
+              rel="noopener noreferrer"
               className="text-accent hover:text-accent-dark transition-colors"
             >
-              hola@karenpendergrass.com
+              LinkedIn
             </a>
+            .
           </p>
         </div>
       </div>

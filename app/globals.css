@@ -923,3 +923,15 @@ button:focus-visible,
 @keyframes cc-blink {
   50% { opacity: 0; }
 }
+
+/* Announcement bar ticker marquee */
+.cc-ticker-track {
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+  animation: cc-ticker 42s linear infinite;
+}
+@keyframes cc-ticker {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}

@@ -15,6 +15,8 @@ const engagementTypes = [
 
 export default function IntakeForm() {
   const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState(false);
+  const [sending, setSending] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -30,17 +32,32 @@ export default function IntakeForm() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Build mailto link with form data as body
-    const subject = encodeURIComponent(
-      `${formData.engagementType} inquiry from ${formData.name} at ${formData.organization}`
-    );
-    const body = encodeURIComponent(
-      `Name: ${formData.name}\nEmail: ${formData.email}\nOrganization: ${formData.organization}\nRole: ${formData.role}\nEngagement type: ${formData.engagementType}\n\nMessage:\n${formData.message}`
-    );
-    window.location.href = `mailto:hola@karenpendergrass.com?subject=${subject}&body=${body}`;
-    setSubmitted(true);
+    setSending(true);
+    setError(false);
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          company: formData.organization,
+          subject: `${formData.engagementType || 'Engagement'} inquiry — ${formData.organization || formData.name}`,
+          message:
+            `Role: ${formData.role || '—'}\n` +
+            `Engagement type: ${formData.engagementType || '—'}\n\n` +
+            `${formData.message || '(no additional details provided)'}`,
+        }),
+      });
+      if (!res.ok) throw new Error('send failed');
+      setSubmitted(true);
+    } catch {
+      setError(true);
+    } finally {
+      setSending(false);
+    }
   };
 
   if (submitted) {
@@ -53,12 +70,8 @@ export default function IntakeForm() {
           Thank you
         </p>
         <p className="text-sm text-ink-light">
-          Your email client should have opened with a pre-filled message.
-          If it didn't, you can email me directly at{' '}
-          <a href="mailto:hola@karenpendergrass.com" className="text-accent underline underline-offset-2">
-            hola@karenpendergrass.com
-          </a>
-          .
+          Your inquiry is on its way. I&apos;ll be in touch shortly to find a time for your
+          complimentary scoping call.
         </p>
       </div>
     );
@@ -184,10 +197,16 @@ export default function IntakeForm() {
 
         <button
           type="submit"
-          className="self-start px-6 py-2.5 bg-ink text-paper text-sm font-medium rounded-md hover:bg-ink-light transition-colors"
+          disabled={sending}
+          className="self-start px-6 py-2.5 bg-ink text-paper text-sm font-medium rounded-md hover:bg-ink-light transition-colors disabled:opacity-60"
         >
-          Send inquiry
+          {sending ? 'Sending…' : 'Send inquiry'}
         </button>
+        {error && (
+          <p className="text-sm text-red-600">
+            Something went wrong sending your inquiry. Please try again in a moment.
+          </p>
+        )}
       </form>
     </div>
   );

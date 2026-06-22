@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 /**
  * Contact form API route.
  *
- * Accepts form submissions that display hola@karenpendergrass.com publicly
+ * Accepts form submissions (no email address is shown publicly on the site)
  * but delivers messages to the actual inbox: karen@paleofoundation.com
  *
  * Uses Resend (https://resend.com) for delivery. Set RESEND_API_KEY in
