@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 import { ventures } from '@/lib/ventures';
+import SocialLinks from '@/components/SocialLinks';
 
 // Standalone design study — full, SEO-rich homepage in the oversized
 // duotone style. Not linked from nav; noindex. For review on /concept.
@@ -38,6 +39,44 @@ const receipts = [
   { year: '2025', text: 'Only non-PhD among 150 researchers invited to the Beneficial Microbes Conference.' },
   { year: '2026', text: 'Published the Microbiome Medicine Journal, Volume I — five original papers on Parkinson’s disease.' },
   { year: 'Next', text: 'Heavy metals as the defining consumer-health issue. Phage therapy replacing antibiotics. Passive biomonitoring everywhere.' },
+];
+
+const testimonials = [
+  {
+    quote: 'Schopenhauer said: “Talent hits a target no one else can hit; genius hits a target no one else can see.” Karen Pendergrass sees things no one else sees. Pick any topic and she has a lecture in the barrel, ready to go.',
+    name: 'Mike Mihalski',
+    title: 'Founder, Sons of Liberty Gunworks',
+  },
+  {
+    quote: 'One word? Obsessive. She argues with Claude on anything from medicine to logic — and she wins. AI companies should be studying the way she thinks.',
+    name: 'Victor Subia',
+    title: 'Founder · AI Researcher',
+  },
+  {
+    quote: 'In university, Karen got into it with our Harvard business professor, Dr. Carla Pavone, over the Paleo Diet — because she bet her career it would trend. Dr. Pavone said there was no indication it ever would, and that moving across the country to start the Paleo Foundation was, frankly, stupid. Turns out, Karen was right. Karen 1, Harvard Business School professor 0.',
+    name: 'Jacques Lebrument',
+    title: 'Former classmate, UMKC Bloch School',
+  },
+  {
+    quote: 'People thought she was insane for saying she could make processed foods healthy. I would never have believed it possible — if it wasn’t Karen Pendergrass who said it was.',
+    name: 'Joseph Salama',
+    title: '',
+  },
+  {
+    quote: 'She built an entire movement toward fixing health issues. A true inspiration.',
+    name: 'Matty Aporta',
+    title: 'Vital Proteins',
+  },
+  {
+    quote: 'The most dangerously intelligent woman I have ever met… and that’s not a compliment.',
+    name: 'Ross Jeffries',
+    title: '“Godfather” of PUA (Neil Strauss)',
+  },
+  {
+    quote: 'She could probably cure cancer, but still can’t tie her own shoes and do basic math.',
+    name: 'Mario Singelmann',
+    title: '',
+  },
 ];
 
 const articles = [
@@ -103,6 +142,10 @@ export default function ConceptPage() {
               <p className="cc-eyebrow cc-caret text-[10px] mt-10" style={{ color: 'rgba(255,255,255,0.5)' }}>
                 &gt; based in parekklisia, cyprus
               </p>
+
+              <div className="mt-8">
+                <SocialLinks linkClassName="text-white/55 hover:text-[var(--color-accent)]" />
+              </div>
             </div>
 
             <div className="lg:col-span-5 order-1 lg:order-2 relative">
@@ -117,6 +160,28 @@ export default function ConceptPage() {
         <div className="relative z-10 max-w-[1500px] mx-auto px-6 md:px-12 pb-8 flex items-center justify-between">
           <span className="cc-eyebrow text-[9px]" style={{ color: 'rgba(255,255,255,0.45)' }}>Karen Pendergrass · Est. 2009</span>
           <span className="cc-eyebrow text-[9px]" style={{ color: 'rgba(255,255,255,0.45)' }}>34.68°N 33.14°E · Paleo Foundation</span>
+        </div>
+      </section>
+
+      {/* ───────────── THE ORACLE — featured quote (navy spotlight) ───────────── */}
+      <section style={{ background: NAVY, color: PAPER }} className="py-24 md:py-36 relative overflow-hidden">
+        <div className="aurora aurora-dark" aria-hidden="true" />
+        <div className="relative z-10 max-w-[1100px] mx-auto px-6 md:px-12 text-center">
+          <p className="cc-eyebrow text-[11px] mb-10" style={{ color: 'var(--color-accent)' }}>The Oracle</p>
+          <blockquote
+            className="cc-hero-title"
+            style={{ fontSize: 'clamp(2rem, 5.5vw, 5rem)', textTransform: 'none', lineHeight: 1.05 }}
+          >
+            “Well, if it isn’t the <span style={{ color: 'var(--color-accent)' }}>Oracle</span> herself.”
+          </blockquote>
+          <p className="text-base md:text-lg leading-relaxed mt-10 max-w-2xl mx-auto" style={{ color: 'rgba(255,255,255,0.82)' }}>
+            In 2020, Karen told Fred Hart that Pepsi would one day put fiber on the front of its cans and
+            proudly advertise it. He thought she was crazy. Seven years later it happened — and he called
+            her the Oracle.
+          </p>
+          <p className="cc-eyebrow text-[11px] mt-10" style={{ color: 'rgba(255,255,255,0.6)' }}>
+            Fred Hart · Founder, Interact
+          </p>
         </div>
       </section>
 
@@ -230,6 +295,35 @@ export default function ConceptPage() {
           <Link href="/about" className="inline-block mt-2 px-7 py-3.5 text-[12px] tracking-[0.12em] uppercase" style={{ background: NAVY, color: PAPER, fontFamily: 'var(--font-mono)' }}>
             Read the full story
           </Link>
+        </div>
+      </section>
+
+      {/* ───────────── TESTIMONIALS (paper) ───────────── */}
+      <section style={{ background: PAPER, color: NAVY }} className="py-20 md:py-28">
+        <div className="max-w-[1500px] mx-auto px-6 md:px-12">
+          <p className="cc-eyebrow text-[11px] mb-12" style={{ color: 'var(--color-accent-dark)' }}>What people say</p>
+          <div className="columns-1 md:columns-2 lg:columns-3 gap-6">
+            {testimonials.map((t) => (
+              <figure
+                key={t.name}
+                className="break-inside-avoid mb-6 p-7 rounded-lg"
+                style={{ background: '#fff', border: '1px solid rgba(29,56,79,0.12)' }}
+              >
+                <blockquote
+                  className="text-base md:text-lg leading-relaxed"
+                  style={{ color: 'var(--color-ink)', fontFamily: 'var(--font-display)' }}
+                >
+                  {t.quote}
+                </blockquote>
+                <figcaption className="mt-5">
+                  <p className="cc-eyebrow text-[10px]" style={{ color: NAVY }}>{t.name}</p>
+                  {t.title && (
+                    <p className="cc-eyebrow text-[9px] mt-1.5" style={{ color: 'var(--color-accent-dark)' }}>{t.title}</p>
+                  )}
+                </figcaption>
+              </figure>
+            ))}
+          </div>
         </div>
       </section>
 
