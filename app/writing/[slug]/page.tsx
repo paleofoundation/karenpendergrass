@@ -139,13 +139,25 @@ export default function ArticlePage({ params }: Props) {
   }
 
   // remark-slug ships nested unified/mdast types; runtime pipeline is valid.
-  const htmlContent = unified()
-    .use(remarkParse)
-    // @ts-expect-error — remark-slug@7 vs unified@11 duplicate type trees
-    .use(remarkSlug)
-    .use(remarkHtml, { sanitize: false })
-    .processSync(post.content)
-    .toString();
+  const renderMarkdown = (md: string) =>
+    unified()
+      .use(remarkParse)
+      // @ts-expect-error — remark-slug@7 vs unified@11 duplicate type trees
+      .use(remarkSlug)
+      .use(remarkHtml, { sanitize: false })
+      .processSync(md)
+      .toString();
+
+  // Split off a trailing references/sources section so a "Share this" block
+  // can sit right before it. Falls back to the whole body when absent.
+  const refMatch = post.content.match(
+    /^#{2,3}\s+(sources|references|citations|bibliography|further reading)\b/im
+  );
+  const splitAt = refMatch?.index ?? -1;
+  const bodyMarkdown = splitAt >= 0 ? post.content.slice(0, splitAt) : post.content;
+  const referencesMarkdown = splitAt >= 0 ? post.content.slice(splitAt) : '';
+  const htmlContent = renderMarkdown(bodyMarkdown);
+  const referencesHtml = referencesMarkdown ? renderMarkdown(referencesMarkdown) : '';
 
   return (
     <div className="page-enter">
@@ -243,6 +255,29 @@ export default function ArticlePage({ params }: Props) {
         className="max-w-3xl mx-auto px-6 py-10 prose"
         dangerouslySetInnerHTML={{ __html: htmlContent }}
       />
+
+      {/* Share this — sits right before the references/sources */}
+      <div className="max-w-3xl mx-auto px-6">
+        <div
+          className="rounded-lg px-6 py-7 text-center"
+          style={{ background: 'var(--color-bg-alt)', border: '1px solid var(--color-border-light)' }}
+        >
+          <p className="cc-eyebrow text-[11px] mb-4" style={{ color: 'var(--color-accent-dark)' }}>
+            Share this
+          </p>
+          <div className="flex justify-center">
+            <ShareButtons url={`/writing/${post.meta.slug}`} title={post.meta.title} />
+          </div>
+        </div>
+      </div>
+
+      {/* References / sources (rendered after the share block) */}
+      {referencesHtml && (
+        <article
+          className="max-w-3xl mx-auto px-6 pt-12 prose"
+          dangerouslySetInnerHTML={{ __html: referencesHtml }}
+        />
+      )}
 
       {/* Bottom share buttons */}
       <div className="max-w-3xl mx-auto px-6 pb-8">
