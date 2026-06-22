@@ -322,24 +322,6 @@ export default function SidebarNav() {
             </Link>
           </div>
 
-          {/* Email */}
-          <div
-            style={{
-              marginTop: '16px',
-              opacity: isOpen ? 1 : 0,
-              transition: 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
-              transitionDelay: isOpen ? '0.6s' : '0s',
-            }}
-          >
-            <a
-              href="mailto:hola@karenpendergrass.com"
-              className="text-xs tracking-widest transition-colors duration-300 hover:text-[var(--color-accent)]"
-              style={{ color: 'rgba(255,255,255,0.3)' }}
-            >
-              hola@karenpendergrass.com
-            </a>
-          </div>
-
           {/* Social */}
           <div
             style={{

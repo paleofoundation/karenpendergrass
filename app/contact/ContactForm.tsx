@@ -188,11 +188,7 @@ export default function ContactForm() {
 
       {status === 'error' && (
         <p className="text-sm text-red-600">
-          Something went wrong. Please try emailing{' '}
-          <a href="mailto:hola@karenpendergrass.com" className="underline">
-            hola@karenpendergrass.com
-          </a>{' '}
-          directly.
+          Something went wrong sending your message. Please try again in a moment.
         </p>
       )}
     </form>
