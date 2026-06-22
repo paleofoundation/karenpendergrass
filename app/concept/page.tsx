@@ -163,28 +163,6 @@ export default function ConceptPage() {
         </div>
       </section>
 
-      {/* ───────────── THE ORACLE — featured quote (navy spotlight) ───────────── */}
-      <section style={{ background: NAVY, color: PAPER }} className="py-24 md:py-36 relative overflow-hidden">
-        <div className="aurora aurora-dark" aria-hidden="true" />
-        <div className="relative z-10 max-w-[1100px] mx-auto px-6 md:px-12 text-center">
-          <p className="cc-eyebrow text-[11px] mb-10" style={{ color: 'var(--color-accent)' }}>The Oracle</p>
-          <blockquote
-            className="cc-hero-title"
-            style={{ fontSize: 'clamp(2rem, 5.5vw, 5rem)', textTransform: 'none', lineHeight: 1.05 }}
-          >
-            “Well, if it isn’t the <span style={{ color: 'var(--color-accent)' }}>Oracle</span> herself.”
-          </blockquote>
-          <p className="text-base md:text-lg leading-relaxed mt-10 max-w-2xl mx-auto" style={{ color: 'rgba(255,255,255,0.82)' }}>
-            In 2020, Karen told Fred Hart that Pepsi would one day put fiber on the front of its cans and
-            proudly advertise it. He thought she was crazy. Seven years later it happened — and he called
-            her the Oracle.
-          </p>
-          <p className="cc-eyebrow text-[11px] mt-10" style={{ color: 'rgba(255,255,255,0.6)' }}>
-            Fred Hart · Founder, Interact
-          </p>
-        </div>
-      </section>
-
       {/* ───────────── POSITIONING + PILLARS (paper) ───────────── */}
       <section style={{ background: PAPER, color: NAVY }} className="py-20 md:py-28">
         <div className="max-w-[1500px] mx-auto px-6 md:px-12">
