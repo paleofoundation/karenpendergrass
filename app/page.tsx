@@ -125,9 +125,10 @@ export default function HomePage() {
               </h1>
               <p className="text-base md:text-lg leading-relaxed mt-8 max-w-xl" style={{ color: 'rgba(255,255,255,0.85)' }}>
                 Karen Pendergrass calls the shift before the market sees it — then builds the standard,
-                the certification, and the research before the demand arrives. Paleo and keto. Grain-free.
-                Microbiome medicine. Phage therapy for antimicrobial resistance. The field of microbial
-                metallomics. Nickel in the food supply. Early every time, and on the record.
+                the certification, and the research before the demand arrives. Paleo and Keto Diet. FMTs.
+                Microbiome Medicine. The <em>entire</em> field of microbial metallomics. The critical role
+                of heavy metals in food. Fiber trends. Heavy-metal trends. Global regulations on specific
+                heavy metals. Early every time, and on the record.
               </p>
               <div className="flex flex-wrap items-center gap-4 mt-10">
                 <Link href="/writing" className="px-7 py-3.5 text-[12px] tracking-[0.12em] uppercase" style={{ background: 'var(--color-accent)', color: NAVY, fontFamily: 'var(--font-mono)' }}>
