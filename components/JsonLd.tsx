@@ -40,6 +40,7 @@ export function PersonSchema() {
       'https://www.linkedin.com/in/karenpendergras/',
       'https://x.com/PendergrassKP',
       'https://www.instagram.com/micrometallomics',
+      'https://www.facebook.com/karen.pendergrass/',
       'https://paleofoundation.com',
       'https://microbiomemedicine.com',
       'https://microbialmetallomics.com',

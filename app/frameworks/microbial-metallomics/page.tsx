@@ -64,7 +64,11 @@ export default function MicrobialMetallomicsPage() {
           </p>
 
           <p>
-            This nickel dependency creates a therapeutic vulnerability that conventional antimicrobial approaches completely miss. By targeting nickel acquisition systems rather than the bacteria directly, it may be possible to disarm pathogens without the selective pressure that drives antibiotic resistance.
+            This nickel dependency creates a therapeutic vulnerability that conventional antimicrobial approaches completely miss. By targeting nickel acquisition systems rather than the bacteria directly, it may be possible to disarm pathogens without the selective pressure that drives antibiotic resistance. For a worked clinical example, see how nickel acts as a{' '}
+            <Link href="/writing/nickel-necrotizing-enterocolitis" className="text-accent">
+              catalytic driver of necrotizing enterocolitis in preterm infants
+            </Link>
+            .
           </p>
 
           <h2>Environmental Selection Pressure</h2>
