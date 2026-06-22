@@ -121,15 +121,17 @@ export default function ConceptPage() {
                 Standards Developer · Microbiome Researcher · Cyprus
               </p>
               <h1 className="cc-hero-title">
-                The standard
+                Always
                 <br />
-                before the
+                <span style={{ color: 'var(--color-accent)' }}>ahead of</span>
                 <br />
-                <span style={{ color: 'var(--color-accent)' }}>market.</span>
+                the market.
               </h1>
-              <p className="text-base md:text-lg leading-relaxed mt-8 max-w-xl" style={{ color: 'rgba(255,255,255,0.82)' }}>
-                Karen Pendergrass builds the frameworks that become the standard before there is a
-                market — in microbial metallomics, heavy-metal certification, and microbiome signatures.
+              <p className="text-base md:text-lg leading-relaxed mt-8 max-w-xl" style={{ color: 'rgba(255,255,255,0.85)' }}>
+                Karen Pendergrass calls the shift before the market sees it — then builds the standard,
+                the certification, and the research before the demand arrives. Paleo and keto. Grain-free.
+                Microbiome medicine. Phage therapy for antimicrobial resistance. The field of microbial
+                metallomics. Nickel in the food supply. Early every time, and on the record.
               </p>
               <div className="flex flex-wrap items-center gap-4 mt-10">
                 <Link href="/writing" className="px-7 py-3.5 text-[12px] tracking-[0.12em] uppercase" style={{ background: 'var(--color-accent)', color: NAVY, fontFamily: 'var(--font-mono)' }}>
@@ -163,9 +165,27 @@ export default function ConceptPage() {
         </div>
       </section>
 
-      {/* ───────────── POSITIONING + PILLARS (paper) ───────────── */}
+      {/* ───────────── ORACLE + POSITIONING + PILLARS (paper) ───────────── */}
       <section style={{ background: PAPER, color: NAVY }} className="py-20 md:py-28">
         <div className="max-w-[1500px] mx-auto px-6 md:px-12">
+          {/* Featured quote — The Oracle */}
+          <div className="max-w-3xl mb-14 md:mb-20">
+            <p className="cc-eyebrow text-[11px] mb-6" style={{ color: 'var(--color-accent-dark)' }}>The Oracle</p>
+            <blockquote
+              className="cc-feature-title"
+              style={{ fontSize: 'clamp(1.9rem, 4.2vw, 3.5rem)', textTransform: 'none', color: NAVY, lineHeight: 1.1 }}
+            >
+              “Well, if it isn’t the <span style={{ color: 'var(--color-accent-dark)' }}>Oracle</span> herself.”
+            </blockquote>
+            <p className="text-base md:text-lg leading-relaxed mt-6" style={{ color: 'var(--color-ink)' }}>
+              In 2020, Karen told Fred Hart that Pepsi would one day put fiber on the front of its cans and
+              proudly advertise it. He thought she was crazy. Seven years later it happened — and he called
+              her the Oracle.
+            </p>
+            <p className="cc-eyebrow text-[10px] mt-6" style={{ color: NAVY }}>Fred Hart · Founder, Interact</p>
+          </div>
+          <div className="mb-16" style={{ borderTop: '1px solid rgba(29,56,79,0.12)' }} />
+
           <div className="max-w-3xl mb-16">
             <p className="cc-eyebrow text-[11px] mb-5" style={{ color: 'var(--color-accent-dark)' }}>What I do</p>
             <h2 className="cc-feature-title mb-6" style={{ fontSize: 'clamp(1.9rem, 4vw, 3.25rem)', color: NAVY }}>
