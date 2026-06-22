@@ -39,7 +39,7 @@ export function PersonSchema() {
       'https://orcid.org/0000-0002-2348-7259',
       'https://www.linkedin.com/in/karenpendergras/',
       'https://x.com/PendergrassKP',
-      'https://www.instagram.com/5wordsorlesskp/',
+      'https://www.instagram.com/micrometallomics',
       'https://paleofoundation.com',
       'https://microbiomemedicine.com',
       'https://microbialmetallomics.com',

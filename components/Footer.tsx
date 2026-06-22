@@ -22,6 +22,7 @@ const footerSections = [
       { href: 'https://microbiomemedicine.com', label: 'Microbiome Medicine', external: true },
       { href: 'https://microbialmetallomics.com', label: 'Journal of Food Metallomics', external: true },
       { href: 'https://heavymetaltested.com', label: 'Heavy Metal Tested', external: true },
+      { href: 'https://heavymetalindex.com', label: 'Heavy Metal Index', external: true },
       { href: 'https://wikibiome.com', label: 'WikiBiome', external: true },
       { href: 'https://tinies.app', label: 'Tinies', external: true },
       { href: 'https://gardensofstgertrude.com', label: 'Gardens of St. Gertrude', external: true },
@@ -63,6 +64,31 @@ export default function Footer() {
             Based in Cyprus. Available for board and advisory roles.
           </p>
           <SocialLinks className="mt-7" linkClassName="text-white/50 hover:text-white" />
+
+          {/* Featured destinations (interim hub while contaminationstandards.com is in progress) */}
+          <div className="mt-9">
+            <h3 className="text-[11px] font-semibold text-white/40 uppercase mb-4 tracking-[0.15em]">
+              Featured
+            </h3>
+            <div className="flex flex-wrap gap-3">
+              <a
+                href="https://heavymetalindex.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-md border border-white/20 text-sm text-white/85 hover:border-[var(--color-accent)] hover:text-white transition-colors duration-200"
+              >
+                Heavy Metal Index <span className="text-xs text-white/50">↗</span>
+              </a>
+              <a
+                href="https://paleofoundation.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-md border border-white/20 text-sm text-white/85 hover:border-[var(--color-accent)] hover:text-white transition-colors duration-200"
+              >
+                Paleo Foundation <span className="text-xs text-white/50">↗</span>
+              </a>
+            </div>
+          </div>
         </div>
 
         {/* Main Grid Content */}
