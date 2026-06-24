@@ -179,7 +179,7 @@ export default function HomePage() {
               proudly advertise it. He thought she was crazy. Seven years later it happened — and he called
               her the Oracle.
             </p>
-            <p className="cc-eyebrow text-[10px] mt-6" style={{ color: NAVY }}>Fred Hart · Founder, Interact</p>
+            <p className="cc-eyebrow text-[10px] mt-6" style={{ color: NAVY }}>Fred Hart · Partner & Creative Director, Interact</p>
           </div>
           <div className="mb-16" style={{ borderTop: '1px solid rgba(29,56,79,0.12)' }} />
 
@@ -333,7 +333,7 @@ export default function HomePage() {
             <span style={{ color: 'var(--color-accent)' }}>Calling the next one.</span>
           </h2>
           <div className="mt-12">
-            <Link href="/advisory" className="inline-block px-8 py-4 text-[12px] tracking-[0.12em] uppercase" style={{ background: 'var(--color-accent)', color: NAVY, fontFamily: 'var(--font-mono)' }}>
+            <Link href="/receipts" className="inline-block px-8 py-4 text-[12px] tracking-[0.12em] uppercase" style={{ background: 'var(--color-accent)', color: NAVY, fontFamily: 'var(--font-mono)' }}>
               See the receipts
             </Link>
           </div>
