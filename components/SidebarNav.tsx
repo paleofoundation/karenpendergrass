@@ -13,6 +13,7 @@ const navLinks = [
   { href: '/frameworks', label: 'Frameworks' },
   { href: '/publications', label: 'Publications' },
   { href: '/writing', label: 'Writing' },
+  { href: '/receipts', label: 'Receipts' },
   { href: '/roundtable', label: 'Roundtable' },
   { href: '/speaking', label: 'Speaking' },
   { href: '/advisory', label: 'Advisory' },

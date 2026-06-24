@@ -1,27 +1,21 @@
 import Link from 'next/link';
+import { tickerReceipts } from '@/lib/receipts';
 
 // Thin orange utility bar: a scrolling "receipts" ticker of trends called
-// early + a persistent advisory CTA. Sits below the nav, scrolls away.
-const items = [
-  'Called Paleo in 2009',
-  'Keto',
-  'Tiny houses',
-  'Grain-free',
-  'Microbiome medicine',
-  'Phage therapy for antimicrobial resistance',
-  'The field of microbial metallomics',
-  'Nickel in the food supply',
-];
-
+// early (links to the full track record) + a persistent advisory CTA.
 export default function AnnouncementBar() {
   // Duplicate the set so the marquee can loop seamlessly (translateX -50%).
-  const ticker = [...items, ...items];
+  const ticker = [...tickerReceipts, ...tickerReceipts];
   return (
     <div
       className="relative flex items-stretch overflow-hidden"
       style={{ background: 'var(--color-accent)', color: 'var(--color-ink-deep)' }}
     >
-      <div className="flex-1 overflow-hidden">
+      <Link
+        href="/receipts"
+        aria-label="See the full track record of trends called early"
+        className="flex-1 overflow-hidden"
+      >
         <div className="cc-ticker-track py-2.5">
           {ticker.map((t, i) => (
             <span key={i} className="cc-eyebrow text-[10px] inline-flex items-center">
@@ -30,7 +24,7 @@ export default function AnnouncementBar() {
             </span>
           ))}
         </div>
-      </div>
+      </Link>
       <Link
         href="/advisory"
         className="hidden sm:inline-flex items-center px-5 py-2.5 cc-eyebrow text-[10px] font-semibold whitespace-nowrap transition-colors duration-200 hover:bg-[var(--color-ink-deep)] hover:text-[var(--color-accent)]"
