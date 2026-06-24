@@ -6,13 +6,28 @@ interface ShareButtonsProps {
   url: string;
   title: string;
   compact?: boolean;
+  /** Raw tags/hashtags; sanitized and attached to the X (Twitter) share intent. */
+  hashtags?: string[];
 }
 
-export default function ShareButtons({ url, title, compact = false }: ShareButtonsProps) {
+export default function ShareButtons({ url, title, compact = false, hashtags = [] }: ShareButtonsProps) {
   const [copied, setCopied] = useState(false);
   const fullUrl = `https://www.karenpendergrass.com${url}`;
   const encodedUrl = encodeURIComponent(fullUrl);
   const encodedTitle = encodeURIComponent(title);
+
+  // X (Twitter) intent supports &hashtags=a,b,c. Sanitize to alphanumerics,
+  // drop the unusably long, de-dupe, and cap so the composer stays clean.
+  const cleanHashtags = Array.from(
+    new Set(
+      hashtags
+        .map((t) => t.replace(/[^a-zA-Z0-9]/g, ''))
+        .filter((t) => t.length >= 2 && t.length <= 24)
+    )
+  ).slice(0, 3);
+  const hashtagParam = cleanHashtags.length
+    ? `&hashtags=${encodeURIComponent(cleanHashtags.join(','))}`
+    : '';
 
   const handleCopy = async () => {
     try {
@@ -58,7 +73,7 @@ export default function ShareButtons({ url, title, compact = false }: ShareButto
 
       {/* X / Twitter */}
       <a
-        href={`https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedTitle}`}
+        href={`https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedTitle}${hashtagParam}`}
         target="_blank"
         rel="noopener noreferrer"
         className={buttonClass}
