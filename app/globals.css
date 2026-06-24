@@ -929,7 +929,7 @@ button:focus-visible,
   display: inline-flex;
   align-items: center;
   white-space: nowrap;
-  animation: cc-ticker 42s linear infinite;
+  animation: cc-ticker 52.5s linear infinite;
 }
 @keyframes cc-ticker {
   from { transform: translateX(0); }
