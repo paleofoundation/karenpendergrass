@@ -28,6 +28,8 @@ export interface PostMeta {
   author?: string;
   canonicalUrl?: string;
   openGraph?: PostMetaOpenGraph;
+  /** Optional curated hashtags for social share buttons (overrides tags). */
+  hashtags?: string[];
 }
 
 export interface Post {
@@ -73,6 +75,7 @@ export function getAllPosts(): Post[] {
         author: data.author || '',
         canonicalUrl: data.canonicalUrl || '',
         openGraph: data.openGraph || undefined,
+        hashtags: data.hashtags || undefined,
       },
       content,
     };
@@ -108,6 +111,7 @@ export function getPostBySlug(slug: string): Post | null {
         author: data.author || '',
         canonicalUrl: data.canonicalUrl || '',
         openGraph: data.openGraph || undefined,
+        hashtags: data.hashtags || undefined,
     },
     content,
   };

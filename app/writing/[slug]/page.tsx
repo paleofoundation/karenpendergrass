@@ -160,6 +160,13 @@ export default function ArticlePage({ params }: Props) {
   const htmlContent = renderMarkdown(bodyMarkdown);
   const referencesHtml = referencesMarkdown ? renderMarkdown(referencesMarkdown) : '';
 
+  // Auto-hashtags for the X share intent: curated frontmatter `hashtags` if
+  // present, otherwise the first few article tags.
+  const shareHashtags =
+    post.meta.hashtags && post.meta.hashtags.length
+      ? post.meta.hashtags
+      : (post.meta.tags || []).slice(0, 3);
+
   return (
     <div className="page-enter">
       <ReadingProgress />
@@ -223,6 +230,7 @@ export default function ArticlePage({ params }: Props) {
             <ShareButtons
               url={`/writing/${post.meta.slug}`}
               title={post.meta.title}
+              hashtags={shareHashtags}
             />
           </div>
         </div>
@@ -270,7 +278,7 @@ export default function ArticlePage({ params }: Props) {
               Share this
             </p>
             <div className="flex justify-center">
-              <ShareButtons url={`/writing/${post.meta.slug}`} title={post.meta.title} />
+              <ShareButtons url={`/writing/${post.meta.slug}`} title={post.meta.title} hashtags={shareHashtags} />
             </div>
           </div>
 
@@ -294,6 +302,7 @@ export default function ArticlePage({ params }: Props) {
               <ShareButtons
                 url={`/writing/${post.meta.slug}`}
                 title={post.meta.title}
+                hashtags={shareHashtags}
                 compact
               />
             </div>
