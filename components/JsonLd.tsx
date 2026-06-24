@@ -38,7 +38,7 @@ export function PersonSchema() {
     sameAs: [
       'https://orcid.org/0000-0002-2348-7259',
       'https://www.linkedin.com/in/karenpendergras/',
-      'https://x.com/PendergrassKP',
+      'https://x.com/micrometalomics',
       'https://www.instagram.com/micrometallomics',
       'https://www.facebook.com/karen.pendergrass/',
       'https://paleofoundation.com',
