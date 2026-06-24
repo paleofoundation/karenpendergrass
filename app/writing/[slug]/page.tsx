@@ -103,6 +103,7 @@ const categoryLabels: Record<string, string> = {
   analysis: 'Analysis',
   essays: 'Essays',
   'essays-by-claude': 'Essays by Claude',
+  'brass-tacks': 'Brass Tacks',
 };
 
 export default function ArticlePage({ params }: Props) {
