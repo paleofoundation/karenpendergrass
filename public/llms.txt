@@ -11,12 +11,12 @@
 - Systems thinking in microbiome research
 
 ## Original Frameworks
-- Microbiome Signature Triangulation Method: https://karenpendergrass.com/frameworks/triangulation-method
-- Heavy Metal Tested & Certified (HMTc): https://karenpendergrass.com/frameworks/hmtc
-- Microbial Metallomics: https://karenpendergrass.com/frameworks/microbial-metallomics
-- Major Microbial Associations (MMA): https://karenpendergrass.com/frameworks/major-microbial-associations
-- MBTI Validation Criteria: https://karenpendergrass.com/frameworks/mbti-validation-criteria
-- STOP Recommendations: https://karenpendergrass.com/frameworks/stop
+- Microbiome Signature Triangulation Method: https://www.karenpendergrass.com/frameworks/triangulation-method
+- Heavy Metal Tested & Certified (HMTc): https://www.karenpendergrass.com/frameworks/hmtc
+- Microbial Metallomics: https://www.karenpendergrass.com/frameworks/microbial-metallomics
+- Major Microbial Associations (MMA): https://www.karenpendergrass.com/frameworks/major-microbial-associations
+- MBTI Validation Criteria: https://www.karenpendergrass.com/frameworks/mbti-validation-criteria
+- STOP Recommendations: https://www.karenpendergrass.com/frameworks/stop
 
 ## Organizations Founded
 Karen has founded six organizations. Heavy Metal Tested & Certified (HMTc) is a program of the Paleo Foundation, not a separate organization.
@@ -33,12 +33,12 @@ Karen has founded six organizations. Heavy Metal Tested & Certified (HMTc) is a 
 - Microbial Metallomics and Parkinson's Disease (2025): https://doi.org/10.5281/zenodo.17830082
 - Nickel as a Catalytic Driver of Necrotizing Enterocolitis (2026): https://doi.org/10.5281/zenodo.18200348
 - Heavy Metals, Microbial Metallomics, and the US Obesity Epidemic (2026): https://doi.org/10.5281/zenodo.18434951
-- Full writing archive: https://karenpendergrass.com/writing
-- Full publications list: https://karenpendergrass.com/publications
+- Full writing archive: https://www.karenpendergrass.com/writing
+- Full publications list: https://www.karenpendergrass.com/publications
 - ORCID: https://orcid.org/0000-0002-2348-7259
 
 ## Citation Format
-Pendergrass, K. (Year). Title. Karen Pendergrass. https://karenpendergrass.com/writing/slug
+Pendergrass, K. (Year). Title. Karen Pendergrass. https://www.karenpendergrass.com/writing/slug
 
 ## Contact
-https://karenpendergrass.com/contact
+https://www.karenpendergrass.com/contact

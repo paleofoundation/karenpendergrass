@@ -15,6 +15,7 @@ import ReadingProgress from '@/components/ReadingProgress';
 import CitationBlock from '@/components/CitationBlock';
 import NewsletterSignup from '@/components/NewsletterSignup';
 import RelatedArticles from '@/components/RelatedArticles';
+import ArticleSidebar from '@/components/ArticleSidebar';
 
 interface Props {
   params: { slug: string };
@@ -243,118 +244,129 @@ export default function ArticlePage({ params }: Props) {
         </div>
       )}
 
-      {/* Table of contents (only for long articles) */}
+      {/* Table of contents — mobile/tablet only; large screens use the sidebar */}
       {post.content.split(/\s+/).length > 1500 && (
-        <div className="max-w-3xl mx-auto px-6">
+        <div className="lg:hidden max-w-3xl mx-auto px-6">
           <TableOfContents content={post.content} />
         </div>
       )}
 
-      {/* Article body */}
-      <article
-        className="max-w-3xl mx-auto px-6 py-10 prose"
-        dangerouslySetInnerHTML={{ __html: htmlContent }}
-      />
-
-      {/* Share this — sits right before the references/sources */}
-      <div className="max-w-3xl mx-auto px-6">
-        <div
-          className="rounded-lg px-6 py-7 text-center"
-          style={{ background: 'var(--color-bg-alt)', border: '1px solid var(--color-border-light)' }}
-        >
-          <p className="cc-eyebrow text-[11px] mb-4" style={{ color: 'var(--color-accent-dark)' }}>
-            Share this
-          </p>
-          <div className="flex justify-center">
-            <ShareButtons url={`/writing/${post.meta.slug}`} title={post.meta.title} />
-          </div>
-        </div>
-      </div>
-
-      {/* References / sources (rendered after the share block) */}
-      {referencesHtml && (
-        <article
-          className="max-w-3xl mx-auto px-6 pt-12 prose"
-          dangerouslySetInnerHTML={{ __html: referencesHtml }}
-        />
-      )}
-
-      {/* Bottom share buttons */}
-      <div className="max-w-3xl mx-auto px-6 pb-8">
-        <div
-          className="flex items-center justify-between pt-6"
-          style={{ borderTop: '1px solid var(--color-border-light)' }}
-        >
-          <p className="text-xs" style={{ color: 'var(--color-ink-muted)' }}>
-            If this was useful, share it with someone who needs to see it.
-          </p>
-          <ShareButtons
-            url={`/writing/${post.meta.slug}`}
-            title={post.meta.title}
-            compact
+      {/* Two-column reading layout: prose + sticky editorial sidebar */}
+      <div className="mx-auto max-w-6xl px-6 lg:flex lg:gap-14 lg:items-start">
+        {/* Main reading column */}
+        <div className="min-w-0 lg:flex-1 lg:max-w-[44rem]">
+          {/* Article body */}
+          <article
+            className="py-10 prose"
+            dangerouslySetInnerHTML={{ __html: htmlContent }}
           />
-        </div>
-      </div>
 
-      {/* Citation block */}
-      <div className="max-w-3xl mx-auto px-6 pb-8">
-        <CitationBlock
-          title={post.meta.title}
-          date={post.meta.date}
-          slug={post.meta.slug}
-          author={byClaude ? 'Claude (Anthropic)' : undefined}
-          directedBy={byClaude ? 'K. Pendergrass' : undefined}
-        />
-      </div>
+          {/* Share this — sits right before the references/sources */}
+          <div
+            className="rounded-lg px-6 py-7 text-center"
+            style={{ background: 'var(--color-bg-alt)', border: '1px solid var(--color-border-light)' }}
+          >
+            <p className="cc-eyebrow text-[11px] mb-4" style={{ color: 'var(--color-accent-dark)' }}>
+              Share this
+            </p>
+            <div className="flex justify-center">
+              <ShareButtons url={`/writing/${post.meta.slug}`} title={post.meta.title} />
+            </div>
+          </div>
 
-      {/* Newsletter signup */}
-      <div className="max-w-3xl mx-auto px-6 pb-10">
-        <NewsletterSignup />
-      </div>
-
-      {/* Author bio */}
-      <div className="max-w-3xl mx-auto px-6 pb-10">
-        <AuthorBio variant={byClaude ? 'claude' : 'karen'} />
-      </div>
-
-      {/* Related articles */}
-      <div className="max-w-3xl mx-auto px-6 pb-10">
-        <RelatedArticles articles={related} />
-      </div>
-
-      {/* Prev / Next navigation */}
-      <nav
-        className="max-w-3xl mx-auto px-6 pb-20 pt-8"
-        style={{ borderTop: '1px solid var(--color-border-light)' }}
-      >
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-          {prevPost && (
-            <Link href={`/writing/${prevPost.meta.slug}`} className="group">
-              <p className="text-xs mb-1" style={{ color: 'var(--color-ink-muted)' }}>← Previous</p>
-              <p
-                className="text-sm font-medium transition-colors duration-200 group-hover:text-[var(--color-accent-dark)] line-clamp-2"
-                style={{ fontFamily: 'var(--font-display)', color: 'var(--color-ink)' }}
-              >
-                {prevPost.meta.title}
-              </p>
-            </Link>
+          {/* References / sources (rendered after the share block) */}
+          {referencesHtml && (
+            <article
+              className="pt-12 prose"
+              dangerouslySetInnerHTML={{ __html: referencesHtml }}
+            />
           )}
-          {nextPost && (
-            <Link
-              href={`/writing/${nextPost.meta.slug}`}
-              className="group text-right sm:col-start-2"
+
+          {/* Bottom share buttons */}
+          <div className="pb-8">
+            <div
+              className="flex items-center justify-between pt-6 mt-12"
+              style={{ borderTop: '1px solid var(--color-border-light)' }}
             >
-              <p className="text-xs mb-1" style={{ color: 'var(--color-ink-muted)' }}>Next →</p>
-              <p
-                className="text-sm font-medium transition-colors duration-200 group-hover:text-[var(--color-accent-dark)] line-clamp-2"
-                style={{ fontFamily: 'var(--font-display)', color: 'var(--color-ink)' }}
-              >
-                {nextPost.meta.title}
+              <p className="text-xs" style={{ color: 'var(--color-ink-muted)' }}>
+                If this was useful, share it with someone who needs to see it.
               </p>
-            </Link>
-          )}
+              <ShareButtons
+                url={`/writing/${post.meta.slug}`}
+                title={post.meta.title}
+                compact
+              />
+            </div>
+          </div>
+
+          {/* Citation block */}
+          <div className="pb-8">
+            <CitationBlock
+              title={post.meta.title}
+              date={post.meta.date}
+              slug={post.meta.slug}
+              author={byClaude ? 'Claude (Anthropic)' : undefined}
+              directedBy={byClaude ? 'K. Pendergrass' : undefined}
+            />
+          </div>
+
+          {/* Newsletter signup */}
+          <div className="pb-10">
+            <NewsletterSignup />
+          </div>
+
+          {/* Author bio */}
+          <div className="pb-10">
+            <AuthorBio variant={byClaude ? 'claude' : 'karen'} />
+          </div>
+
+          {/* Related articles */}
+          <div className="pb-10">
+            <RelatedArticles articles={related} />
+          </div>
+
+          {/* Prev / Next navigation */}
+          <nav
+            className="pb-20 pt-8"
+            style={{ borderTop: '1px solid var(--color-border-light)' }}
+          >
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              {prevPost && (
+                <Link href={`/writing/${prevPost.meta.slug}`} className="group">
+                  <p className="text-xs mb-1" style={{ color: 'var(--color-ink-muted)' }}>← Previous</p>
+                  <p
+                    className="text-sm font-medium transition-colors duration-200 group-hover:text-[var(--color-accent-dark)] line-clamp-2"
+                    style={{ fontFamily: 'var(--font-display)', color: 'var(--color-ink)' }}
+                  >
+                    {prevPost.meta.title}
+                  </p>
+                </Link>
+              )}
+              {nextPost && (
+                <Link
+                  href={`/writing/${nextPost.meta.slug}`}
+                  className="group text-right sm:col-start-2"
+                >
+                  <p className="text-xs mb-1" style={{ color: 'var(--color-ink-muted)' }}>Next →</p>
+                  <p
+                    className="text-sm font-medium transition-colors duration-200 group-hover:text-[var(--color-accent-dark)] line-clamp-2"
+                    style={{ fontFamily: 'var(--font-display)', color: 'var(--color-ink)' }}
+                  >
+                    {nextPost.meta.title}
+                  </p>
+                </Link>
+              )}
+            </div>
+          </nav>
         </div>
-      </nav>
+
+        {/* Editorial sidebar — large screens only */}
+        <aside className="hidden lg:block lg:w-72 xl:w-80 flex-shrink-0">
+          <div className="sticky top-28 pt-10 pb-20">
+            <ArticleSidebar content={post.content} currentSlug={post.meta.slug} />
+          </div>
+        </aside>
+      </div>
     </div>
   );
 }
