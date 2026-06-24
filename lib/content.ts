@@ -134,6 +134,55 @@ export function getAllCategories(): { name: string; count: number }[] {
     .sort((a, b) => b.count - a.count);
 }
 
+// Words too generic to make useful, content-specific hashtags.
+const HASHTAG_STOPWORDS = new Set([
+  'analysis',
+  'essays',
+  'research',
+  'regulation',
+  'predictions',
+  'trends',
+  'science',
+  'health',
+  'food',
+  'medicine',
+]);
+
+/**
+ * Derive clean, content-relevant hashtags from an article's tags. Used for the
+ * X (Twitter) share intent on every article, so sharing always carries
+ * sensible hashtags even when no curated `hashtags` field is set.
+ *
+ * Heuristic: prefer short, single-word tags (they make the cleanest hashtags),
+ * fall back to compacted multi-word tags, skip generic stopwords, de-dupe
+ * case-insensitively, and cap the count.
+ */
+export function deriveHashtags(tags: string[], limit = 3): string[] {
+  const candidates = (tags || [])
+    .map((t) => ({ raw: t.trim(), tag: t.replace(/[^a-zA-Z0-9]/g, '') }))
+    .filter(
+      (c) =>
+        c.tag.length >= 2 &&
+        c.tag.length <= 20 &&
+        !HASHTAG_STOPWORDS.has(c.raw.toLowerCase())
+    );
+
+  const singleWord = candidates.filter((c) => !/\s/.test(c.raw));
+  const multiWord = candidates.filter((c) => /\s/.test(c.raw));
+  const ordered = [...singleWord, ...multiWord];
+
+  const seen = new Set<string>();
+  const out: string[] = [];
+  for (const c of ordered) {
+    const key = c.tag.toLowerCase();
+    if (seen.has(key)) continue;
+    seen.add(key);
+    out.push(c.tag);
+    if (out.length >= limit) break;
+  }
+  return out;
+}
+
 export function getPage(slug: string): Page | null {
   const filePath = path.join(contentDirectory, 'pages', `${slug}.mdx`);
   

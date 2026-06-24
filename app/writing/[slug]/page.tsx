@@ -6,7 +6,7 @@ import { unified } from 'unified';
 import remarkParse from 'remark-parse';
 import remarkHtml from 'remark-html';
 import remarkSlug from 'remark-slug';
-import { getAllPosts, getPostBySlug, formatDate, readingTime } from '@/lib/content';
+import { getAllPosts, getPostBySlug, formatDate, readingTime, deriveHashtags } from '@/lib/content';
 import { ArticleSchema } from '@/components/JsonLd';
 import ShareButtons from '@/components/ShareButtons';
 import AuthorBio from '@/components/AuthorBio';
@@ -161,11 +161,11 @@ export default function ArticlePage({ params }: Props) {
   const referencesHtml = referencesMarkdown ? renderMarkdown(referencesMarkdown) : '';
 
   // Auto-hashtags for the X share intent: curated frontmatter `hashtags` if
-  // present, otherwise the first few article tags.
+  // present, otherwise derived automatically from the article's own tags.
   const shareHashtags =
     post.meta.hashtags && post.meta.hashtags.length
       ? post.meta.hashtags
-      : (post.meta.tags || []).slice(0, 3);
+      : deriveHashtags(post.meta.tags || []);
 
   return (
     <div className="page-enter">
