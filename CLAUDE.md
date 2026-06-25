@@ -41,7 +41,7 @@ These are hard rules. Karen has corrected each of them more than once.
   Karen's direction; she remains publisher.
 
 ## Conventions
-- Canonical host is **www.karenpendergrass.com**. Never display Karen's email
+- Canonical host is **karenpendergrass.com**. Never display Karen's email
   publicly (the contact form delivers to karen@paleofoundation.com silently).
 - Articles auto-derive social hashtags from their `tags` (or a curated
   `hashtags:` frontmatter override). Full SEO/LLMO metadata + JSON-LD ship per

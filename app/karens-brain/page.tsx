@@ -35,9 +35,9 @@ export default function KarensBrainPage() {
             creator: {
               '@type': 'Person',
               name: 'Karen Pendergrass',
-              url: 'https://www.karenpendergrass.com',
+              url: 'https://karenpendergrass.com',
             },
-            url: 'https://www.karenpendergrass.com/karens-brain',
+            url: 'https://karenpendergrass.com/karens-brain',
           }),
         }}
       />

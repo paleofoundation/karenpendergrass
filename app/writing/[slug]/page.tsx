@@ -40,7 +40,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const description = (post.meta.description || fallbackDesc).slice(0, 150);
   const canonical =
     post.meta.canonicalUrl ||
-    `https://www.karenpendergrass.com/writing/${post.meta.slug}`;
+    `https://karenpendergrass.com/writing/${post.meta.slug}`;
   const og = post.meta.openGraph;
   const ogTitle = og?.title || post.meta.title;
   const ogDescription = (og?.description || description).slice(0, 150);
@@ -78,7 +78,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         ? {
             images: [
               {
-                url: `https://www.karenpendergrass.com${post.meta.coverImage}`,
+                url: `https://karenpendergrass.com${post.meta.coverImage}`,
                 width: 1200,
                 height: 630,
                 alt: post.meta.title,
@@ -92,7 +92,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: post.meta.title,
       description,
       ...(post.meta.coverImage
-        ? { images: [`https://www.karenpendergrass.com${post.meta.coverImage}`] }
+        ? { images: [`https://karenpendergrass.com${post.meta.coverImage}`] }
         : {}),
     },
   };
