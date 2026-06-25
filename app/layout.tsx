@@ -48,7 +48,7 @@ export const metadata: Metadata = {
     'food safety researcher',
     'Limassol Cyprus',
   ],
-  metadataBase: new URL('https://www.karenpendergrass.com'),
+  metadataBase: new URL('https://karenpendergrass.com'),
   alternates: {
     canonical: '/',
   },
@@ -56,7 +56,7 @@ export const metadata: Metadata = {
     title: 'Karen Pendergrass',
     description:
       'Standards developer, microbiome signatures researcher, and founder at the intersection of microbiome science, translational medicine, and regulatory innovation.',
-    url: 'https://www.karenpendergrass.com',
+    url: 'https://karenpendergrass.com',
     siteName: 'Karen Pendergrass',
     locale: 'en_US',
     type: 'website',
@@ -67,7 +67,7 @@ export const metadata: Metadata = {
     description:
       'Standards developer, microbiome signatures researcher, and founder at the intersection of microbiome science, translational medicine, and regulatory innovation.',
   },
-  authors: [{ name: 'Karen Pendergrass', url: 'https://www.karenpendergrass.com' }],
+  authors: [{ name: 'Karen Pendergrass', url: 'https://karenpendergrass.com' }],
   robots: {
     index: true,
     follow: true,

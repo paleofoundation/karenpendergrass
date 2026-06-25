@@ -12,7 +12,7 @@ interface ShareButtonsProps {
 
 export default function ShareButtons({ url, title, compact = false, hashtags = [] }: ShareButtonsProps) {
   const [copied, setCopied] = useState(false);
-  const fullUrl = `https://www.karenpendergrass.com${url}`;
+  const fullUrl = `https://karenpendergrass.com${url}`;
   const encodedUrl = encodeURIComponent(fullUrl);
   const encodedTitle = encodeURIComponent(title);
 

@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     description:
       'Paleo in 2009. Microbiome medicine in 2011. The first recorded FMT for celiac in 2012. Fiber on the can. The nickel problem. The receipts, with the years and the gaps.',
     type: 'website',
-    url: 'https://www.karenpendergrass.com/receipts',
+    url: 'https://karenpendergrass.com/receipts',
   },
 };
 
