@@ -1,0 +1,62 @@
+---
+description: Design system enforcement for karenpendergrass.com — load before writing any UI/CSS
+globs: ["**/*.tsx", "**/*.ts", "**/*.css", "**/*.jsx", "**/*.mdx"]
+alwaysApply: true
+---
+
+# karenpendergrass.com Design System
+
+Canonical source: the brand design system at `~/design` (repo paleofoundation/design) —
+`src/lib/design-tokens.ts` plus its `.cursor/rules/dzyne-design-system.mdc`. This file adapts
+those conventions to THIS repo's actual tokens. The aesthetic is **editorial** — warm,
+light-weight, intentional — not the dark-mode "AI dev tool" look.
+
+## Tokens are the only source of truth
+All styling goes through the tokens in `app/globals.css` (`:root`) and `tailwind.config.js`.
+NEVER hardcode a hex value, raw `rgb()`, or generic Tailwind color (`bg-gray-*`,
+`text-slate-*`, etc.) in a component.
+- Colors → `--color-ink` (`text-ink`), `--color-ink-secondary`, `--color-ink-muted`,
+  `--color-accent` (`text-accent` / `bg-accent`), `--color-accent-dark` (AA-safe accent text
+  on light), `--color-bg`, `--color-bg-alt`, `--color-surface`, `--color-border`,
+  `--color-border-light`.
+- Fonts → `--font-display` (`font-display`, editorial serif), `--font-body` (`font-body`),
+  `--font-mono` (`font-mono`). Never introduce Inter / Geist / system fonts.
+- Spacing → the 8px-grid tokens `--spacing-xs..4xl` (4/8/16/24/32/48/64/96px). Sections get
+  generous breathing room (~96px desktop / 48px mobile).
+- Radius → 4/6/8/12 (`rounded-sm/md/lg/xl`). Be consistent; inner radius < outer.
+- Type → the `--text-*` scale; don't invent arbitrary sizes.
+
+## Heading-weight convention — CRITICAL
+The display serif is high-contrast and is meant to read at LIGHT weights. Bold serif headings
+are the #1 tell of a generic template.
+- Display headings **h1–h3: weight 400.** Never 700. (The global CSS currently uses 600/500;
+  prefer 400 for display per the system.)
+- Subheads h4–h6: 500.
+- UI labels / uppercase eyebrows / badges: 600 — `font-semibold` is correct ONLY here.
+- Stat / data numbers: 700 (numeric emphasis only).
+- Body: 400.
+
+## Anti-patterns (do not ship)
+1. Hardcoded hex / raw rgb of a token color → use the `var(--color-*)` token (or
+   `color-mix(in srgb, var(--color-*) N%, transparent)` for tints).
+2. `font-bold` / 700 on a display serif heading.
+3. Generic Tailwind grays / Inter-everywhere / dark-mode-by-default.
+4. `rounded-xl` on everything; mismatched radii on one page.
+5. Pure-gray shadows where a warm / brand-tinted shadow reads better.
+6. Two different heading-weight conventions across pages — keep it site-wide consistent.
+
+## Brand palette is intentional — don't swap it casually
+This site currently runs a **deep-blue + warm-orange** palette (the canonical design system
+ships forest-green / orange / amber / lavender). The palette VALUES live in ONE place —
+`app/globals.css` `:root`. To rebrand, change them there and everything cascades. Do NOT
+change brand colors without Karen's explicit decision.
+
+## Self-check before finishing any UI file
+1. Grep the file for `#` hex and `rgb(` — replace token colors with `var(--color-*)`.
+2. No `font-bold` / `fontWeight: 700` on h1–h3 display headings.
+3. All `font-family` via `var(--font-*)` / `font-display|body|mono`.
+4. Spacing & radius use the token scale (8px grid; 4/6/8/12).
+5. No generic Tailwind color classes.
+6. Heading weights consistent with the convention above, site-wide.
+
+When a decision isn't covered here, check `~/design` or ask Karen — intentional, not defaulted.
