@@ -1,4 +1,4 @@
-// Single source of truth for Karen's six ventures.
+// Single source of truth for Karen's ventures.
 //
 // Pure data — NO `fs` import — so it is safe to consume from both server
 // components (app/ventures, app/page) and the JSON-LD module. Previously this
@@ -72,6 +72,20 @@ export const ventures: Venture[] = [
     schemaDescription:
       'Clinician-facing database formalizing disease-associated microbiome patterns through Major Microbial Associations (MMAs).',
     status: 'active',
+  },
+  {
+    name: 'Phage Cocktails',
+    slug: 'phage-cocktails',
+    url: 'https://phagecocktails.com',
+    tag: 'Frontier',
+    homeDescription: 'Precision bacteriophage therapy as the answer to antimicrobial resistance',
+    role: 'Founder',
+    tagline: 'The most precise antibiotic ever discovered is a virus',
+    description:
+      'A scientific platform making the case for bacteriophage cocktails as precision replacements for broad-spectrum antibiotics. Phages target a single bacterial strain and leave the microbiome intact, where antibiotics carpet-bomb it. The flagship program is a prophylactic cocktail to prevent necrotizing enterocolitis in premature infants by suppressing Klebsiella blooms. Includes 50 open-source CC0 grant proposals, a Build-a-Cocktail Lab, landmark case studies, and an interest waitlist — the connective tissue between microbiome signatures and the antimicrobial therapies of the next era.',
+    schemaDescription:
+      'Scientific platform for precision bacteriophage (phage) cocktail therapy as an alternative to broad-spectrum antibiotics, with a flagship program to prevent necrotizing enterocolitis in premature infants.',
+    status: 'building',
   },
   {
     name: 'Journal of Food Metallomics',

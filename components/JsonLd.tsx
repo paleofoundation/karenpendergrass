@@ -22,6 +22,8 @@ export function PersonSchema() {
       'Food Safety Standards',
       'Paleo Certification',
       'Phage Therapy',
+      'Bacteriophage Cocktails',
+      'Antimicrobial Resistance',
       'Translational Microbiome Medicine',
       'Microbiome-Targeted Interventions',
       'Heavy Metal Testing and Certification',
@@ -49,6 +51,7 @@ export function PersonSchema() {
       'https://gardensofstgertrude.com',
       'https://heavymetaltested.com',
       'https://heavymetalindex.com',
+      'https://phagecocktails.com',
     ],
     founder: ventures.map((v) => ({
       '@type': 'Organization',
