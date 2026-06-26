@@ -10,6 +10,7 @@ const navLinks = [
   { href: '/start', label: 'Start Here' },
   { href: '/about', label: 'About' },
   { href: '/ventures', label: 'Ventures' },
+  { href: '/phage', label: 'Phage Cocktails' },
   { href: '/frameworks', label: 'Frameworks' },
   { href: '/publications', label: 'Publications' },
   { href: '/writing', label: 'Writing' },
