@@ -46,3 +46,12 @@ These are hard rules. Karen has corrected each of them more than once.
 - Articles auto-derive social hashtags from their `tags` (or a curated
   `hashtags:` frontmatter override). Full SEO/LLMO metadata + JSON-LD ship per
   article; the sitemap (`app/sitemap.ts`) auto-includes every post.
+
+## Design system
+Brand design system lives at `~/design` (repo paleofoundation/design) and is enforced here
+via `.cursor/rules/dzyne-design-system.mdc` — **read it before touching any UI/CSS.**
+Non-negotiables: style only through the tokens in `app/globals.css` + `tailwind.config.js`
+(never hardcode hex / generic Tailwind grays); display headings h1–h3 in the serif at weight
+**400** (editorial — never 700); `font-semibold`/600 is for uppercase eyebrow labels only;
+spacing on the 8px grid; radius 4/6/8/12. Brand palette values live in one place
+(`app/globals.css :root`) — change there to rebrand; don't swap colors without Karen's say-so.
