@@ -196,7 +196,7 @@ const credentials: { label: string; value: ReactNode }[] = [
     label: 'Organizations Founded',
     value: (
       <>
-        6 (
+        8 (
         <Link href="/ventures" className="text-accent">
           Paleo Foundation
         </Link>{' '}
@@ -211,6 +211,19 @@ const credentials: { label: string; value: ReactNode }[] = [
         </a>
         ),{' '}
         <Link href="/ventures" className="text-accent">
+          Heavy Metal Index
+        </Link>{' '}
+        (
+        <a
+          href="https://heavymetalindex.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-accent"
+        >
+          heavymetalindex.com
+        </a>
+        ),{' '}
+        <Link href="/ventures" className="text-accent">
           Microbiome Medicine
         </Link>{' '}
         (
@@ -221,6 +234,19 @@ const credentials: { label: string; value: ReactNode }[] = [
           className="text-accent"
         >
           microbiomemedicine.com
+        </a>
+        ),{' '}
+        <Link href="/ventures" className="text-accent">
+          Phage Cocktails
+        </Link>{' '}
+        (
+        <a
+          href="https://phagecocktails.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-accent"
+        >
+          phagecocktails.com
         </a>
         ),{' '}
         <Link href="/ventures" className="text-accent">
