@@ -1,3 +1,6 @@
+import type { DonationPurpose } from "@/lib/donations";
+import type { FieldIcon } from "./types";
+
 export type ZoneKind =
   | "foundry"
   | "wetlands"
@@ -55,6 +58,8 @@ export type FieldLink = {
   label: string;
   eyebrow: string;
   href: string;
+  icon?: FieldIcon;
+  supportPurpose?: DonationPurpose;
   color: string;
   x: number;
   z: number;
@@ -130,7 +135,7 @@ export const expeditionZones: ExpeditionZone[] = [
     label: "CATEGORY-SPECIFIC STANDARDS",
     kicker: "Evidence becomes a standard people can use",
     description:
-      "Certification infrastructure for a food system that needs limits grounded in category, exposure, surveillance, testing, and continuous improvement—not one universal cutoff.",
+      "Certification infrastructure for a food system that needs limits grounded in category, exposure, surveillance, testing, and continuous improvement—not one universal cutoff. The work behind Heavy Metal Certified has also funded and fed Karen’s sanctuary cats for years.",
     x: 15,
     z: -35,
     radius: 9,
@@ -149,7 +154,7 @@ export const expeditionZones: ExpeditionZone[] = [
         "Testing protocols, surveillance, corrective action, and public standards make the mark more than a one-time laboratory result.",
         "The Index supplies the evidence layer; certification translates that evidence into operating rules.",
       ],
-      receipt: "Karen began constructing the framework before heavy-metal certification became a mainstream market demand.",
+      receipt: "Karen began constructing the framework before heavy-metal certification became a mainstream market demand. Heavy Metal Certified has quietly been the work funding the food and care of the Gardens of St. Gertrude cats all these years.",
     },
   },
   {
@@ -219,7 +224,7 @@ export const expeditionZones: ExpeditionZone[] = [
     label: "SANCTUARY INFRASTRUCTURE",
     kicker: "Repair the system, not the fundraising loop",
     description:
-      "Karen founded Tinies after building a real-life sanctuary first. Gardens of St. Gertrude in Cyprus cares for 90+ cats; the cats pictured by Tinies are the actual animals that made the platform necessary.",
+      "Karen founded Tinies after building a real-life sanctuary first. Gardens of St. Gertrude in Cyprus cares for 90+ cats; the cats pictured by Tinies are the actual animals that made the platform necessary. Heavy Metal Certified has been the work funding and feeding them behind the scenes.",
     x: 48,
     z: 34,
     radius: 9,
@@ -338,10 +343,17 @@ export const oracleBlocks: OracleBlock[] = [
 ];
 
 export const socialLinks: FieldLink[] = [
-  { id: "social-linkedin", label: "LINKEDIN", eyebrow: "KAREN ON", href: "https://www.linkedin.com/in/karenpendergras/", color: "#6bb6ff", x: -81, z: -42, rotation: 0.16 },
-  { id: "social-instagram", label: "INSTAGRAM", eyebrow: "MICROMETALLOMICS", href: "https://www.instagram.com/micrometallomics", color: "#ff9cae", x: -75, z: -44, rotation: 0.06 },
-  { id: "social-x", label: "X / TWITTER", eyebrow: "@MICROMETALOMICS", href: "https://x.com/micrometalomics", color: "#eef7e9", x: -69, z: -44, rotation: -0.06 },
-  { id: "social-facebook", label: "FACEBOOK", eyebrow: "KAREN PENDERGRASS", href: "https://www.facebook.com/karen.pendergrass/", color: "#8caeff", x: -63, z: -42, rotation: -0.16 },
+  { id: "social-linkedin", label: "LINKEDIN", eyebrow: "KAREN ON", href: "https://www.linkedin.com/in/karenpendergras/", icon: "linkedin", color: "#0a66c2", x: -83, z: -43, rotation: 0.19 },
+  { id: "social-instagram", label: "INSTAGRAM", eyebrow: "MICROMETALLOMICS", href: "https://www.instagram.com/micrometallomics", icon: "instagram", color: "#e55292", x: -77, z: -46, rotation: 0.1 },
+  { id: "social-x", label: "X / TWITTER", eyebrow: "@MICROMETALOMICS", href: "https://x.com/micrometalomics", icon: "x", color: "#eef7e9", x: -71, z: -47, rotation: 0 },
+  { id: "social-facebook", label: "FACEBOOK", eyebrow: "KAREN PENDERGRASS", href: "https://www.facebook.com/karen.pendergrass/", icon: "facebook", color: "#1877f2", x: -65, z: -46, rotation: -0.1 },
+  { id: "social-email", label: "EMAIL KAREN", eyebrow: "FIELD CONTACT", href: "/contact", icon: "email", color: "#ffad4f", x: -59, z: -43, rotation: -0.19 },
+  { id: "social-orcid", label: "ORCID 0000-0002-2348-7259", eyebrow: "PAPERS · PUBLICATIONS · RECORD", href: "https://orcid.org/0000-0002-2348-7259", icon: "orcid", color: "#a6ce39", x: -71, z: -36, rotation: 0 },
+];
+
+export const supportLinks: FieldLink[] = [
+  { id: "support-microbiome", label: "MICROBIOME MEDICINE", eyebrow: "FREE RESEARCH PLATFORM · COFFEE OPTIONAL", href: "https://microbiomemedicine.com", icon: "microbiome", supportPurpose: "microbiome-medicine", color: "#5de5d6", x: -62, z: 56, rotation: 0.1 },
+  { id: "support-wikibiome", label: "WIKIBIOME", eyebrow: "FREE KNOWLEDGE PLATFORM · COFFEE OPTIONAL", href: "https://wikibiome.com", icon: "wikibiome", supportPurpose: "wikibiome", color: "#b98cff", x: -52, z: 58, rotation: -0.1 },
 ];
 
 export const articleSignals: FieldLink[] = [

@@ -2,20 +2,28 @@
 
 import Link from "next/link";
 import { useEffect } from "react";
+import { DONATION_PROGRAMS, type DonationPurpose } from "@/lib/donations";
 
-export default function DonationReturn({ verified }: { verified: boolean }) {
+export default function DonationReturn({ verified, purpose }: { verified: boolean; purpose: DonationPurpose }) {
+  const program = DONATION_PROGRAMS[purpose];
+
   useEffect(() => {
     if (!verified) return;
-    window.localStorage.setItem("kp-tinies-donation-verified", String(Date.now()));
-    window.opener?.postMessage({ type: "kp-tinies-donation-verified" }, window.location.origin);
-  }, [verified]);
+    if (purpose === "tinies") {
+      window.localStorage.setItem("kp-tinies-donation-verified", String(Date.now()));
+      window.opener?.postMessage({ type: "kp-tinies-donation-verified" }, window.location.origin);
+      return;
+    }
+    window.localStorage.setItem(`kp-coffee-${purpose}-verified`, String(Date.now()));
+    window.opener?.postMessage({ type: "kp-coffee-donation-verified", purpose }, window.location.origin);
+  }, [purpose, verified]);
 
   return (
     <main className="donation-return-page">
       <section className={verified ? "donation-return-card is-verified" : "donation-return-card"}>
-        <span>{verified ? "PAYMENT VERIFIED · GARDENS OF ST. GERTRUDE" : "PAYMENT NOT VERIFIED"}</span>
-        <h1>{verified ? "THE CATS THANK YOU." : "WE COULD NOT CONFIRM THAT GIFT."}</h1>
-        <p>{verified ? "Your $1 contribution was confirmed. Return to the expedition tab: cat-safety penalties will be restored and the 1,000-point sanctuary bonus will be added automatically." : "No completed $1 Stripe payment was found. You can return to the expedition and try the sanctuary mission again."}</p>
+        <span>{verified ? program.successEyebrow : "PAYMENT NOT VERIFIED"}</span>
+        <h1>{verified ? program.successTitle : "WE COULD NOT CONFIRM THAT GIFT."}</h1>
+        <p>{verified ? program.successCopy : `No completed ${program.amountLabel} Stripe payment was found. You can return to the expedition and try the support mission again.`}</p>
         <Link href="/">RETURN TO EXPEDITION KP–01 →</Link>
       </section>
     </main>

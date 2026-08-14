@@ -1,3 +1,5 @@
+import type { DonationPurpose } from "@/lib/donations";
+
 export type Telemetry = {
   speed: number;
   heading: number;
@@ -7,12 +9,16 @@ export type Telemetry = {
   scanning: boolean;
 };
 
+export type FieldIcon = "linkedin" | "instagram" | "x" | "facebook" | "email" | "orcid" | "microbiome" | "wikibiome";
+
 export type FieldObjectEvent = {
   id: string;
   label: string;
   eyebrow: string;
-  kind: "social" | "article" | "demolition";
+  kind: "social" | "article" | "demolition" | "support";
   href?: string;
+  icon?: FieldIcon;
+  supportPurpose?: DonationPurpose;
   color: string;
   points: number;
 };

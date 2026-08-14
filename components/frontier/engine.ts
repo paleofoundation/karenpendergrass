@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { RoundedBoxGeometry } from "three/examples/jsm/geometries/RoundedBoxGeometry.js";
 import type { DynamicRayCastVehicleController, RigidBody, World } from "@dimforge/rapier3d-compat";
-import { articleSignals, expeditionZones, oracleBlocks, socialLinks, type ExpeditionZone } from "./zones";
+import { articleSignals, expeditionZones, oracleBlocks, socialLinks, supportLinks, type ExpeditionZone } from "./zones";
 import type { DriveAction, ExperienceCallbacks, ExperienceHandle, FieldObjectEvent } from "./types";
 
 const TAU = Math.PI * 2;
@@ -151,6 +151,97 @@ function createPointsSprite(points: number, color: string, label = "POTENTIAL") 
   return sprite;
 }
 
+function createSignalIconTexture(event: FieldObjectEvent) {
+  const canvas = document.createElement("canvas");
+  canvas.width = 1024;
+  canvas.height = 512;
+  const context = canvas.getContext("2d")!;
+  context.fillStyle = "rgba(35, 29, 49, .97)";
+  context.fillRect(0, 0, canvas.width, canvas.height);
+  context.strokeStyle = event.color;
+  context.lineWidth = 9;
+  context.strokeRect(7, 7, canvas.width - 14, canvas.height - 14);
+
+  const centerX = 205;
+  const centerY = 250;
+  const icon = event.icon;
+  context.fillStyle = event.color;
+  if (icon === "orcid" || icon === "microbiome" || icon === "wikibiome") {
+    context.beginPath();
+    context.arc(centerX, centerY, 142, 0, TAU);
+    context.fill();
+  } else {
+    context.fillRect(68, 112, 274, 274);
+  }
+
+  context.save();
+  context.translate(centerX, centerY);
+  context.strokeStyle = "#ffffff";
+  context.fillStyle = "#ffffff";
+  context.lineWidth = 22;
+  context.lineCap = "round";
+  context.lineJoin = "round";
+  context.textAlign = "center";
+  context.textBaseline = "middle";
+  if (icon === "linkedin") {
+    context.font = "900 190px Arial";
+    context.fillText("in", 0, 13);
+  } else if (icon === "facebook") {
+    context.font = "900 235px Arial";
+    context.fillText("f", 2, 25);
+  } else if (icon === "x") {
+    context.font = "500 205px Arial";
+    context.fillText("X", 0, 9);
+  } else if (icon === "instagram") {
+    context.strokeRect(-83, -83, 166, 166);
+    context.beginPath();
+    context.arc(0, 0, 49, 0, TAU);
+    context.stroke();
+    context.beginPath();
+    context.arc(58, -58, 10, 0, TAU);
+    context.fill();
+  } else if (icon === "email") {
+    context.strokeRect(-104, -69, 208, 138);
+    context.beginPath();
+    context.moveTo(-100, -62);
+    context.lineTo(0, 18);
+    context.lineTo(100, -62);
+    context.stroke();
+  } else if (icon === "orcid") {
+    context.font = "800 155px Arial";
+    context.fillText("iD", 0, 8);
+  } else if (icon === "microbiome") {
+    context.font = "900 112px Arial";
+    context.fillText("MM", 0, 8);
+    [[-80, -90], [70, -80], [-92, 72], [88, 80]].forEach(([x, y]) => {
+      context.beginPath();
+      context.arc(x, y, 14, 0, TAU);
+      context.fill();
+    });
+  } else if (icon === "wikibiome") {
+    context.font = "900 170px Georgia";
+    context.fillText("W", 0, 8);
+  }
+  context.restore();
+
+  context.fillStyle = event.color;
+  context.font = "700 26px monospace";
+  context.letterSpacing = "6px";
+  context.fillText(event.eyebrow, 395, 132, 570);
+  context.fillStyle = "#fbfaf6";
+  context.font = event.icon === "orcid" ? "900 48px Arial" : "900 66px Arial";
+  context.letterSpacing = "-2px";
+  context.fillText(event.label, 392, 252, 580);
+  context.fillStyle = "rgba(251,250,246,.62)";
+  context.font = "700 23px monospace";
+  context.letterSpacing = "4px";
+  context.fillText(event.kind === "support" ? "OPEN SITE · COFFEE OPTIONAL" : "DRIVE THROUGH TO OPEN", 395, 342, 570);
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.colorSpace = THREE.SRGBColorSpace;
+  texture.anisotropy = 8;
+  return texture;
+}
+
 function addRoad(scene: THREE.Scene, from: THREE.Vector2, to: THREE.Vector2, width = 4.2) {
   const dx = to.x - from.x;
   const dz = to.y - from.y;
@@ -236,7 +327,7 @@ function createKnockableVisual(event: FieldObjectEvent, width: number, height: n
     }),
   );
   group.add(shell);
-  const texture = createTextTexture(event.label, event.eyebrow, "#eff9e9", event.color);
+  const texture = event.icon ? createSignalIconTexture(event) : createTextTexture(event.label, event.eyebrow, "#eff9e9", event.color);
   [-1, 1].forEach((side) => {
     const label = mesh(
       new THREE.PlaneGeometry(width * 0.88, Math.min(height * 0.68, 1.5)),
@@ -248,6 +339,26 @@ function createKnockableVisual(event: FieldObjectEvent, width: number, height: n
     label.rotation.y = side < 0 ? Math.PI : 0;
     group.add(label);
   });
+
+  if (event.icon === "orcid") {
+    const badgeMaterial = material("#a6ce39", 0.34, 0.18);
+    [-1, 1].forEach((side) => {
+      const badge = mesh(new THREE.CylinderGeometry(1.05, 1.05, 0.2, 32), badgeMaterial);
+      badge.rotation.x = Math.PI * 0.5;
+      badge.position.set(-width * 0.27, 0, side * (depth * 0.5 + 0.14));
+      group.add(badge);
+      const badgeTexture = createTextTexture("iD", "ORCID", "#ffffff", "#a6ce39");
+      const badgeFace = mesh(
+        new THREE.PlaneGeometry(1.65, 0.42),
+        new THREE.MeshBasicMaterial({ map: badgeTexture, transparent: true, side: THREE.DoubleSide }),
+        false,
+        false,
+      );
+      badgeFace.position.set(-width * 0.27, 0, side * (depth * 0.5 + 0.255));
+      badgeFace.rotation.y = side < 0 ? Math.PI : 0;
+      group.add(badgeFace);
+    });
+  }
   const top = mesh(
     new THREE.BoxGeometry(width * 0.82, 0.055, depth * 0.82),
     new THREE.MeshBasicMaterial({ color: event.color }),
@@ -256,7 +367,7 @@ function createKnockableVisual(event: FieldObjectEvent, width: number, height: n
   );
   top.position.y = height * 0.5 + 0.025;
   group.add(top);
-  const points = createPointsSprite(event.points, event.color, event.kind === "demolition" ? "IMPACT" : "SIGNAL");
+  const points = createPointsSprite(event.points, event.color, event.kind === "demolition" ? "IMPACT" : event.kind === "support" ? "OPEN KNOWLEDGE" : "SIGNAL");
   points.position.y = height * 0.5 + 1.15;
   group.add(points);
   return group;
@@ -1114,6 +1225,7 @@ export async function createSwoveeExperience(canvas: HTMLCanvasElement, callback
   addRoad(scene, new THREE.Vector2(-72, -20), new THREE.Vector2(-72, -43), 6.4);
   addRoad(scene, new THREE.Vector2(-72, -20), new THREE.Vector2(-72, 31), 6.4);
   addRoad(scene, new THREE.Vector2(-72, 31), new THREE.Vector2(-24, 42), 6.4);
+  addRoad(scene, new THREE.Vector2(-72, 31), new THREE.Vector2(-57, 57), 6.4);
   const sanctuaryCats = expeditionZones.flatMap((zone) => createZoneWorld(scene, zone));
   const oracleVisuals = oracleBlocks.map((block) => createOracleBlock(scene, block.id, block.x, block.z, block.rotation));
   oracleVisuals.forEach((oracle) => {
@@ -1123,6 +1235,7 @@ export async function createSwoveeExperience(canvas: HTMLCanvasElement, callback
   });
   addAreaMarker(scene, "SOCIAL SIGNALS", "PHYSICAL LINKS · HIT + OPEN", -72, -50, "#6bb6ff");
   addAreaMarker(scene, "ARTICLE RANGE", "MODULAR FIELD ARCHIVE", -73, 44, "#ff765e", Math.PI);
+  addAreaMarker(scene, "OPEN KNOWLEDGE CAFE", "FREE WEBSITES · COFFEE OPTIONAL", -57, 64, "#5de5d6", Math.PI);
   addAreaMarker(scene, "DEMOLITION LAB", "ROVALIZER IMPACT TEST", -92, -3, "#d5ff50", Math.PI * 0.5);
   callbacks.onProgress(0.62, "ASSEMBLING RESEARCH DISTRICTS");
 
@@ -1188,7 +1301,11 @@ export async function createSwoveeExperience(canvas: HTMLCanvasElement, callback
     });
   };
 
-  socialLinks.forEach((link) => addKnockable({ ...link, kind: "social", points: 90 }, link.x, link.z, link.rotation, 5, 3.4, 1.15, 0.62));
+  socialLinks.forEach((link) => {
+    const isOrcid = link.icon === "orcid";
+    addKnockable({ ...link, kind: "social", points: isOrcid ? 250 : 90 }, link.x, link.z, link.rotation, isOrcid ? 6.8 : 5, isOrcid ? 4.5 : 3.4, isOrcid ? 1.3 : 1.15, isOrcid ? 0.82 : 0.62);
+  });
+  supportLinks.forEach((link) => addKnockable({ ...link, kind: "support", points: 125 }, link.x, link.z, link.rotation, 6.2, 3.8, 1.2, 0.68));
   articleSignals.forEach((article) => addKnockable({ ...article, kind: "article", points: 140 }, article.x, article.z, article.rotation, 5, 3.3, 1.2, 0.66));
   const demolitionWords = ["DOUBT", "NO MARKET", "TOO EARLY", "STAY IN YOUR LANE", "IMPOSSIBLE", "CREDENTIALS", "CONSENSUS", "LATER"];
   demolitionWords.forEach((label, index) => {
@@ -1209,16 +1326,36 @@ export async function createSwoveeExperience(canvas: HTMLCanvasElement, callback
     RAPIER.RigidBodyDesc.dynamic()
       .setTranslation(SPAWN.x, SPAWN.y, SPAWN.z)
       .setCanSleep(false)
-      .setLinearDamping(0.12)
-      .setAngularDamping(0.38),
+      .setLinearDamping(0.14)
+      .setAngularDamping(0.82)
+      .setAdditionalMassProperties(
+        4,
+        { x: 0, y: -0.72, z: 0 },
+        { x: 5.2, y: 8.5, z: 5.2 },
+        { x: 0, y: 0, z: 0, w: 1 },
+      ),
   );
-  chassisBody.setEnabledRotations(false, true, false, true);
-  const chassisCollider = RAPIER.ColliderDesc.cuboid(2.25, 0.48, 1.12)
+  chassisBody.setEnabledRotations(true, true, true, true);
+  const chassisCollider = RAPIER.ColliderDesc.roundCuboid(2.25, 0.48, 1.12, 0.16)
     .setTranslation(0, -0.18, 0)
     .setMass(4.8)
     .setFriction(0.45)
     .setRestitution(0.08);
   world.createCollider(chassisCollider, chassisBody);
+  const climbingNose = RAPIER.ColliderDesc.convexHull(new Float32Array([
+    1.55, -0.6, -1.02,
+    1.55, -0.6, 1.02,
+    1.55, 0.14, -1.02,
+    1.55, 0.14, 1.02,
+    2.88, -0.38, -1.02,
+    2.88, -0.38, 1.02,
+  ]));
+  if (climbingNose) {
+    world.createCollider(
+      climbingNose.setMass(0.35).setFriction(0.26).setRestitution(0.04),
+      chassisBody,
+    );
+  }
   const vehicleController: DynamicRayCastVehicleController = world.createVehicleController(chassisBody);
   vehicleController.indexUpAxis = 1;
 

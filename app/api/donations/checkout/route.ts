@@ -1,31 +1,36 @@
 import { NextResponse } from 'next/server';
 import { stripe } from '@/lib/stripe';
+import { DONATION_PROGRAMS, resolveDonationPurpose } from '@/lib/donations';
 
 export const dynamic = 'force-dynamic';
 
 export async function POST(request: Request) {
   try {
     const origin = new URL(request.url).origin;
+    const formData = await request.formData();
+    const purpose = resolveDonationPurpose(formData.get('purpose'));
+    const program = DONATION_PROGRAMS[purpose];
     const session = await stripe.checkout.sessions.create({
       mode: 'payment',
-      submit_type: 'donate',
+      submit_type: purpose === 'tinies' ? 'donate' : 'pay',
       customer_creation: 'always',
       line_items: [
         {
           quantity: 1,
           price_data: {
             currency: 'usd',
-            unit_amount: 100,
+            unit_amount: program.amountCents,
             product_data: {
-              name: 'Gardens of St. Gertrude Cat Food Mission',
-              description: 'A $1 contribution toward food and care for the 90+ sanctuary cats behind Tinies.',
+              name: program.productName,
+              description: program.description,
             },
           },
         },
       ],
       metadata: {
-        project: 'Tinies',
-        sanctuary: 'Gardens of St. Gertrude',
+        purpose,
+        project: program.project,
+        sanctuary: purpose === 'tinies' ? 'Gardens of St. Gertrude' : '',
         expedition: 'KP-01',
       },
       success_url: `${origin}/donation/success?session_id={CHECKOUT_SESSION_ID}`,
@@ -35,7 +40,7 @@ export async function POST(request: Request) {
     if (!session.url) throw new Error('Stripe did not return a checkout URL.');
     return NextResponse.redirect(session.url, 303);
   } catch (error) {
-    console.error('Unable to create the Tinies donation checkout', error);
-    return NextResponse.json({ error: 'The Tinies checkout is temporarily unavailable.' }, { status: 503 });
+    console.error('Unable to create the expedition support checkout', error);
+    return NextResponse.json({ error: 'The support checkout is temporarily unavailable.' }, { status: 503 });
   }
 }

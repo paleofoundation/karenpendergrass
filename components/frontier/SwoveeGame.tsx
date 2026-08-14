@@ -4,8 +4,9 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { SignedIn, SignedOut, SignInButton, UserButton, useUser } from "@clerk/nextjs";
+import { DONATION_PROGRAMS, type DonationPurpose } from "@/lib/donations";
 import { createSwoveeExperience } from "./engine";
-import { articleSignals, expeditionZones, mapExtent, markedZones, socialLinks, type ExpeditionZone } from "./zones";
+import { articleSignals, expeditionZones, mapExtent, markedZones, socialLinks, supportLinks, type ExpeditionZone } from "./zones";
 import type { DriveAction, ExperienceHandle, FieldObjectEvent, Telemetry } from "./types";
 import KpCompanion from "./KpCompanion";
 
@@ -31,6 +32,18 @@ const initialTelemetry: Telemetry = {
 const receiptsZone = expeditionZones.find((zone) => zone.id === "receipts")!;
 const tiniesZone = expeditionZones.find((zone) => zone.id === "tinies")!;
 const CAT_PENALTY = 150;
+const TOTAL_KNOCKABLES = socialLinks.length + articleSignals.length + supportLinks.length + 8;
+const COFFEE_PURPOSES: DonationPurpose[] = ["microbiome-medicine", "wikibiome"];
+const DEMOLITION_QUIPS: Record<string, string> = {
+  DOUBT: "Doubt has been peer-reviewed by the front bumper. Major revisions requested.",
+  "NO MARKET": "Market research complete: there was, in fact, a market. It was hiding behind this block.",
+  "TOO EARLY": "Chronology update: early is just on time with worse catering.",
+  "STAY IN YOUR LANE": "Lane guidance declined. The Rovalizer brought its own lane.",
+  IMPOSSIBLE: "Impossible has been successfully converted into a low-speed road feature.",
+  CREDENTIALS: "Credential check complete. The machine remains unmoved by LinkedIn endorsements.",
+  CONSENSUS: "Consensus has been safely flattened. Evidence may now proceed.",
+  LATER: "Later has been rescheduled to now. Calendar invite declined.",
+};
 
 type Challenge = {
   id: string;
@@ -156,6 +169,7 @@ export default function SwoveeGame() {
   const [briefingOpen, setBriefingOpen] = useState(false);
   const [supportMission, setSupportMission] = useState<ExpeditionZone | null>(null);
   const [supportClaimed, setSupportClaimed] = useState(false);
+  const [coffeeSupported, setCoffeeSupported] = useState<DonationPurpose[]>([]);
   const [oracleCard, setOracleCard] = useState<string | null>(null);
   const [oracleFound, setOracleFound] = useState<string[]>([]);
   const [knockedDown, setKnockedDown] = useState<string[]>([]);
@@ -255,6 +269,42 @@ export default function SwoveeGame() {
   }, []);
 
   useEffect(() => {
+    const awardCoffee = (purpose: DonationPurpose) => {
+      if (!COFFEE_PURPOSES.includes(purpose)) return;
+      setCoffeeSupported((current) => {
+        if (current.includes(purpose)) return current;
+        const program = DONATION_PROGRAMS[purpose];
+        setScore((value) => value + program.rewardPoints);
+        setNotification(`${program.project.toUpperCase()} COFFEE VERIFIED · OPEN KNOWLEDGE +${program.rewardPoints}`);
+        window.localStorage.removeItem(`kp-coffee-${purpose}-start`);
+        window.localStorage.removeItem(`kp-coffee-${purpose}-verified`);
+        return [...current, purpose];
+      });
+    };
+    const checkStoredCoffee = () => {
+      COFFEE_PURPOSES.forEach((purpose) => {
+        const startedAt = Number(window.localStorage.getItem(`kp-coffee-${purpose}-start`) || 0);
+        const verifiedAt = Number(window.localStorage.getItem(`kp-coffee-${purpose}-verified`) || 0);
+        if (startedAt > 0 && verifiedAt >= startedAt) awardCoffee(purpose);
+      });
+    };
+    const onStorage = (event: StorageEvent) => {
+      if (event.key?.startsWith("kp-coffee-") && event.key.endsWith("-verified")) checkStoredCoffee();
+    };
+    const onMessage = (event: MessageEvent) => {
+      if (event.origin !== window.location.origin || event.data?.type !== "kp-coffee-donation-verified") return;
+      awardCoffee(event.data.purpose as DonationPurpose);
+    };
+    window.addEventListener("storage", onStorage);
+    window.addEventListener("message", onMessage);
+    checkStoredCoffee();
+    return () => {
+      window.removeEventListener("storage", onStorage);
+      window.removeEventListener("message", onMessage);
+    };
+  }, []);
+
+  useEffect(() => {
     if (!canvasRef.current) return;
     experienceActiveRef.current = true;
     let localExperience: ExperienceHandle | null = null;
@@ -320,8 +370,8 @@ export default function SwoveeGame() {
             if (current.includes(item.id)) return current;
             const bonus = item.points;
             setScore((value) => value + bonus);
-            setNotification(`${item.kind === "demolition" ? "OBSTACLE DOWN" : item.kind === "social" ? "SOCIAL SIGNAL HIT" : "ARTICLE SIGNAL HIT"}  +${bonus}`);
-            if (item.href) {
+            setNotification(`${item.kind === "demolition" ? "ASSUMPTION FLATTENED" : item.kind === "social" ? "SOCIAL SIGNAL HIT" : item.kind === "support" ? "OPEN KNOWLEDGE SIGNAL HIT" : "ARTICLE SIGNAL HIT"}  +${bonus}`);
+            if (item.href || item.kind === "demolition") {
               setFieldLink(item);
               experienceRef.current?.pause();
             }
@@ -457,6 +507,11 @@ export default function SwoveeGame() {
   const beginSupportDonation = () => {
     window.localStorage.setItem("kp-tinies-donation-start", String(Date.now()));
     setNotification("SECURE $1 TINIES CHECKOUT OPENED · VERIFYING ON RETURN");
+  };
+
+  const beginCoffeeDonation = (purpose: DonationPurpose) => {
+    window.localStorage.setItem(`kp-coffee-${purpose}-start`, String(Date.now()));
+    setNotification(`${DONATION_PROGRAMS[purpose].project.toUpperCase()} COFFEE CHECKOUT OPENED · VERIFYING ON RETURN`);
   };
 
   const submitScore = async () => {
@@ -620,6 +675,7 @@ export default function SwoveeGame() {
         <span><kbd>SPACE</kbd> PRINT</span>
         <span><kbd>E</kbd> INTERACT</span>
         <span><kbd>CTRL</kbd> BRAKE</span>
+        <span><kbd>R</kbd> RECOVER</span>
       </div>
 
       <div className="trackpad-hint" aria-label="Trackpad driving controls">
@@ -763,8 +819,10 @@ export default function SwoveeGame() {
               <span>OPTIONAL SIDE MISSION · GARDENS OF ST. GERTRUDE</span>
               <h2 id="cat-support-title">HELP FEED THE<br /><em>90+.</em></h2>
               <p>{supportMission.support.description}</p>
+              <p className="cat-funding-note"><strong>THE ENGINE BEHIND THE CAT FOOD:</strong> Heavy Metal Certified has been the work funding and feeding the Gardens of St. Gertrude cats all these years.</p>
               <div className="cat-food-meter"><span>ONE BAG OF CAT FOOD</span><i><b /></i><strong>EVERY SMALL GIFT MOVES THE MARKER</strong></div>
               <form className="cat-donation-form" action="/api/donations/checkout" method="post" target="_blank" onSubmit={beginSupportDonation}>
+                <input type="hidden" name="purpose" value="tinies" />
                 <button type="submit" disabled={supportClaimed}>
                   <span>{supportClaimed ? "$1 DONATION VERIFIED" : `${supportMission.support.cta} · $1 SECURE CHECKOUT`}</span>
                   <strong>{supportClaimed ? "CAT POINTS RESTORED ✓" : `RESTORE PENALTIES + ${supportMission.support.bonus} PTS ↗`}</strong>
@@ -804,12 +862,32 @@ export default function SwoveeGame() {
         <div className="overlay field-link-overlay" role="presentation" onMouseDown={closeOverlay}>
           <article className="field-link-card" style={{ "--field-link-color": fieldLink.color } as React.CSSProperties} role="dialog" aria-modal="true" aria-labelledby="field-link-title" onMouseDown={(event) => event.stopPropagation()}>
             <button className="overlay-close" onClick={closeOverlay} aria-label="Close field signal">×</button>
-            <span>{fieldLink.eyebrow}</span>
+            <span>{fieldLink.kind === "demolition" ? "DEMOLITION REPORT · ROVALIZER 1 / OBSTACLE 0" : fieldLink.eyebrow}</span>
             <h2 id="field-link-title">{fieldLink.label}</h2>
-            <p>{fieldLink.kind === "social" ? "You knocked over a live social signal. Follow it—or leave it lying in the field and keep driving." : "You discovered a modular article signal in the expanded field archive. Read it now, or keep mapping the world."}</p>
+            <p>{fieldLink.kind === "demolition"
+              ? DEMOLITION_QUIPS[fieldLink.label] ?? "Another immovable assumption has discovered that it was, in fact, movable."
+              : fieldLink.kind === "social"
+                ? fieldLink.icon === "orcid"
+                  ? "You found Karen’s ORCID research record. Open it to browse the papers, publications, and scholarly trail behind the expedition."
+                  : "You knocked over a live social signal. Follow it—or leave it lying in the field and keep driving."
+                : fieldLink.kind === "support"
+                  ? `${fieldLink.label} is a real, free public website. Explore it without paying a thing; if it earns a coffee, the optional support mission keeps the knowledge flowing.`
+                  : "You discovered a modular article signal in the expanded field archive. Read it now, or keep mapping the world."}</p>
             <div>
-              <a href={fieldLink.href} target={isInteriorPage(fieldLink.href ?? "") ? undefined : "_blank"} rel={isInteriorPage(fieldLink.href ?? "") ? undefined : "noreferrer"}>OPEN {fieldLink.kind === "social" ? "SOCIAL PROFILE" : "ARTICLE"} {isInteriorPage(fieldLink.href ?? "") ? "→" : "↗"}</a>
-              <button onClick={closeOverlay}>RETURN TO DRIVING →</button>
+              {fieldLink.href && (
+                <a href={fieldLink.href} target={isInteriorPage(fieldLink.href) ? undefined : "_blank"} rel={isInteriorPage(fieldLink.href) ? undefined : "noreferrer"}>
+                  {fieldLink.icon === "orcid" ? "OPEN KAREN’S ORCID RECORD" : fieldLink.icon === "email" ? "CONTACT KAREN" : fieldLink.kind === "social" ? "OPEN SOCIAL PROFILE" : fieldLink.kind === "support" ? `EXPLORE ${fieldLink.label}` : "OPEN ARTICLE"} {isInteriorPage(fieldLink.href) ? "→" : "↗"}
+                </a>
+              )}
+              {fieldLink.kind === "support" && fieldLink.supportPurpose && (
+                <form className="knowledge-support-form" action="/api/donations/checkout" method="post" target="_blank" onSubmit={() => beginCoffeeDonation(fieldLink.supportPurpose!)}>
+                  <input type="hidden" name="purpose" value={fieldLink.supportPurpose} />
+                  <button type="submit" disabled={coffeeSupported.includes(fieldLink.supportPurpose)}>
+                    {coffeeSupported.includes(fieldLink.supportPurpose) ? "COFFEE VERIFIED · +750 ✓" : `BUY THE BUILDERS A ${DONATION_PROGRAMS[fieldLink.supportPurpose].amountLabel} COFFEE ↗`}
+                  </button>
+                </form>
+              )}
+              <button onClick={closeOverlay}>{fieldLink.kind === "demolition" ? "CONTINUE LUMBERING →" : "RETURN TO DRIVING →"}</button>
             </div>
           </article>
         </div>
@@ -840,10 +918,11 @@ export default function SwoveeGame() {
               })}
               <span className="map-expansion map-social" style={{ left: `${((-72 + mapExtent) / (mapExtent * 2)) * 100}%`, top: `${((-43 + mapExtent) / (mapExtent * 2)) * 100}%` }}>SOCIAL PLAZA · {socialLinks.length}</span>
               <span className="map-expansion map-articles" style={{ left: `${((-73 + mapExtent) / (mapExtent * 2)) * 100}%`, top: `${((32 + mapExtent) / (mapExtent * 2)) * 100}%` }}>ARTICLE RANGE · {articleSignals.length}</span>
+              <span className="map-expansion map-support" style={{ left: `${((-57 + mapExtent) / (mapExtent * 2)) * 100}%`, top: `${((57 + mapExtent) / (mapExtent * 2)) * 100}%` }}>OPEN KNOWLEDGE CAFÉ · {supportLinks.length}</span>
               <span className="map-expansion map-demolition" style={{ left: `${((-92 + mapExtent) / (mapExtent * 2)) * 100}%`, top: `${((-3 + mapExtent) / (mapExtent * 2)) * 100}%` }}>DEMOLITION LAB · 8</span>
               <span className="map-rover" style={{ left: `${mapPlayerX}%`, top: `${mapPlayerY}%`, transform: `translate(-50%,-50%) rotate(${telemetry.heading + 90}deg)` }}>▲</span>
             </div>
-            <footer><span><i className="map-key scanned" /> SCANNED</span><span><i className="map-key pending" /> PENDING</span><span>KNOCKDOWNS {knockedDown.length}/18 · ORACLE {oracleFound.length}/3 · R–01 / {Math.round(telemetry.x)}, {Math.round(telemetry.z)}</span></footer>
+            <footer><span><i className="map-key scanned" /> SCANNED</span><span><i className="map-key pending" /> PENDING</span><span>KNOCKDOWNS {knockedDown.length}/{TOTAL_KNOCKABLES} · ORACLE {oracleFound.length}/3 · R–01 / {Math.round(telemetry.x)}, {Math.round(telemetry.z)}</span></footer>
           </section>
         </div>
       )}

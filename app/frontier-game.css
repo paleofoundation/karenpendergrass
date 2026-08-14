@@ -234,12 +234,15 @@
 .cat-support-copy h2 { margin: 14px 0 18px; font-size: clamp(48px,6vw,75px); line-height: .79; letter-spacing: -.075em; }
 .cat-support-copy h2 em { color: #ff9cae; font-style: normal; }
 .cat-support-copy > p { color: rgba(238,247,233,.67); font-size: 13px; line-height: 1.58; }
+.cat-support-copy .cat-funding-note { margin: 14px 0 0; padding: 11px 12px; border-left: 2px solid var(--acid); color: rgba(251,250,246,.72); background: rgba(213,255,80,.055); font: 600 9px/1.55 var(--font-geist-mono); }
+.cat-funding-note strong { color: var(--acid); }
 .cat-food-meter { display: grid; gap: 6px; margin: 21px 0; }
 .cat-food-meter span,.cat-food-meter strong { color: rgba(238,247,233,.42); font: 650 7px var(--font-geist-mono); letter-spacing: .11em; }
 .cat-food-meter strong { justify-self: end; }
 .cat-food-meter i { position: relative; display: block; height: 7px; overflow: hidden; border: 1px solid rgba(255,156,174,.3); background: rgba(255,255,255,.04); }
 .cat-food-meter b { display: block; width: 68%; height: 100%; background: linear-gradient(90deg,#ff9cae,#d5ff50); box-shadow: 0 0 16px rgba(255,156,174,.35); }
 .cat-donation-form { margin: 0; }
+.cat-donation-form input,.knowledge-support-form input { display: none; }
 .cat-donation-form button,.cat-support-copy > button { min-height: 48px; display: flex; justify-content: space-between; align-items: center; width: 100%; padding: 11px 14px; border: 1px solid rgba(255,156,174,.52); color: var(--ink); background: #ff9cae; text-decoration: none; font: 800 8px var(--font-geist-mono); letter-spacing: .055em; cursor: pointer; }
 .cat-donation-form button strong { font-size: 8px; }
 .cat-donation-form button:disabled { color: rgba(6,17,14,.65); background: #c7d79d; cursor: default; }
@@ -260,7 +263,7 @@
 .map-zone:hover i { transform: scale(1.14); box-shadow: 0 0 18px var(--zone-color); }
 .map-zone.is-found i { color: var(--ink); background: var(--zone-color); box-shadow: 0 0 12px var(--zone-color); }.map-zone.is-hidden { opacity: .3; filter: blur(.6px); }
 .map-expansion { position: absolute; z-index: 2; transform: translate(-50%,-50%); padding: 5px 7px; border: 1px solid currentColor; color: var(--acid); background: rgba(47,40,63,.88); font: 650 6px var(--font-geist-mono); letter-spacing: .08em; white-space: nowrap; }
-.map-social { color: #6bb6ff; }.map-articles { color: var(--signal); }.map-demolition { color: var(--acid); writing-mode: vertical-rl; }
+.map-social { color: #6bb6ff; }.map-articles { color: var(--signal); }.map-support { color: var(--cyan); }.map-demolition { color: var(--acid); writing-mode: vertical-rl; }
 .map-rover { position: absolute; z-index: 5; display: grid; place-items: center; width: 28px; height: 28px; color: var(--ink); background: var(--acid); border-radius: 50%; box-shadow: 0 0 15px rgba(213,255,80,.6); font-size: 12px; }
 .field-map-panel > footer { display: flex; gap: 18px; align-items: center; margin-top: 13px; color: rgba(238,247,233,.42); font: 550 7px var(--font-geist-mono); letter-spacing: .08em; }
 .field-map-panel > footer span:last-child { margin-left: auto; }
