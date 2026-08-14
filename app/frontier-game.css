@@ -18,6 +18,7 @@
 .swovee-game button, .swovee-game input { font: inherit; }
 .swovee-game button, .swovee-game a { -webkit-tap-highlight-color: transparent; }
 .swovee-game button:focus-visible, .swovee-game a:focus-visible, .swovee-game input:focus-visible { outline: 2px solid var(--acid); outline-offset: 3px; }
+.swovee-game h1, .swovee-game h2, .swovee-game h3, .swovee-game h4 { color: var(--paper); font-family: var(--font-geist-sans), Arial, sans-serif; }
 
 .swovee-game { position: relative; width: 100vw; height: 100dvh; min-height: 600px; overflow: hidden; background: #071410; isolation: isolate; }
 .frontier-boot { width: 100vw; height: 100dvh; display: grid; place-content: center; gap: 9px; color: #eef7e9; background: #06110e; text-align: center; font-family: var(--font-mono); }
