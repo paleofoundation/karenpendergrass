@@ -20,12 +20,15 @@
 
 ## Organizations Founded
 Karen has founded six organizations. Heavy Metal Tested & Certified (HMTc) is a program of the Paleo Foundation, not a separate organization.
-- Paleo Foundation (https://paleofoundation.com) — Food certification standards for Paleo, Keto, and Grain-Free, plus the Heavy Metal Tested & Certified (HMTc) program; consumer-facing site: https://heavymetaltested.com; public evidence database: https://heavymetalindex.com
+- Paleo Foundation (https://paleofoundation.com) — Food certification standards for Paleo, Keto, and Grain-Free, plus the Heavy Metal Tested & Certified (HMTc) program; consumer-facing site: https://heavymetalcertified.com; public evidence database: https://heavymetalindex.com
 - Microbiome Medicine (https://microbiomemedicine.com) — Disease-associated microbiome patterns database
 - Journal of Food Metallomics (https://microbialmetallomics.com) — Trace metal analysis and microbiome research
 - WikiBiome (https://wikibiome.com) — Open microbiome knowledge platform
-- Tinies (https://tinies.app) — Connecting animal sanctuaries with sponsors
+- Tinies (https://tinies.com) — Connecting animal sanctuaries with sponsors
 - Gardens of St. Gertrude (https://gardensofstgertrude.com) — Cat sanctuary in Parekklisia, Cyprus
+
+## Additional Project
+- Swovee (https://swovee.com) — Karen Pendergrass's 2017 robotics, AI, laser-scanning, and large-format 3D-printing project; the Rovalizer is its terrain-aware construction machine concept.
 
 ## Key Publications
 - The Counterproductive Consequences of Public Exposé Testing (2026): https://doi.org/10.5281/zenodo.19470572

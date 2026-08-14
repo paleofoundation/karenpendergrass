@@ -110,12 +110,12 @@ export default function HMTcPage() {
             </a>
             ). Full program details are available at{' '}
             <a
-              href="https://heavymetaltested.com"
+              href="https://heavymetalcertified.com"
               target="_blank"
               rel="noopener noreferrer"
               className="text-accent"
             >
-              heavymetaltested.com
+              heavymetalcertified.com
             </a>
             .
           </p>

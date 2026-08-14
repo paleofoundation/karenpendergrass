@@ -67,7 +67,7 @@ const projects: ResearchProject[] = [
     internalHref: '/frameworks/hmtc',
     description:
       'Category-specific contaminant limits for food, supplements, and personal care products using ALARA-based principles and statistical risk matrices. Eight per-metal standards documents (Pb, As, Hg, Cd, Cr, Ni, Sn, Al) with anti-circumvention language, lot testing schedules, and governance policies.',
-    url: 'https://heavymetaltested.com',
+    url: 'https://heavymetalcertified.com',
   },
   {
     title: 'STOP (Suggested Termination Of Practice)',

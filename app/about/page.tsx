@@ -243,12 +243,12 @@ export default function AboutPage() {
             </Link>{' '}
             (
             <a
-              href="https://tinies.app"
+              href="https://tinies.com"
               target="_blank"
               rel="noopener noreferrer"
               className="text-accent"
             >
-              tinies.app
+              tinies.com
             </a>
             ) from scratch using Cursor and Claude, with no prior coding experience.
             The platform connects animal sanctuaries with sponsors and supporters. It
@@ -354,12 +354,12 @@ export default function AboutPage() {
             </strong>{' '}
             (
             <a
-              href="https://tinies.app"
+              href="https://tinies.com"
               target="_blank"
               rel="noopener noreferrer"
               className="text-accent"
             >
-              tinies.app
+              tinies.com
             </a>
             ): The platform connecting animal sanctuaries with sponsors.{' '}
             <strong>

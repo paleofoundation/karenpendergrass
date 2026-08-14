@@ -453,9 +453,6 @@ function createLogoKnockableVisual(event: FieldObjectEvent, width: number, heigh
     addBar(0.2, 1.7, 0.68, 0, -0.16);
   }
 
-  const points = createPointsSprite(event.points, event.color, event.kind === "support" ? "OPEN KNOWLEDGE" : "SIGNAL");
-  points.position.y = height * 0.5 + 0.7;
-  group.add(points);
   return group;
 }
 
@@ -513,9 +510,6 @@ function createKnockableVisual(event: FieldObjectEvent, width: number, height: n
   );
   top.position.y = height * 0.5 + 0.025;
   group.add(top);
-  const points = createPointsSprite(event.points, event.color, event.kind === "demolition" ? "IMPACT" : event.kind === "support" ? "OPEN KNOWLEDGE" : "SIGNAL");
-  points.position.y = height * 0.5 + 1.15;
-  group.add(points);
   return group;
 }
 
@@ -537,11 +531,6 @@ function addZonePad(scene: THREE.Scene, zone: ExpeditionZone) {
   ring.rotation.x = Math.PI * 0.5;
   scene.add(ring);
 
-  if (zone.id !== "finish") {
-    const points = createPointsSprite(zone.secret ? 400 : 65, zone.color, zone.secret ? "SECRET" : "SCAN");
-    points.position.set(zone.x, 3.05, zone.z + zone.radius * 0.46);
-    scene.add(points);
-  }
 }
 
 function createFoundry(scene: THREE.Scene, zone: ExpeditionZone) {
@@ -679,7 +668,7 @@ function createSanctuary(scene: THREE.Scene, zone: ExpeditionZone) {
   door.position.set(1.2, 0.9, 1.94);
   group.add(door);
   const catColors = ["#efe6d2", "#282a28", "#d98242", "#a99b83", "#e8d4b9", "#47433c", "#d9d5c8", "#8c5b3f"];
-  for (let index = 0; index < 48; index += 1) {
+  for (let index = 0; index < 30; index += 1) {
     const cat = createCat(catColors[index % catColors.length]);
     const angle = index * 2.399963;
     const radius = 3.2 + (index % 7) * 0.72;
@@ -1752,34 +1741,16 @@ export async function createSwoveeExperience(canvas: HTMLCanvasElement, callback
   sun.shadow.normalBias = 0.025;
   scene.add(sun);
 
-  const driveZones = expeditionZones.filter((zone) => zone.id !== "finish");
+  const driveZones = expeditionZones;
   const roadPoints = [
     new THREE.Vector2(SPAWN.x, SPAWN.z),
     ...driveZones.map((zone) => new THREE.Vector2(zone.x, zone.z)),
     new THREE.Vector2(SPAWN.x, SPAWN.z),
   ];
   for (let index = 0; index < roadPoints.length - 1; index += 1) addRoad(scene, roadPoints[index], roadPoints[index + 1], 5.4);
-  const receipts = expeditionZones.find((zone) => zone.id === "receipts");
-  const finish = expeditionZones.find((zone) => zone.id === "finish");
-  if (receipts && finish) addRoad(scene, new THREE.Vector2(receipts.x, receipts.z), new THREE.Vector2(finish.x, finish.z), 6.2);
-  addRoad(scene, new THREE.Vector2(-43, -12), new THREE.Vector2(-72, -20), 6.4);
-  addRoad(scene, new THREE.Vector2(-72, -20), new THREE.Vector2(-72, -43), 6.4);
-  addRoad(scene, new THREE.Vector2(-72, -20), new THREE.Vector2(-72, 31), 6.4);
-  addRoad(scene, new THREE.Vector2(-72, 31), new THREE.Vector2(-24, 42), 6.4);
-  addRoad(scene, new THREE.Vector2(-72, 31), new THREE.Vector2(-57, 57), 6.4);
-  createOperationsGateway(scene);
   const sanctuaryCats = expeditionZones.flatMap((zone) => createZoneWorld(scene, zone));
   const oracleVisuals = oracleBlocks.map((block) => createOracleBlock(scene, block.id, block.x, block.z, block.rotation));
-  oracleVisuals.forEach((oracle) => {
-    const points = createPointsSprite(175, "#d5ff50", "ORACLE");
-    points.position.y = 2.15;
-    oracle.group.add(points);
-  });
-  addAreaMarker(scene, "SOCIAL ICON GARDEN", "3D LINKS · HIT + OPEN", -72, -50, "#6bb6ff", Math.PI);
-  addAreaMarker(scene, "ARTICLE RANGE", "MODULAR FIELD ARCHIVE", -73, 44, "#ff765e", Math.PI);
-  addAreaMarker(scene, "OPEN KNOWLEDGE CAFE", "FREE WEBSITES · COFFEE OPTIONAL", -57, 64, "#5de5d6", Math.PI);
-  addAreaMarker(scene, "DEMOLITION LAB", "ROVALIZER IMPACT TEST", -92, -3, "#d5ff50", Math.PI * 0.5);
-  callbacks.onProgress(0.62, "ASSEMBLING RESEARCH DISTRICTS");
+  callbacks.onProgress(0.62, "ASSEMBLING FOUR FIELD DISTRICTS");
 
   const world: World = new RAPIER.World({ x: 0, y: -9.81, z: 0 });
   world.timestep = 1 / 60;
@@ -1849,10 +1820,8 @@ export async function createSwoveeExperience(canvas: HTMLCanvasElement, callback
   });
   supportLinks.forEach((link) => addKnockable({ ...link, kind: "support", points: 125 }, link.x, link.z, link.rotation, 4.4, 4.4, 1.55, 0.68));
   articleSignals.forEach((article) => addKnockable({ ...article, kind: "article", points: 140 }, article.x, article.z, article.rotation, 5, 3.3, 1.2, 0.66));
-  const demolitionWords = ["DOUBT", "NO MARKET", "TOO EARLY", "STAY IN YOUR LANE", "IMPOSSIBLE", "CREDENTIALS", "CONSENSUS", "LATER"];
+  const demolitionWords = ["NO MARKET", "TOO EARLY", "STAY IN YOUR LANE", "CREDENTIALS"];
   demolitionWords.forEach((label, index) => {
-    const row = Math.floor(index / 4);
-    const column = index % 4;
     const event: FieldObjectEvent = {
       id: `demo-${index}`,
       label,
@@ -1861,7 +1830,7 @@ export async function createSwoveeExperience(canvas: HTMLCanvasElement, callback
       color: index % 2 ? "#ff765e" : "#d5ff50",
       points: 35,
     };
-    addKnockable(event, -95 + row * 5.2, -13 + column * 4.1, row % 2 ? 0.08 : -0.08, 4.4, 3.8, 1.4, 0.55);
+    addKnockable(event, -20 - index * 5.1, 6 - index * 5.2, index % 2 ? 0.09 : -0.07, 4.2, 3.5, 1.35, 0.55);
   });
 
   const chassisBody: RigidBody = world.createRigidBody(

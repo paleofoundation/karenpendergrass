@@ -48,8 +48,8 @@ export const ventures: Venture[] = [
     status: 'active',
     subLinks: [
       {
-        name: 'Heavy Metal Tested',
-        url: 'https://heavymetaltested.com',
+        name: 'Heavy Metal Certified',
+        url: 'https://heavymetalcertified.com',
         note: 'HMTc certification & certified-product directory',
       },
       {
@@ -118,7 +118,7 @@ export const ventures: Venture[] = [
   {
     name: 'Tinies',
     slug: 'tinies',
-    url: 'https://tinies.app',
+    url: 'https://tinies.com',
     tag: 'Social Impact',
     homeDescription: 'Connecting animal sanctuaries with sponsors worldwide',
     role: 'Founder',

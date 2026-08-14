@@ -241,7 +241,7 @@ const databases: { name: string; url: string; description: string }[] = [
   },
   {
     name: 'Heavy Metal Tested & Certified (HMTc) Standards Library',
-    url: 'https://heavymetaltested.com',
+    url: 'https://heavymetalcertified.com',
     description: 'Eight per-metal standards documents (Pb, As, Hg, Cd, Cr, Ni, Sn, Al) with category-specific contaminant limits, ALARA-based principles, lot testing schedules, governance policies, and anti-circumvention language for food, supplements, cosmetics, and consumer products.',
   },
 ];

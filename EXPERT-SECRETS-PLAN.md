@@ -101,7 +101,7 @@ Done (hybrid tone, per Karen's call):
 - **`/manifesto` page** — restrained "What I believe" creed (enemy = causal reductionism / credentialism / institutional lag, never a named person or brand).
 - **Newsletter made functional** — `NewsletterSignup` now POSTs to the working `/api/contact` (Resend → karen@paleofoundation.com) instead of silently discarding emails; safe to surface site-wide. Closes the README TODO.
 - **Wiring** — `/start` + `/manifesto` added to SidebarNav, Footer, and the sitemap.
-- **Consistency** — resolved the six-vs-seven ventures contradiction in `llms.txt` (HMTc is a Paleo Foundation program, not a 7th org; heavymetaltested.com URL preserved).
+- **Consistency** — resolved the six-vs-seven ventures contradiction in `llms.txt` (HMTc is a Paleo Foundation program, not a 7th org; heavymetalcertified.com URL preserved).
 
 Remaining backlog (recommended next pass — deliberately deferred for quality):
 - **Framework FAQ / "Key definitions" blocks** on the six `/frameworks/*` pages + `FAQPage` JSON-LD. Deferred because it must *reuse* existing on-page definitions, not re-author Karen's coined-framework science.

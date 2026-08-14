@@ -5,11 +5,11 @@ import { WebSiteSchema } from '@/components/JsonLd';
 export const metadata: Metadata = {
   title: { absolute: 'Drive the Frontier — Karen Pendergrass' },
   description:
-    'Pilot the Swovee Rovalizer through Karen Pendergrass’s projects, research, forecasts, articles, receipts, and sanctuary work.',
+    'Drive Karen Pendergrass’s Swovee through a focused world of heavy-metal standards, microbiome research, robotics, and sanctuary cats.',
   alternates: { canonical: '/' },
   openGraph: {
     title: 'Drive the Frontier — Karen Pendergrass',
-    description: 'A real-time 3D expedition through Karen Pendergrass’s body of work.',
+    description: 'A focused 3D introduction to Karen Pendergrass: heavy metals, microbes, machines, and 90+ sanctuary cats.',
     url: 'https://karenpendergrass.com',
   },
 };

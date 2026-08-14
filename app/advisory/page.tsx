@@ -90,12 +90,12 @@ const boardDomains: { title: string; description: ReactNode; keywords: string }[
         </Link>{' '}
         (
         <a
-          href="https://tinies.app"
+          href="https://tinies.com"
           target="_blank"
           rel="noopener noreferrer"
           className="text-accent"
         >
-          tinies.app
+          tinies.com
         </a>
         ; a full-stack platform) from scratch using AI coding tools with no prior
         coding experience. Designed and deployed an AI-managed Operations Command
@@ -129,12 +129,12 @@ const boardDomains: { title: string; description: ReactNode; keywords: string }[
         </Link>{' '}
         (
         <a
-          href="https://tinies.app"
+          href="https://tinies.com"
           target="_blank"
           rel="noopener noreferrer"
           className="text-accent"
         >
-          tinies.app
+          tinies.com
         </a>
         ; sanctuary-to-sponsor platform). Direct operational experience with
         sanctuary management, fundraising, veterinary care logistics, and
@@ -254,12 +254,12 @@ const credentials: { label: string; value: ReactNode }[] = [
         </Link>{' '}
         (
         <a
-          href="https://tinies.app"
+          href="https://tinies.com"
           target="_blank"
           rel="noopener noreferrer"
           className="text-accent"
         >
-          tinies.app
+          tinies.com
         </a>
         ),{' '}
         <Link href="/ventures" className="text-accent">

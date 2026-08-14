@@ -7,9 +7,9 @@ const SwoveeGame = dynamic(() => import('./SwoveeGame'), {
   loading: () => (
     <div className="frontier-boot" role="status" aria-live="polite">
       <div>
-        <span>EXPEDITION KP–01 · WORLD BUILD 02</span>
+        <span>KAREN PENDERGRASS · SWOVEE</span>
         <strong>WAKE THE ROVALIZER</strong>
-        <small>LiDAR terrain · field operations · mobile fabrication</small>
+        <small>Heavy metals · microbiome · robotics · 90+ cats</small>
         <i />
       </div>
     </div>
