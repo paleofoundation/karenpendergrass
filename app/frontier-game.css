@@ -247,9 +247,10 @@
   .mission-tracker { top: 90px; left: 16px; }
   .rover-hud { left: 16px; bottom: 16px; width: 245px; }.telemetry-grid span:nth-child(n+3) { display: none; }
   .keyboard-hints { display: none; }
-  .touch-drive { position: absolute; z-index: 20; right: 16px; bottom: 16px; display: grid; grid-template-columns: 112px 112px; gap: 9px; }
+  .touch-drive { position: absolute; z-index: 20; right: 16px; bottom: 16px; display: grid; grid-template-columns: 112px 112px; gap: 9px; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
   .touch-steer,.touch-pedals { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
-  .touch-drive button { height: 48px; border: 1px solid rgba(238,247,233,.26); color: var(--paper); background: rgba(3,15,11,.7); touch-action: none; font: 700 10px var(--font-geist-mono); }
+  .touch-drive button { height: 52px; border: 1px solid rgba(238,247,233,.34); color: var(--paper); background: rgba(3,15,11,.82); touch-action: none; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; -webkit-tap-highlight-color: transparent; cursor: pointer; font: 800 11px var(--font-geist-mono); transition: transform .08s ease, background .08s ease, color .08s ease, border-color .08s ease, box-shadow .08s ease; }
+  .touch-drive button:active,.touch-drive button[aria-pressed="true"] { color: var(--ink); background: var(--paper); border-color: var(--paper); box-shadow: 0 0 0 2px rgba(213,255,80,.45),0 0 24px rgba(213,255,80,.22); transform: scale(.95); }
   .touch-drive button.go { color: var(--ink); background: var(--acid); }.touch-brake { grid-column: 1; }.touch-print { grid-column: 2; }
   .launch-screen { grid-template-columns: 1fr; background: linear-gradient(90deg,rgba(3,13,10,.96),rgba(3,13,10,.75),rgba(3,13,10,.25)); }
   .launch-panel { align-self: end; padding: 34px 26px 42px; }
@@ -263,8 +264,8 @@
   .swovee-game { min-height: 540px; }
   .game-brand span { font-size: 6px; }.game-brand strong { font-size: 14px; }.game-tools button, .game-tools a { width: 34px; height: 34px; }
   .mission-tracker { width: 210px; padding: 9px; }.tracker-zones { display: none; }
-  .rover-hud { width: 184px; padding: 10px; }.rover-id b { display: none; }.speedometer strong { font-size: 34px; }.telemetry-grid { display: none; }
-  .touch-drive { grid-template-columns: 90px 90px; }.touch-drive button { height: 44px; }
+  .rover-hud { left: 12px; bottom: 12px; width: 148px; padding: 10px; }.rover-id b { display: none; }.speedometer strong { font-size: 34px; }.telemetry-grid { display: none; }
+  .touch-drive { right: 12px; bottom: 12px; grid-template-columns: 100px 100px; gap: 6px; }.touch-drive button { min-width: 0; height: 54px; }
   .field-notification { top: 78px; max-width: 80vw; text-align: center; }
   .interact-callout { min-width: min(310px,90vw); bottom: 92px; }
   .launch-panel { padding: 22px 20px 28px; background: linear-gradient(0deg,rgba(3,13,10,.94) 82%,transparent); }
