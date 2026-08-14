@@ -54,17 +54,63 @@ function TouchButton({
   className?: string;
   setAction: (action: DriveAction, active: boolean) => void;
 }) {
+  const activePointerRef = useRef<number | null>(null);
+  const [pressed, setPressed] = useState(false);
+
+  const release = useCallback((pointerId?: number) => {
+    if (activePointerRef.current === null) return;
+    if (pointerId !== undefined && activePointerRef.current !== pointerId) return;
+    activePointerRef.current = null;
+    setPressed(false);
+    setAction(action, false);
+  }, [action, setAction]);
+
+  useEffect(() => {
+    const releasePointer = (event: PointerEvent) => release(event.pointerId);
+    const releaseOnBlur = () => release();
+    const releaseWhenHidden = () => {
+      if (document.hidden) release();
+    };
+
+    window.addEventListener("pointerup", releasePointer);
+    window.addEventListener("pointercancel", releasePointer);
+    window.addEventListener("blur", releaseOnBlur);
+    document.addEventListener("visibilitychange", releaseWhenHidden);
+
+    return () => {
+      window.removeEventListener("pointerup", releasePointer);
+      window.removeEventListener("pointercancel", releasePointer);
+      window.removeEventListener("blur", releaseOnBlur);
+      document.removeEventListener("visibilitychange", releaseWhenHidden);
+      activePointerRef.current = null;
+      setAction(action, false);
+    };
+  }, [action, release, setAction]);
+
   return (
     <button
+      type="button"
       className={className}
       aria-label={label}
+      aria-pressed={pressed}
+      draggable={false}
       onPointerDown={(event) => {
-        event.currentTarget.setPointerCapture(event.pointerId);
+        event.preventDefault();
+        if (activePointerRef.current !== null) return;
+        activePointerRef.current = event.pointerId;
+        setPressed(true);
         setAction(action, true);
+        try {
+          event.currentTarget.setPointerCapture(event.pointerId);
+        } catch {
+          // Global pointer listeners still guarantee release on older iOS browsers.
+        }
       }}
-      onPointerUp={() => setAction(action, false)}
-      onPointerCancel={() => setAction(action, false)}
-      onPointerLeave={() => setAction(action, false)}
+      onPointerUp={(event) => release(event.pointerId)}
+      onPointerCancel={(event) => release(event.pointerId)}
+      onLostPointerCapture={(event) => release(event.pointerId)}
+      onContextMenu={(event) => event.preventDefault()}
+      onDragStart={(event) => event.preventDefault()}
     >
       {label}
     </button>
