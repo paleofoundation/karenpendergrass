@@ -108,7 +108,7 @@ export async function POST(request: Request) {
           subject: `[KP Contact] ${subject} — from ${name}`,
           html: `
             <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; max-width: 600px;">
-              <h2 style="color: #1d384f; margin-bottom: 4px;">New message from karenpendergrass.com</h2>
+              <h2 style="color: #0a1915; margin-bottom: 4px;">New message from karenpendergrass.com</h2>
               <hr style="border: none; border-top: 1px solid #e5ddd5; margin: 16px 0;" />
               <p><strong>Name:</strong> ${escapeHtml(name)}</p>
               <p><strong>Email:</strong> <a href="mailto:${escapeHtml(email)}">${escapeHtml(email)}</a></p>

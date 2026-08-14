@@ -96,7 +96,7 @@ export default function SidebarNav() {
         className="fixed top-7 left-7 z-[1000] w-12 h-12 flex flex-col items-center justify-center gap-[5px] rounded-xl border cursor-pointer transition-all duration-400"
         style={{
           borderColor: isOpen ? 'var(--color-accent)' : 'var(--color-border)',
-          background: isOpen ? 'rgba(0,0,0,0.3)' : 'rgba(250,250,248,0.85)',
+          background: isOpen ? 'rgba(0,0,0,0.3)' : 'rgba(238,247,233,0.92)',
           backdropFilter: 'blur(12px)',
           WebkitBackdropFilter: 'blur(12px)',
           boxShadow: isOpen
@@ -155,7 +155,7 @@ export default function SidebarNav() {
         className="fixed top-0 left-0 h-dvh z-[950] flex flex-col sm:flex-row overflow-hidden"
         style={{
           width: 'min(480px, 100vw)',
-          background: '#0f2030',
+          background: 'var(--color-ink-deep)',
           transform: isOpen ? 'translateX(0)' : 'translateX(-100%)',
           transition: 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
         }}
@@ -189,14 +189,14 @@ export default function SidebarNav() {
           <div
             className="absolute bottom-0 left-0 right-0 h-[40%] pointer-events-none z-[2] sm:block hidden"
             style={{
-              background: 'linear-gradient(to top, #0f2030 0%, transparent 100%)',
+              background: 'linear-gradient(to top, var(--color-ink-deep) 0%, transparent 100%)',
             }}
           />
           {/* Right edge fade for desktop */}
           <div
             className="absolute top-0 bottom-0 right-0 w-[30%] pointer-events-none z-[2] hidden sm:block"
             style={{
-              background: 'linear-gradient(to left, #0f2030 0%, transparent 100%)',
+              background: 'linear-gradient(to left, var(--color-ink-deep) 0%, transparent 100%)',
             }}
           />
         </div>
