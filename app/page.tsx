@@ -1,343 +1,152 @@
+import type { CSSProperties } from 'react';
 import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ventures } from '@/lib/ventures';
 import SocialLinks from '@/components/SocialLinks';
 import { WebSiteSchema } from '@/components/JsonLd';
+import './home-expedition.css';
 
 export const metadata: Metadata = {
-  title: 'Karen Pendergrass — Standards Developer & Microbiome Researcher',
+  title: 'Karen Pendergrass — Systems Thinker, Researcher & Founder',
   description:
-    'Standards developer Karen Pendergrass — years ahead of the market on microbial metallomics, heavy-metal certification, and microbiome signatures.',
-  alternates: {
-    canonical: '/',
-  },
+    'Karen Pendergrass builds the evidence, standards, and platforms complex fields need before the market knows to ask for them.',
+  alternates: { canonical: '/' },
 };
 
-const NAVY = 'var(--color-ink-deep)';
-const PAPER = '#f6f8fa';
+const projects = [
+  { name: 'Heavy Metal Index', url: 'https://heavymetalindex.com', note: 'Evidence infrastructure', color: '#ffad4f' },
+  { name: 'Microbiome Medicine', url: 'https://microbiomemedicine.com', note: 'Disease ecosystems', color: '#64f4e8' },
+  { name: 'Heavy Metal Certified', url: 'https://heavymetalcertified.com', note: 'Category-specific standards', color: '#ffd45d' },
+  { name: 'Swovee', url: 'https://swovee.com', note: 'Scan · reason · print', color: '#6bb6ff' },
+  { name: 'Phage Cocktails', url: 'https://phagecocktails.com', note: 'Precision antibacterials', color: '#d5ff50' },
+  { name: 'Tinies', url: 'https://tinies.com', note: 'Sanctuary infrastructure', color: '#ff9cae' },
+];
 
 const pillars = [
   {
-    title: 'Microbial Metallomics',
-    img: '/images/wp-migrated/Microbial-Metallomics.jpg',
-    body: 'Heavy metals don’t just poison you directly — they reshape the gut microbiome, selecting for metal-resistant, virulence-enabled pathobionts while suppressing beneficial commensals. It is the lens that reframes food safety and chronic disease.',
+    field: '01 / MICROBIAL METALLOMICS',
+    title: 'Find the interaction everyone else is measuring separately.',
+    body: 'Metals reshape microbial communities, microbial communities transform metals, and both alter health. The useful signal lives in the system—not one isolated variable.',
+    image: '/images/wp-migrated/Microbial-Metallomics.jpg',
+    color: '#64f4e8',
+    href: '/frameworks/microbial-metallomics',
   },
   {
-    title: 'Heavy-Metal Standards',
-    img: '/images/wp-migrated/Karen-Pendergrass-Microbiome-Medicine-.jpg',
-    body: 'HMTc is the heavy-metal certification infrastructure the food system does not have yet — built before the demand wave hits, so the standard exists when the market finally asks for it.',
+    field: '02 / HEAVY-METAL STANDARDS',
+    title: 'Turn fragmented evidence into standards people can actually use.',
+    body: 'Category-specific limits, ALARA principles, transparent sourcing, and testing protocols designed to make safer decisions possible.',
+    image: '/images/wp-migrated/Karen-Pendergrass-Microbiome-Medicine-.jpg',
+    color: '#d5ff50',
+    href: '/frameworks/hmtc',
   },
   {
-    title: 'Microbiome Signatures',
-    img: '/images/wp-migrated/Evolutionary-Microbial-and-Functional-Case-for-Complex-Carbohydrates.jpg',
-    body: 'Condition-specific microbial patterns, formalized through the Triangulation Method into a database of signatures that turns correlation into testable, targeted intervention.',
+    field: '03 / MICROBIOME SIGNATURES',
+    title: 'Map disease ecosystems without pretending one microbe explains them.',
+    body: 'Condition-specific patterns, evidence triangulation, and research frameworks for a field where context changes the meaning of every result.',
+    image: '/images/wp-migrated/Evolutionary-Microbial-and-Functional-Case-for-Complex-Carbohydrates.jpg',
+    color: '#b98cff',
+    href: '/frameworks/major-microbial-associations',
   },
 ];
 
 const receipts = [
-  { year: '2009', text: 'Founded the Paleo Foundation. A Harvard professor said there was no market. The market arrived.' },
-  { year: '2012', text: 'First documented FMT for Celiac Disease — four years before the first published case study.' },
-  { year: '2020', text: 'Told Fred Hart that Pepsi would put prebiotics on their cans. Pepsi confirmed it in 2026.' },
-  { year: '2025', text: 'Only non-PhD among 150 researchers invited to the Beneficial Microbes Conference.' },
-  { year: '2026', text: 'Published the Microbiome Medicine Journal, Volume I — five original papers on Parkinson’s disease.' },
-  { year: 'Next', text: 'Heavy metals as the defining consumer-health issue. Phage therapy replacing antibiotics. Passive biomonitoring everywhere.' },
-];
-
-const testimonials = [
-  {
-    quote: 'Schopenhauer said: “Talent hits a target no one else can hit; genius hits a target no one else can see.” Karen Pendergrass sees things no one else sees. Pick any topic and she has a lecture in the barrel, ready to go.',
-    name: 'Mike Mihalski',
-    title: 'Founder, Sons of Liberty Gunworks',
-  },
-  {
-    quote: 'One word? Obsessive. She argues with Claude on anything from medicine to logic — and she wins. AI companies should be studying the way she thinks.',
-    name: 'Victor Subia',
-    title: 'Founder · AI Researcher',
-  },
-  {
-    quote: 'In university, Karen got into it with our Harvard business professor, Dr. Carla Pavone, over the Paleo Diet — because she bet her career it would trend. Dr. Pavone said there was no indication it ever would, and that moving across the country to start the Paleo Foundation was, frankly, stupid. Turns out, Karen was right. Karen 1, Harvard Business School professor 0.',
-    name: 'Jacques Lebrument',
-    title: 'Former classmate, UMKC Bloch School',
-  },
-  {
-    quote: 'People thought she was insane for saying she could make processed foods healthy. I would never have believed it possible — if it wasn’t Karen Pendergrass who said it was.',
-    name: 'Joseph Salama',
-    title: '',
-  },
-  {
-    quote: 'She built an entire movement toward fixing health issues. A true inspiration.',
-    name: 'Matty Aporta',
-    title: 'Vital Proteins',
-  },
-  {
-    quote: 'The most dangerously intelligent woman I have ever met… and that’s not a compliment.',
-    name: 'Ross Jeffries',
-    title: '“Godfather” of PUA (Neil Strauss)',
-  },
-  {
-    quote: 'She could probably cure cancer, but still can’t tie her own shoes and do basic math.',
-    name: 'Mario Singelmann',
-    title: '',
-  },
+  ['2009', 'Founded the Paleo Foundation before there was a market to certify.'],
+  ['2012', 'Documented FMT for celiac disease four years before the first case report.'],
+  ['2020', 'Forecast prebiotics at Pepsi; the direction was publicly confirmed in 2026.'],
+  ['2025', 'Only non-PhD among 150 attendees at the Beneficial Microbes Conference.'],
+  ['2026', 'Published Microbiome Medicine Journal, Volume I, with five Parkinson’s papers.'],
 ];
 
 const articles = [
-  { slug: 'microbial-metallomics-and-heavy-metal-contamination', title: 'Microbial Metallomics: The Missing Link in Heavy Metal Contamination', meta: 'Microbiome Research' },
-  { slug: 'obesity-heavy-metals-sugar-scapegoat', title: 'The Obesity Scapegoat: Why Sugar Isn’t the Whole Story', meta: 'Analysis' },
-  { slug: 'heavy-metal-index-tracing-food-contamination-to-source', title: 'The Heavy Metal Index: Tracing Food Contamination to the Evidence', meta: 'Analysis' },
-  { slug: '2030-trends', title: '2030 Trends: A Forecast From Someone Who Called the Last Decade', meta: 'Forecasting' },
+  { id: 'A–031', type: 'MICROBIOME RESEARCH', title: 'Microbial Metallomics: The Missing Link in Heavy Metal Contamination', time: '11 MIN', slug: 'microbial-metallomics-and-heavy-metal-contamination', color: '#64f4e8' },
+  { id: 'A–034', type: 'ANALYSIS', title: 'The Heavy Metal Index: Tracing Food Contamination to the Evidence', time: '9 MIN', slug: 'heavy-metal-index-tracing-food-contamination-to-source', color: '#ffad4f' },
+  { id: 'A–037', type: 'FORECASTING', title: '2030 Trends: A Forecast From Someone Who Called the Last Decade', time: '9 MIN', slug: '2030-trends', color: '#b98cff' },
+  { id: 'A–040', type: 'PHAGE THERAPY', title: 'The Trillion-Dollar Answer No One Is Funding', time: '12 MIN', slug: 'phage-therapy-the-answer-no-one-is-funding', color: '#d5ff50' },
+  { id: 'A–042', type: 'AI + CULTURE', title: 'The Flattening', time: '10 MIN', slug: 'the-flattening', color: '#ff765e' },
 ];
 
 export default function HomePage() {
   return (
-    <div className="page-enter">
+    <div className="kp-live page-enter">
       <WebSiteSchema />
 
-      {/* ───────────── HERO (navy) ───────────── */}
-      <section className="relative overflow-hidden" style={{ background: NAVY, color: PAPER }}>
-        <div
-          className="cc-ghost absolute left-1/2 bottom-0 -translate-x-1/2 translate-y-[30%] select-none pointer-events-none"
-          aria-hidden="true"
-          style={{ color: 'rgba(255,255,255,0.035)' }}
-        >
-          PENDERGRASS
-        </div>
-
-        <div className="relative z-10 pt-10 text-center">
-          <span className="cc-eyebrow text-[11px]" style={{ color: 'rgba(255,255,255,0.65)' }}>
-            Research · Standards · Frameworks · Advisory
-          </span>
-        </div>
-
-        <div className="relative z-10 max-w-[1500px] mx-auto px-6 md:px-12 pt-12 pb-24 md:pb-28">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
-            <div className="lg:col-span-7 order-2 lg:order-1">
-              <p className="cc-eyebrow text-[11px] mb-6" style={{ color: 'rgba(255,255,255,0.6)' }}>
-                Standards Developer · Microbiome Researcher · Cyprus
-              </p>
-              <h1 className="cc-hero-title">
-                Always
-                <br />
-                <span style={{ color: 'var(--color-accent)' }}>ahead of</span>
-                <br />
-                the market.
-              </h1>
-              <p className="text-base md:text-lg leading-relaxed mt-8 max-w-xl" style={{ color: 'rgba(255,255,255,0.85)' }}>
-                Karen Pendergrass calls the shift before the market sees it — then builds the standard,
-                the certification, and the research before the demand arrives. Paleo and Keto Diet. FMTs.
-                Microbiome Medicine. The <em>entire</em> field of microbial metallomics. The critical role
-                of heavy metals in food. Fiber trends. Heavy-metal trends. Global regulations on specific
-                heavy metals. Early every time, and on the record.
-              </p>
-              <div className="flex flex-wrap items-center gap-4 mt-10">
-                <Link href="/writing" className="px-7 py-3.5 text-[12px] tracking-[0.12em] uppercase" style={{ background: 'var(--color-accent)', color: NAVY, fontFamily: 'var(--font-mono)' }}>
-                  Read the work
-                </Link>
-                <Link href="/start" className="px-7 py-3.5 text-[12px] tracking-[0.12em] uppercase" style={{ border: '1px solid rgba(255,255,255,0.4)', color: PAPER, fontFamily: 'var(--font-mono)' }}>
-                  Start here
-                </Link>
-              </div>
-              <p className="cc-eyebrow cc-caret text-[10px] mt-10" style={{ color: 'rgba(255,255,255,0.5)' }}>
-                &gt; based in parekklisia, cyprus
-              </p>
-
-              <div className="mt-8">
-                <SocialLinks linkClassName="text-white/55 hover:text-[var(--color-accent)]" />
-              </div>
-            </div>
-
-            <div className="lg:col-span-5 order-1 lg:order-2 relative">
-              <div className="relative mx-auto w-full max-w-[440px] aspect-[2/3]">
-                <div className="cc-sunburst" aria-hidden="true" />
-                <Image src="/images/Karen_Pendergrass.png" alt="Karen Pendergrass" fill sizes="(max-width: 1024px) 320px, 440px" className="object-contain object-bottom cc-figure relative z-[1]" priority />
-              </div>
-            </div>
+      <section className="kp-hero" id="top">
+        <div className="kp-grid" aria-hidden="true" />
+        <div className="kp-hero-copy">
+          <p className="kp-coordinate">34.7071° N · 33.0226° E / FIELD NODE 001</p>
+          <p className="kp-eyebrow"><span /> SYSTEMS THINKER · RESEARCHER · FOUNDER</p>
+          <h1>ALWAYS<br />AHEAD OF<br /><em>THE MARKET.</em></h1>
+          <p className="kp-intro">I build the maps, standards, and evidence infrastructure that complex fields need <strong>before the market knows to ask for them.</strong></p>
+          <div className="kp-hero-actions">
+            <a className="kp-primary" href="#work">ENTER THE FIELD <b>↓</b></a>
+            <Link className="kp-text-link" href="/start">START WITH THE STORY <b>↗</b></Link>
           </div>
+          <SocialLinks className="kp-socials" linkClassName="text-white/55 hover:text-[var(--color-accent)]" />
         </div>
 
-        <div className="relative z-10 max-w-[1500px] mx-auto px-6 md:px-12 pb-8 flex items-center justify-between">
-          <span className="cc-eyebrow text-[9px]" style={{ color: 'rgba(255,255,255,0.45)' }}>Karen Pendergrass · Est. 2009</span>
-          <span className="cc-eyebrow text-[9px]" style={{ color: 'rgba(255,255,255,0.45)' }}>34.68°N 33.14°E · Paleo Foundation</span>
+        <div className="kp-portrait" aria-label="Portrait of Karen Pendergrass">
+          <div className="kp-orbit kp-orbit-one" /><div className="kp-orbit kp-orbit-two" /><div className="kp-orbit kp-orbit-three" />
+          <div className="kp-portrait-label"><span>SUBJECT</span><strong>K. PENDERGRASS</strong><small>FOUNDER / FIELD ARCHITECT</small></div>
+          <Image src="/images/Karen_Pendergrass.png" alt="Karen Pendergrass" fill sizes="(max-width: 1000px) 90vw, 42vw" className="kp-portrait-image" priority />
+          <div className="kp-scan" aria-hidden="true" />
+        </div>
+
+        <dl className="kp-hero-stats">
+          <div><dt>FIELD</dt><dd>MICROBIOME × METALS</dd></div>
+          <div><dt>MODE</dt><dd>FIRST PRINCIPLES</dd></div>
+          <div><dt>BASE</dt><dd>CYPRUS / GLOBAL</dd></div>
+          <div><dt>RECORD</dt><dd>17+ YEARS AHEAD</dd></div>
+        </dl>
+      </section>
+
+      <section className="kp-projects" id="ventures">
+        <header className="kp-section-head"><span>00 / FOUNDER SIGNALS</span><h2>SIX PLATFORMS.<br />ONE SYSTEMS-LEVEL METHOD.</h2><p>Each is an operating thesis: identify missing infrastructure, assemble the evidence, and build it.</p></header>
+        <div className="kp-project-grid">
+          {projects.map((project, index) => (
+            <a className="kp-project" href={project.url} target="_blank" rel="noopener noreferrer" style={{ '--project-color': project.color } as CSSProperties} key={project.name}>
+              <small>0{index + 1}</small><span>FOUNDED BY KAREN PENDERGRASS</span><h3>{project.name}</h3><p>{project.note}</p><b>TRANSMIT ↗</b>
+            </a>
+          ))}
         </div>
       </section>
 
-      {/* ───────────── ORACLE + POSITIONING + PILLARS (paper) ───────────── */}
-      <section style={{ background: PAPER, color: NAVY }} className="py-20 md:py-28">
-        <div className="max-w-[1500px] mx-auto px-6 md:px-12">
-          {/* Featured quote — The Oracle */}
-          <div className="max-w-3xl mb-14 md:mb-20">
-            <p className="cc-eyebrow text-[11px] mb-6" style={{ color: 'var(--color-accent-dark)' }}>The Oracle</p>
-            <blockquote
-              className="cc-feature-title"
-              style={{ fontSize: 'clamp(1.9rem, 4.2vw, 3.5rem)', textTransform: 'none', color: NAVY, lineHeight: 1.1 }}
-            >
-              “Well, if it isn’t the <span style={{ color: 'var(--color-accent-dark)' }}>Oracle</span> herself.”
-            </blockquote>
-            <p className="text-base md:text-lg leading-relaxed mt-6" style={{ color: 'var(--color-ink)' }}>
-              In 2020, Karen told Fred Hart that Pepsi would one day put fiber on the front of its cans and
-              proudly advertise it. He thought she was crazy. Seven years later it happened — and he called
-              her the Oracle.
-            </p>
-            <p className="cc-eyebrow text-[10px] mt-6" style={{ color: NAVY }}>Fred Hart · Partner & Creative Director, Interact</p>
-          </div>
-          <div className="mb-16" style={{ borderTop: '1px solid rgba(29,56,79,0.12)' }} />
-
-          <div className="max-w-3xl mb-16">
-            <p className="cc-eyebrow text-[11px] mb-5" style={{ color: 'var(--color-accent-dark)' }}>What I do</p>
-            <h2 className="cc-feature-title mb-6" style={{ fontSize: 'clamp(1.9rem, 4vw, 3.25rem)', color: NAVY }}>
-              I translate complex systems science into standards people can use.
-            </h2>
-            <p className="text-base md:text-lg leading-relaxed" style={{ color: 'var(--color-ink)' }}>
-              I&rsquo;m a standards developer and microbiome signatures researcher, and the founder of six
-              organizations at the intersection of microbiome science, translational medicine, and
-              regulatory innovation. My work spans microbial metallomics, heavy-metal certification, food
-              safety standards, and microbiome-targeted interventions. In 2012 I became the first
-              documented case of fecal microbiota transplantation for Celiac Disease.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-8">
-            {pillars.map((p, i) => (
-              <div key={p.title}>
-                <div className="flex items-baseline gap-3 mb-5">
-                  <span className="cc-eyebrow text-[10px]" style={{ color: 'var(--color-accent-dark)' }}>0{i + 1}</span>
-                  <h3 className="cc-feature-title" style={{ color: NAVY }}>{p.title}</h3>
-                </div>
-                <div className="cc-duo relative aspect-[4/5] mb-5">
-                  <Image src={p.img} alt="" fill sizes="(max-width: 768px) 100vw, 460px" className="object-cover" />
-                  <div className="cc-duo-tint" />
-                  <div className="cc-duo-accent" />
-                  <div className="cc-halftone" />
-                </div>
-                <p className="text-sm leading-relaxed" style={{ color: 'var(--color-ink-secondary)' }}>{p.body}</p>
-              </div>
-            ))}
-          </div>
+      <section className="kp-work" id="work">
+        <header className="kp-section-head kp-section-head-dark"><span>01 / THE WORK</span><h2>I TURN COMPLEX SYSTEMS<br />INTO USABLE SIGNALS.</h2><p>My work sits where emerging science, standards, public understanding, and institution-building overlap.</p></header>
+        <div className="kp-pillars">
+          {pillars.map((pillar) => (
+            <article className="kp-pillar" style={{ '--pillar-color': pillar.color } as CSSProperties} key={pillar.field}>
+              <div className="kp-pillar-image"><Image src={pillar.image} alt="" fill sizes="(max-width: 1000px) 100vw, 33vw" /><span /></div>
+              <div className="kp-pillar-copy"><small>{pillar.field}</small><h3>{pillar.title}</h3><p>{pillar.body}</p><Link href={pillar.href}>OPEN DOSSIER →</Link></div>
+            </article>
+          ))}
         </div>
       </section>
 
-      {/* ───────────── THE RECEIPTS (navy) ───────────── */}
-      <section style={{ background: NAVY, color: PAPER }} className="py-20 md:py-28">
-        <div className="max-w-[1500px] mx-auto px-6 md:px-12">
-          <p className="cc-eyebrow text-[11px] mb-10" style={{ color: 'var(--color-accent)' }}>The receipts · a documented track record</p>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-12">
-            {receipts.map((r) => (
-              <div key={r.year} className="border-l pl-6" style={{ borderColor: 'rgba(255,255,255,0.15)' }}>
-                <p className="cc-feature-title mb-3" style={{ color: 'var(--color-accent)' }}>{r.year}</p>
-                <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.8)' }}>{r.text}</p>
-              </div>
-            ))}
-          </div>
-        </div>
+      <section className="kp-receipts" id="receipts">
+        <div className="kp-receipts-intro"><span>02 / DOCUMENTED TRACK RECORD</span><h2>THE<br /><em>RECEIPTS.</em></h2><div className="kp-oracle"><small>CALLSIGN / THE ORACLE</small><p>Fred Hart called her <strong>“The Oracle.”</strong></p><span>Not for guessing. For seeing the connected system early—and leaving a timestamp.</span></div></div>
+        <ol className="kp-timeline">
+          {receipts.map(([year, receipt], index) => <li key={year}><span>R–00{index + 1}</span><strong>{year}</strong><p>{receipt}</p></li>)}
+        </ol>
+        <Link className="kp-receipts-link" href="/receipts">VIEW THE COMPLETE RECORD →</Link>
       </section>
 
-      {/* ───────────── VENTURES (paper, oversized rows) ───────────── */}
-      <section style={{ background: PAPER, color: NAVY }} className="py-20 md:py-28">
-        <div className="max-w-[1500px] mx-auto px-6 md:px-12">
-          <p className="cc-eyebrow text-[11px] mb-10" style={{ color: 'var(--color-accent-dark)' }}>Ventures · six categories created before they had a market</p>
-          <div style={{ borderTop: '1px solid rgba(29,56,79,0.18)' }}>
-            {ventures.map((v) => (
-              <a
-                key={v.name}
-                href={v.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-8 py-6 no-underline"
-                style={{ borderBottom: '1px solid rgba(29,56,79,0.12)' }}
-              >
-                <span className="cc-eyebrow text-[10px] shrink-0 w-24 pt-1" style={{ color: 'var(--color-accent-dark)' }}>{v.tag}</span>
-                <span className="cc-feature-title flex-1 transition-colors" style={{ color: NAVY }}>{v.name}</span>
-                <span className="text-sm flex-[2] hidden md:block" style={{ color: 'var(--color-ink-secondary)' }}>{v.homeDescription}</span>
-                <span className="text-xl shrink-0 transition-transform duration-200 group-hover:translate-x-1" style={{ color: 'var(--color-accent-dark)' }}>↗</span>
-              </a>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ───────────── WRITING (navy) ───────────── */}
-      <section style={{ background: NAVY, color: PAPER }} className="py-20 md:py-28">
-        <div className="max-w-[1500px] mx-auto px-6 md:px-12">
-          <div className="flex items-end justify-between mb-10 flex-wrap gap-4">
-            <p className="cc-eyebrow text-[11px]" style={{ color: 'var(--color-accent)' }}>Current thinking</p>
-            <Link href="/writing" className="cc-eyebrow text-[11px] underline underline-offset-4" style={{ color: PAPER }}>All writing →</Link>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-px" style={{ background: 'rgba(255,255,255,0.12)' }}>
-            {articles.map((a) => (
-              <Link key={a.slug} href={`/writing/${a.slug}`} className="group block p-8 no-underline" style={{ background: NAVY }}>
-                <span className="cc-eyebrow text-[10px]" style={{ color: 'var(--color-accent)' }}>{a.meta}</span>
-                <span className="block cc-feature-title mt-4" style={{ color: PAPER }}>{a.title}</span>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ───────────── ORIGIN (paper) ───────────── */}
-      <section style={{ background: PAPER, color: NAVY }} className="py-20 md:py-28">
-        <div className="max-w-3xl mx-auto px-6 md:px-12">
-          <p className="cc-eyebrow text-[11px] mb-6" style={{ color: 'var(--color-accent-dark)' }}>Origin</p>
-          <h2 className="cc-feature-title mb-6" style={{ fontSize: 'clamp(1.9rem, 4vw, 3.25rem)', color: NAVY }}>
-            After years of misdiagnoses, I became the first known person to undergo FMT for Celiac Disease.
-          </h2>
-          <p className="text-base md:text-lg leading-relaxed mb-6" style={{ color: 'var(--color-ink)' }}>
-            DIY, because no gastroenterologist would do it. Four years later, the published case study
-            called it a breakthrough. That experience changed the trajectory of everything you see here:
-            the certification frameworks, the microbiome signatures research, and the conviction that the
-            most important standards have to exist before the market knows it needs them.
-          </p>
-          <Link href="/about" className="inline-block mt-2 px-7 py-3.5 text-[12px] tracking-[0.12em] uppercase" style={{ background: NAVY, color: PAPER, fontFamily: 'var(--font-mono)' }}>
-            Read the full story
-          </Link>
-        </div>
-      </section>
-
-      {/* ───────────── TESTIMONIALS (paper) ───────────── */}
-      <section style={{ background: PAPER, color: NAVY }} className="py-20 md:py-28">
-        <div className="max-w-[1500px] mx-auto px-6 md:px-12">
-          <p className="cc-eyebrow text-[11px] mb-12" style={{ color: 'var(--color-accent-dark)' }}>What people say</p>
-          <div className="columns-1 md:columns-2 lg:columns-3 gap-6">
-            {testimonials.map((t) => (
-              <figure
-                key={t.name}
-                className="break-inside-avoid mb-6 p-7 rounded-lg"
-                style={{ background: '#fff', border: '1px solid rgba(29,56,79,0.12)' }}
-              >
-                <blockquote
-                  className="text-base md:text-lg leading-relaxed"
-                  style={{ color: 'var(--color-ink)', fontFamily: 'var(--font-display)' }}
-                >
-                  {t.quote}
-                </blockquote>
-                <figcaption className="mt-5">
-                  <p className="cc-eyebrow text-[10px]" style={{ color: NAVY }}>{t.name}</p>
-                  {t.title && (
-                    <p className="cc-eyebrow text-[9px] mt-1.5" style={{ color: 'var(--color-accent-dark)' }}>{t.title}</p>
-                  )}
-                </figcaption>
-              </figure>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ───────────── CLOSING BAND (navy) ───────────── */}
-      <section style={{ background: NAVY, color: PAPER }} className="py-24 md:py-32 relative overflow-hidden">
-        <div className="aurora aurora-dark" aria-hidden="true" />
-        <div className="relative z-10 max-w-[1500px] mx-auto px-6 md:px-12 text-center">
-          <p className="cc-eyebrow text-[11px] mb-8" style={{ color: 'rgba(255,255,255,0.6)' }}>A documented track record</p>
-          <h2 className="cc-hero-title" style={{ fontSize: 'clamp(2.25rem, 6vw, 5.5rem)' }}>
-            Called the last decade.
-            <br />
-            <span style={{ color: 'var(--color-accent)' }}>Calling the next one.</span>
-          </h2>
-          <div className="mt-12">
-            <Link href="/receipts" className="inline-block px-8 py-4 text-[12px] tracking-[0.12em] uppercase" style={{ background: 'var(--color-accent)', color: NAVY, fontFamily: 'var(--font-mono)' }}>
-              See the receipts
+      <section className="kp-writing" id="writing">
+        <header className="kp-section-head"><span>03 / FIELD ARCHIVE</span><h2>READ THE WORK.</h2><p>Research, analysis, and forecasts—presented as a navigable evidence archive.</p></header>
+        <div className="kp-article-list">
+          {articles.map((article) => (
+            <Link href={`/writing/${article.slug}`} key={article.id} style={{ '--article-color': article.color } as CSSProperties}>
+              <span>{article.id}</span><small>{article.type}</small><h3>{article.title}</h3><time>{article.time}</time><b>→</b>
             </Link>
-          </div>
+          ))}
         </div>
+        <div className="kp-writing-actions"><Link className="kp-primary kp-primary-dark" href="/writing">VIEW ALL WRITING →</Link><Link className="kp-text-link kp-text-dark" href="/publications">OPEN PUBLICATIONS →</Link></div>
+      </section>
+
+      <section className="kp-origin">
+        <span>04 / ORIGIN — WHY THE SYSTEM EXISTS</span>
+        <blockquote>“THE MOST IMPORTANT INFRASTRUCTURE HAS TO EXIST <em>BEFORE</em> THE MARKET ASKS FOR IT.”</blockquote>
+        <p>In 2012, a desperate search for an answer led to an at-home fecal microbiota transplant for celiac disease—four years before the first comparable case report. The result was not a victory lap. It was a lifelong question: what other crucial connections are visible, but not yet organized?</p>
+        <div><Link href="/about">READ THE STARTING STORY →</Link><Link href="/ventures">MAP THE VENTURES →</Link></div>
       </section>
     </div>
   );

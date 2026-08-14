@@ -32,28 +32,18 @@ export default function TopBar() {
     <div
       className="sticky top-0 z-[40] transition-all duration-300"
       style={{
-        background: scrolled ? 'rgba(var(--color-bg-rgb), 0.85)' : 'transparent',
-        backdropFilter: scrolled ? 'blur(12px)' : 'none',
-        WebkitBackdropFilter: scrolled ? 'blur(12px)' : 'none',
-        borderBottom: scrolled
-          ? '1px solid var(--color-border-light)'
-          : '1px solid transparent',
+        background: scrolled ? 'rgba(6,17,14,0.92)' : 'var(--color-ink-deep)',
+        backdropFilter: 'blur(14px)',
+        WebkitBackdropFilter: 'blur(14px)',
+        borderBottom: '1px solid rgba(238,247,233,0.14)',
       }}
     >
       {/* pl clears the floating hamburger (SidebarNav) at top-left */}
       <div className="max-w-[1400px] mx-auto h-16 flex items-center justify-between pl-[5.25rem] pr-6 md:pr-12">
         {/* Brand wordmark → home */}
-        <Link href="/" className="group inline-flex items-baseline gap-1.5" aria-label="Karen Pendergrass — home">
-          <span
-            className="text-base md:text-lg font-medium tracking-[0.02em]"
-            style={{ fontFamily: 'var(--font-display)', color: 'var(--color-ink)' }}
-          >
-            Karen Pendergrass
-          </span>
-          <span
-            className="w-1.5 h-1.5 rounded-full transition-transform duration-300 group-hover:scale-125"
-            style={{ backgroundColor: 'var(--color-accent)' }}
-          />
+        <Link href="/" className="group inline-flex items-center gap-2.5" aria-label="Karen Pendergrass — home">
+          <strong className="grid place-items-center w-9 h-9 text-[13px] tracking-[-0.08em]" style={{ background: 'var(--color-accent)', color: 'var(--color-ink-deep)', fontFamily: 'var(--font-mono)' }}>KP</strong>
+          <span className="text-[10px] font-semibold leading-[1.05] tracking-[0.14em]" style={{ fontFamily: 'var(--font-mono)', color: 'var(--color-bg)' }}>KAREN<br />PENDERGRASS</span>
         </Link>
 
         {/* Desktop primary nav + CTA */}
@@ -63,7 +53,7 @@ export default function TopBar() {
               key={link.href}
               href={link.href}
               className="text-[12px] uppercase tracking-[0.12em] transition-colors duration-200 relative py-1"
-              style={{ color: isActive(link.href) ? 'var(--color-ink)' : 'var(--color-ink-muted)' }}
+              style={{ color: isActive(link.href) ? 'var(--color-accent)' : 'rgba(238,247,233,0.58)', fontFamily: 'var(--font-mono)' }}
             >
               {link.label}
               {isActive(link.href) && (
@@ -76,8 +66,8 @@ export default function TopBar() {
           ))}
           <Link
             href="/contact"
-            className="inline-flex items-center px-4 py-2 text-[12px] font-medium tracking-wide rounded-md transition-all duration-200 hover:-translate-y-0.5"
-            style={{ backgroundColor: 'var(--color-ink)', color: '#fff' }}
+            className="inline-flex items-center px-4 py-2 text-[11px] font-semibold tracking-[0.1em] transition-all duration-200 hover:-translate-y-0.5"
+            style={{ backgroundColor: 'var(--color-accent)', color: 'var(--color-ink-deep)', fontFamily: 'var(--font-mono)' }}
           >
             Contact
           </Link>

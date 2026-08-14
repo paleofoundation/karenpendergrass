@@ -28,7 +28,7 @@ export default function AnnouncementBar() {
       <Link
         href="/advisory"
         className="hidden sm:inline-flex items-center px-5 py-2.5 cc-eyebrow text-[10px] font-semibold whitespace-nowrap transition-colors duration-200 hover:bg-[var(--color-ink-deep)] hover:text-[var(--color-accent)]"
-        style={{ borderLeft: '1px solid rgba(18,37,54,0.2)' }}
+        style={{ borderLeft: '1px solid rgba(6,17,14,0.2)' }}
       >
         Now booking board &amp; advisory →
       </Link>

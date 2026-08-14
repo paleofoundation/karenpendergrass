@@ -16,29 +16,29 @@
   --font-body: var(--font-body-src), 'Source Sans 3', 'Helvetica Neue', sans-serif;
   --font-mono: var(--font-mono-src), 'JetBrains Mono', monospace;
 
-  /* Brand Palette — deep blue dominant, warm orange accent */
-  --color-bg: #f6f8fa;
-  --color-bg-rgb: 246, 248, 250;
-  --color-bg-alt: #eaeff4;
-  --color-surface: #ffffff;
+  /* Expedition KP–01 palette — continuous from the driving experience */
+  --color-bg: #eef7e9;
+  --color-bg-rgb: 238, 247, 233;
+  --color-bg-alt: #dfeadd;
+  --color-surface: #f7fcf4;
 
-  /* Typography Colors — deep blue ink */
-  --color-ink: #1d384f;            /* brand deep blue — dominant */
-  --color-ink-secondary: #3a5266;  /* body copy */
-  --color-ink-muted: #5c7282;      /* muted; meets AA on light bg */
-  --color-ink-deep: #122536;       /* near-black navy for dark panels */
-  --color-ink-rgb: 29, 56, 79;
+  /* Typography Colors — botanical field ink */
+  --color-ink: #0a1915;
+  --color-ink-secondary: #31483f;
+  --color-ink-muted: #526b61;
+  --color-ink-deep: #06110e;
+  --color-ink-rgb: 10, 25, 21;
 
-  /* Accent & Highlights — brand orange */
-  --color-accent: #faaa1f;         /* brand orange — fills, bars, dots, dark-bg text */
-  --color-accent-light: #ffc24d;
-  --color-accent-dark: #9a5d08;    /* AA-readable orange for accent text/links on light bg */
-  --color-accent-rgb: 250, 170, 31;
+  /* Rovalizer signal accent */
+  --color-accent: #d5ff50;
+  --color-accent-light: #e5ff91;
+  --color-accent-dark: #405c00;
+  --color-accent-rgb: 213, 255, 80;
 
   /* Borders & Dividers */
-  --color-border: #dbe2e8;
-  --color-border-light: #eaeff4;
-  --color-grid: #b9c6d0;
+  --color-border: #c8d5c7;
+  --color-border-light: #dfeadd;
+  --color-grid: #a8baaa;
 
   /* Typography Scale */
   --text-xs: 0.75rem;
