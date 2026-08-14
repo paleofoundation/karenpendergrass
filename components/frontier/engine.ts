@@ -1,8 +1,8 @@
 import * as THREE from "three";
 import { RoundedBoxGeometry } from "three/examples/jsm/geometries/RoundedBoxGeometry.js";
 import type { DynamicRayCastVehicleController, RigidBody, World } from "@dimforge/rapier3d-compat";
-import { articleSignals, expeditionZones, oracleBlocks, socialLinks, supportLinks, type ExpeditionZone } from "./zones";
-import type { DriveAction, ExperienceCallbacks, ExperienceHandle, FieldObjectEvent } from "./types";
+import { articleSignals, expeditionZones, fieldOperations, oracleBlocks, socialLinks, supportLinks, type ExpeditionZone, type FieldOperation } from "./zones";
+import type { DriveAction, ExperienceCallbacks, ExperienceHandle, FieldObjectEvent, OperationStage } from "./types";
 
 const TAU = Math.PI * 2;
 const UP = new THREE.Vector3(0, 1, 0);
@@ -22,6 +22,7 @@ type RovalizerVisual = {
   wheels: WheelVisual[];
   lidar: THREE.Group;
   armJoint: THREE.Group;
+  scanCone: THREE.Mesh<THREE.ConeGeometry, THREE.MeshBasicMaterial>;
   scanRing: THREE.Mesh<THREE.RingGeometry, THREE.MeshBasicMaterial>;
   dust: THREE.Points<THREE.BufferGeometry, THREE.PointsMaterial>;
 };
@@ -52,6 +53,18 @@ type CatVisual = {
 type WindStreakVisual = {
   sprites: THREE.Sprite[];
   speeds: number[];
+};
+
+type OperationVisual = {
+  operation: FieldOperation;
+  checkpoints: Array<{
+    id: string;
+    group: THREE.Group;
+    ring: THREE.Mesh<THREE.TorusGeometry, THREE.MeshBasicMaterial>;
+    beam: THREE.Mesh<THREE.CylinderGeometry, THREE.MeshBasicMaterial>;
+  }>;
+  buildSite: THREE.Group;
+  buildRing: THREE.Mesh<THREE.TorusGeometry, THREE.MeshBasicMaterial>;
 };
 
 function material(color: string, roughness = 0.58, metalness = 0.08) {
@@ -246,25 +259,40 @@ function addRoad(scene: THREE.Scene, from: THREE.Vector2, to: THREE.Vector2, wid
   const dx = to.x - from.x;
   const dz = to.y - from.y;
   const length = Math.hypot(dx, dz);
-  const road = mesh(
-    new THREE.BoxGeometry(length, 0.08, width),
-    new THREE.MeshStandardMaterial({ color: "#4b505c", roughness: 1, metalness: 0 }),
+  const shoulder = mesh(
+    new THREE.BoxGeometry(length + 0.5, 0.055, width + 1.15),
+    new THREE.MeshStandardMaterial({ color: "#817764", roughness: 1, metalness: 0 }),
     false,
     true,
   );
-  road.position.set((from.x + to.x) * 0.5, 0.035, (from.y + to.y) * 0.5);
-  road.rotation.y = -Math.atan2(dz, dx);
+  shoulder.position.set((from.x + to.x) * 0.5, 0.005, (from.y + to.y) * 0.5);
+  shoulder.rotation.y = -Math.atan2(dz, dx);
+  scene.add(shoulder);
+  const road = mesh(
+    new THREE.BoxGeometry(length, 0.09, width),
+    new THREE.MeshStandardMaterial({ color: "#454954", roughness: 0.92, metalness: 0.02 }),
+    false,
+    true,
+  );
+  road.position.set((from.x + to.x) * 0.5, 0.055, (from.y + to.y) * 0.5);
+  road.rotation.y = shoulder.rotation.y;
   scene.add(road);
 
-  const marks = mesh(
-    new THREE.BoxGeometry(length * 0.94, 0.015, 0.09),
-    new THREE.MeshBasicMaterial({ color: "#edf0e6" }),
-    false,
-    false,
-  );
-  marks.position.copy(road.position).setY(0.088);
-  marks.rotation.y = road.rotation.y;
-  scene.add(marks);
+  const dashCount = Math.max(2, Math.floor(length / 4.4));
+  const directionX = dx / Math.max(length, 0.001);
+  const directionZ = dz / Math.max(length, 0.001);
+  for (let index = 0; index < dashCount; index += 1) {
+    const distance = -length * 0.5 + ((index + 0.5) / dashCount) * length;
+    const dash = mesh(
+      new THREE.BoxGeometry(Math.min(1.75, length / dashCount * 0.5), 0.018, 0.085),
+      new THREE.MeshBasicMaterial({ color: "#ecece5" }),
+      false,
+      false,
+    );
+    dash.position.set(road.position.x + directionX * distance, 0.111, road.position.z + directionZ * distance);
+    dash.rotation.y = road.rotation.y;
+    scene.add(dash);
+  }
 }
 
 function addSign(scene: THREE.Scene, zone: ExpeditionZone) {
@@ -752,7 +780,54 @@ function createRovalizer(scene: THREE.Scene): RovalizerVisual {
   const scannerBand = mesh(new THREE.CylinderGeometry(0.465, 0.465, 0.08, 18), cyanLight);
   scannerBand.position.y = 0.78;
   lidar.add(scannerBand);
+  const scanCone = mesh(
+    new THREE.ConeGeometry(3.5, 3.2, 32, 1, true, -Math.PI * 0.18, Math.PI * 0.36),
+    new THREE.MeshBasicMaterial({ color: "#63f5ee", transparent: true, opacity: 0.075, side: THREE.DoubleSide, depthWrite: false, blending: THREE.AdditiveBlending }),
+    false,
+    false,
+  ) as THREE.Mesh<THREE.ConeGeometry, THREE.MeshBasicMaterial>;
+  scanCone.position.y = -0.82;
+  scanCone.rotation.y = Math.PI;
+  lidar.add(scanCone);
   root.add(lidar);
+
+  const safetyOrange = new THREE.MeshStandardMaterial({ color: "#ff8a3d", emissive: "#ff572f", emissiveIntensity: 0.7, roughness: 0.32, metalness: 0.32 });
+  const rearModule = mesh(new RoundedBoxGeometry(0.95, 1.15, 1.82, 4, 0.16), graphite);
+  rearModule.position.set(-2.05, 1.02, 0);
+  root.add(rearModule);
+  [-0.48, 0.48].forEach((z, index) => {
+    const canister = mesh(new THREE.CylinderGeometry(0.29, 0.32, 1.03, 16), index ? limeDark : steel);
+    canister.position.set(-2.1, 1.2, z);
+    root.add(canister);
+    const cap = mesh(new THREE.CylinderGeometry(0.16, 0.16, 0.12, 12), safetyOrange);
+    cap.position.set(-2.1, 1.79, z);
+    root.add(cap);
+  });
+  const exhaust = mesh(new THREE.CylinderGeometry(0.075, 0.1, 1.35, 10), graphite);
+  exhaust.position.set(-1.95, 2.22, -0.72);
+  root.add(exhaust);
+  const exhaustCap = mesh(new THREE.CylinderGeometry(0.12, 0.12, 0.09, 10), steel);
+  exhaustCap.position.set(-1.95, 2.91, -0.72);
+  exhaustCap.rotation.z = 0.16;
+  root.add(exhaustCap);
+  [-0.62, 0.62].forEach((z) => {
+    const tailLight = mesh(new THREE.BoxGeometry(0.07, 0.24, 0.32), safetyOrange, false, false);
+    tailLight.position.set(-2.55, 0.75, z);
+    root.add(tailLight);
+  });
+
+  const ventMaterial = new THREE.MeshStandardMaterial({ color: "#181a20", roughness: 0.72, metalness: 0.68 });
+  [-1, 1].forEach((side) => {
+    for (let index = 0; index < 5; index += 1) {
+      const vent = mesh(new THREE.BoxGeometry(0.62, 0.055, 0.03), ventMaterial);
+      vent.position.set(-0.6 + index * 0.04, 0.78 + index * 0.1, side * 0.928);
+      vent.rotation.z = -0.42;
+      root.add(vent);
+    }
+    const step = mesh(new RoundedBoxGeometry(0.72, 0.12, 0.28, 2, 0.03), steel);
+    step.position.set(0.2, 0.18, side * 1.22);
+    root.add(step);
+  });
 
   const cageMaterial = material("#a5a6ac", 0.27, 0.88);
   [-0.78, 0.78].forEach((side) => {
@@ -807,7 +882,7 @@ function createRovalizer(scene: THREE.Scene): RovalizerVisual {
     const container = new THREE.Group();
     container.position.copy(position);
     const roll = new THREE.Group();
-    const tire = mesh(new THREE.CylinderGeometry(0.62, 0.62, 0.5, 18), new THREE.MeshStandardMaterial({ color: "#25252d", roughness: 0.95, metalness: 0.03 }));
+    const tire = mesh(new THREE.CylinderGeometry(0.62, 0.62, 0.5, 24), new THREE.MeshStandardMaterial({ color: "#25252d", roughness: 0.95, metalness: 0.03 }));
     tire.rotation.x = Math.PI * 0.5;
     roll.add(tire);
     for (let treadIndex = 0; treadIndex < 12; treadIndex += 1) {
@@ -823,11 +898,22 @@ function createRovalizer(scene: THREE.Scene): RovalizerVisual {
     const hub = mesh(new THREE.CylinderGeometry(0.1, 0.1, 0.54, 10), lime);
     hub.rotation.x = Math.PI * 0.5;
     roll.add(hub);
+    for (let lugIndex = 0; lugIndex < 6; lugIndex += 1) {
+      const lugAngle = (lugIndex / 6) * TAU;
+      const lug = mesh(new THREE.CylinderGeometry(0.028, 0.028, 0.565, 8), graphite, false, false);
+      lug.rotation.x = Math.PI * 0.5;
+      lug.position.set(Math.cos(lugAngle) * 0.17, Math.sin(lugAngle) * 0.17, 0);
+      roll.add(lug);
+    }
     container.add(roll);
     const strut = mesh(new THREE.CylinderGeometry(0.08, 0.1, 0.65, 8), steel);
     strut.position.y = 0.55;
     strut.rotation.z = index < 2 ? -0.18 : 0.18;
     container.add(strut);
+    const suspensionArm = mesh(new THREE.CylinderGeometry(0.055, 0.075, 0.92, 8), graphite);
+    suspensionArm.position.set(index < 2 ? -0.18 : 0.18, 0.34, 0);
+    suspensionArm.rotation.z = index < 2 ? -0.72 : 0.72;
+    container.add(suspensionArm);
     root.add(container);
     wheels.push({ container, roll, strut });
 
@@ -857,11 +943,57 @@ function createRovalizer(scene: THREE.Scene): RovalizerVisual {
   const dust = new THREE.Points(dustGeometry, new THREE.PointsMaterial({ color: "#b99b6d", size: 0.16, transparent: true, opacity: 0, depthWrite: false }));
   root.add(dust);
   scene.add(root);
-  return { root, wheels, lidar, armJoint, scanRing, dust };
+  return { root, wheels, lidar, armJoint, scanCone, scanRing, dust };
+}
+
+function createTerrainTexture() {
+  const canvas = document.createElement("canvas");
+  canvas.width = 1024;
+  canvas.height = 1024;
+  const context = canvas.getContext("2d")!;
+  context.fillStyle = "#aeb59b";
+  context.fillRect(0, 0, canvas.width, canvas.height);
+  const image = context.getImageData(0, 0, canvas.width, canvas.height);
+  for (let index = 0; index < image.data.length; index += 4) {
+    const grain = Math.floor((Math.random() - 0.5) * 28);
+    image.data[index] = Math.max(0, Math.min(255, image.data[index] + grain));
+    image.data[index + 1] = Math.max(0, Math.min(255, image.data[index + 1] + grain));
+    image.data[index + 2] = Math.max(0, Math.min(255, image.data[index + 2] + Math.floor(grain * 0.72)));
+  }
+  context.putImageData(image, 0, 0);
+  context.globalAlpha = 0.2;
+  for (let index = 0; index < 1700; index += 1) {
+    const x = Math.random() * 1024;
+    const y = Math.random() * 1024;
+    const radius = 0.5 + Math.random() * 3.4;
+    context.fillStyle = index % 4 === 0 ? "#5f6559" : index % 3 === 0 ? "#c9bd91" : "#777d68";
+    context.beginPath();
+    context.ellipse(x, y, radius * 1.8, radius, Math.random() * TAU, 0, TAU);
+    context.fill();
+  }
+  context.globalAlpha = 0.11;
+  context.strokeStyle = "#50564b";
+  context.lineWidth = 1;
+  for (let index = 0; index < 36; index += 1) {
+    context.beginPath();
+    const originX = Math.random() * 1024;
+    const originY = Math.random() * 1024;
+    context.moveTo(originX, originY);
+    context.bezierCurveTo(originX + Math.random() * 90 - 45, originY + Math.random() * 70 - 35, originX + Math.random() * 140 - 70, originY + Math.random() * 110 - 55, originX + Math.random() * 190 - 95, originY + Math.random() * 150 - 75);
+    context.stroke();
+  }
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.colorSpace = THREE.SRGBColorSpace;
+  texture.wrapS = THREE.RepeatWrapping;
+  texture.wrapT = THREE.RepeatWrapping;
+  texture.repeat.set(12, 12);
+  texture.anisotropy = 8;
+  return texture;
 }
 
 function createTerrain(scene: THREE.Scene) {
-  const groundMaterial = new THREE.MeshStandardMaterial({ color: "#71815f", roughness: 1, metalness: 0, vertexColors: true });
+  const terrainTexture = createTerrainTexture();
+  const groundMaterial = new THREE.MeshStandardMaterial({ color: "#83906d", map: terrainTexture, bumpMap: terrainTexture, bumpScale: 0.085, roughness: 0.98, metalness: 0, vertexColors: true });
   const geometry = new THREE.PlaneGeometry(210, 210, 54, 54);
   geometry.rotateX(-Math.PI * 0.5);
   const colors: number[] = [];
@@ -871,6 +1003,7 @@ function createTerrain(scene: THREE.Scene) {
   for (let index = 0; index < positions.count; index += 1) {
     const x = positions.getX(index);
     const z = positions.getZ(index);
+    positions.setY(index, Math.sin(x * 0.15) * Math.cos(z * 0.13) * 0.028);
     const edge = Math.max(Math.abs(x), Math.abs(z)) / 105;
     const color = colorA.clone().lerp(colorB, Math.max(0, edge - 0.35) * 0.82 + Math.random() * 0.08);
     colors.push(color.r, color.g, color.b);
@@ -938,6 +1071,47 @@ function createLandscapeDetails(scene: THREE.Scene) {
   stream.scale.y = 0.12;
   scene.add(stream);
 
+  const puddleMaterial = new THREE.MeshPhysicalMaterial({
+    color: "#8ca8b7",
+    roughness: 0.08,
+    metalness: 0.18,
+    transmission: 0.12,
+    transparent: true,
+    opacity: 0.72,
+    depthWrite: false,
+  });
+  const puddlePositions = [
+    [-19, 29, 2.7, 1.3, 0.2],
+    [7, 45, 3.6, 1.25, -0.42],
+    [25, 20, 2.4, 1.05, 0.68],
+    [-39, 6, 3.1, 1.3, -0.16],
+    [-48, -31, 2.7, 1.18, 0.37],
+    [10, -30, 3.4, 1.25, -0.58],
+    [54, -12, 2.5, 1.1, 0.28],
+    [47, 46, 3.1, 1.2, -0.24],
+    [-66, 49, 2.8, 1.15, 0.54],
+  ] as const;
+  puddlePositions.forEach(([x, z, width, depth, rotation]) => {
+    const puddle = mesh(new THREE.CircleGeometry(1, 40), puddleMaterial, false, false);
+    puddle.rotation.x = -Math.PI * 0.5;
+    puddle.rotation.z = rotation;
+    puddle.position.set(x, 0.035, z);
+    puddle.scale.set(width, depth, 1);
+    scene.add(puddle);
+
+    const wetEdge = mesh(
+      new THREE.RingGeometry(0.98, 1.13, 40),
+      new THREE.MeshBasicMaterial({ color: "#50594f", transparent: true, opacity: 0.25, depthWrite: false }),
+      false,
+      false,
+    );
+    wetEdge.rotation.x = -Math.PI * 0.5;
+    wetEdge.rotation.z = rotation;
+    wetEdge.position.set(x, 0.028, z);
+    wetEdge.scale.set(width, depth, 1);
+    scene.add(wetEdge);
+  });
+
   const rockGeometry = new THREE.DodecahedronGeometry(1, 0);
   const rockMaterial = material("#756f7e", 0.96, 0.03);
   const rocks = new THREE.InstancedMesh(rockGeometry, rockMaterial, 42);
@@ -984,6 +1158,49 @@ function createLandscapeDetails(scene: THREE.Scene) {
   grass.instanceMatrix.needsUpdate = true;
   scene.add(grass);
 
+  const flowerAnchors = [
+    new THREE.Vector2(-49, 53),
+    new THREE.Vector2(49, 60),
+    new THREE.Vector2(58, -50),
+    new THREE.Vector2(-50, -57),
+    new THREE.Vector2(14, 58),
+  ];
+  const flowerCount = 180;
+  const stems = new THREE.InstancedMesh(
+    new THREE.CylinderGeometry(0.018, 0.026, 0.54, 5),
+    material("#607c4a", 1, 0),
+    flowerCount,
+  );
+  const flowerHeads = new THREE.InstancedMesh(
+    new THREE.OctahedronGeometry(0.09, 0),
+    new THREE.MeshStandardMaterial({ color: "#e6d6ef", emissive: "#a98fc2", emissiveIntensity: 0.18, roughness: 0.82 }),
+    flowerCount,
+  );
+  stems.castShadow = false;
+  flowerHeads.castShadow = false;
+  for (let index = 0; index < flowerCount; index += 1) {
+    const anchor = flowerAnchors[index % flowerAnchors.length];
+    const angle = Math.random() * TAU;
+    const radius = 2 + Math.pow(Math.random(), 0.65) * 16;
+    const x = anchor.x + Math.cos(angle) * radius;
+    const z = anchor.y + Math.sin(angle) * radius;
+    const height = 0.32 + Math.random() * 0.42;
+    transform.position.set(x, height * 0.5, z);
+    transform.rotation.set((Math.random() - 0.5) * 0.1, Math.random() * TAU, (Math.random() - 0.5) * 0.12);
+    transform.scale.set(0.75 + Math.random() * 0.45, height / 0.54, 0.75 + Math.random() * 0.45);
+    transform.updateMatrix();
+    stems.setMatrixAt(index, transform.matrix);
+    transform.position.set(x, height + 0.02, z);
+    transform.rotation.set(Math.random() * 0.6, Math.random() * TAU, Math.random() * 0.6);
+    const headScale = 0.7 + Math.random() * 0.75;
+    transform.scale.setScalar(headScale);
+    transform.updateMatrix();
+    flowerHeads.setMatrixAt(index, transform.matrix);
+  }
+  stems.instanceMatrix.needsUpdate = true;
+  flowerHeads.instanceMatrix.needsUpdate = true;
+  scene.add(stems, flowerHeads);
+
   const beaconMaterial = material("#666575", 0.35, 0.76);
   for (let index = 0; index < 16; index += 1) {
     const angle = (index / 16) * TAU;
@@ -1002,6 +1219,103 @@ function createLandscapeDetails(scene: THREE.Scene) {
     beacon.position.set(Math.cos(angle) * radius, 0, Math.sin(angle) * radius);
     scene.add(beacon);
   }
+}
+
+function createFieldOperationVisual(scene: THREE.Scene, operation: FieldOperation): OperationVisual {
+  const checkpoints = operation.checkpoints.map((checkpoint, index) => {
+    const group = new THREE.Group();
+    group.position.set(checkpoint.x, 0.08, checkpoint.z);
+    group.visible = false;
+    const base = mesh(
+      new THREE.CylinderGeometry(1.45, 1.68, 0.22, 24),
+      new THREE.MeshStandardMaterial({ color: "#31313a", roughness: 0.54, metalness: 0.55 }),
+    );
+    base.position.y = 0.08;
+    group.add(base);
+    const ring = mesh(
+      new THREE.TorusGeometry(1.5, 0.075, 8, 48),
+      new THREE.MeshBasicMaterial({ color: operation.color, transparent: true, opacity: 0.78 }),
+      false,
+      false,
+    ) as THREE.Mesh<THREE.TorusGeometry, THREE.MeshBasicMaterial>;
+    ring.rotation.x = Math.PI * 0.5;
+    ring.position.y = 0.22;
+    group.add(ring);
+    const mast = mesh(new THREE.CylinderGeometry(0.07, 0.11, 2.7, 10), material("#7f828b", 0.3, 0.86));
+    mast.position.y = 1.45;
+    group.add(mast);
+    const sensor = mesh(
+      new THREE.OctahedronGeometry(0.34, 0),
+      new THREE.MeshStandardMaterial({ color: operation.color, emissive: operation.color, emissiveIntensity: 3.4, roughness: 0.24 }),
+      false,
+      false,
+    );
+    sensor.position.y = 2.9;
+    group.add(sensor);
+    const beam = mesh(
+      new THREE.CylinderGeometry(0.04, 0.62, 5.8, 16, 1, true),
+      new THREE.MeshBasicMaterial({ color: operation.color, transparent: true, opacity: 0.1, side: THREE.DoubleSide, depthWrite: false, blending: THREE.AdditiveBlending }),
+      false,
+      false,
+    ) as THREE.Mesh<THREE.CylinderGeometry, THREE.MeshBasicMaterial>;
+    beam.position.y = 5.65;
+    group.add(beam);
+    const labelTexture = createTextTexture(checkpoint.label, `${operation.code} · SCAN ${index + 1}/${operation.checkpoints.length}`, "#fbfaf6", operation.color);
+    const label = mesh(
+      new THREE.PlaneGeometry(3.8, 0.95),
+      new THREE.MeshBasicMaterial({ map: labelTexture, transparent: true, side: THREE.DoubleSide, depthWrite: false }),
+      false,
+      false,
+    );
+    label.position.set(0, 3.65, 0);
+    label.userData.faceCamera = true;
+    group.add(label);
+    scene.add(group);
+    return { id: checkpoint.id, group, ring, beam };
+  });
+
+  const buildSite = new THREE.Group();
+  buildSite.position.set(operation.buildSite.x, 0.08, operation.buildSite.z);
+  buildSite.visible = false;
+  const buildBase = mesh(
+    new THREE.CylinderGeometry(operation.buildSite.radius * 0.74, operation.buildSite.radius * 0.82, 0.12, 40),
+    new THREE.MeshStandardMaterial({ color: "#343641", roughness: 0.62, metalness: 0.44, transparent: true, opacity: 0.88 }),
+    false,
+    true,
+  );
+  buildSite.add(buildBase);
+  const buildRing = mesh(
+    new THREE.TorusGeometry(operation.buildSite.radius * 0.78, 0.11, 10, 72),
+    new THREE.MeshBasicMaterial({ color: operation.color, transparent: true, opacity: 0.82 }),
+    false,
+    false,
+  ) as THREE.Mesh<THREE.TorusGeometry, THREE.MeshBasicMaterial>;
+  buildRing.rotation.x = Math.PI * 0.5;
+  buildRing.position.y = 0.13;
+  buildSite.add(buildRing);
+  [0.34, 0.58].forEach((scale, index) => {
+    const inner = mesh(
+      new THREE.RingGeometry(operation.buildSite.radius * scale - 0.04, operation.buildSite.radius * scale + 0.04, 64),
+      new THREE.MeshBasicMaterial({ color: operation.color, transparent: true, opacity: 0.24 - index * 0.05, side: THREE.DoubleSide }),
+      false,
+      false,
+    );
+    inner.rotation.x = -Math.PI * 0.5;
+    inner.position.y = 0.15;
+    buildSite.add(inner);
+  });
+  const buildTexture = createTextTexture("PRINT HERE", `${operation.code} · FABRICATION PAD`, "#fbfaf6", operation.color);
+  const buildLabel = mesh(
+    new THREE.PlaneGeometry(5.2, 1.3),
+    new THREE.MeshBasicMaterial({ map: buildTexture, transparent: true, side: THREE.DoubleSide, depthWrite: false }),
+    false,
+    false,
+  );
+  buildLabel.position.set(0, 2.65, 0);
+  buildLabel.userData.faceCamera = true;
+  buildSite.add(buildLabel);
+  scene.add(buildSite);
+  return { operation, checkpoints, buildSite, buildRing };
 }
 
 function createWindStreaks(scene: THREE.Scene): WindStreakVisual {
@@ -1112,6 +1426,43 @@ function createSky(scene: THREE.Scene) {
   sunDisc.position.copy(sunDirection).multiplyScalar(185);
   sunDisc.scale.set(34, 34, 1);
   scene.add(sunDisc);
+
+  const cloudCanvas = document.createElement("canvas");
+  cloudCanvas.width = 512;
+  cloudCanvas.height = 192;
+  const cloudContext = cloudCanvas.getContext("2d")!;
+  const cloudPuffs = [
+    [110, 112, 86],
+    [184, 78, 104],
+    [278, 104, 122],
+    [372, 84, 91],
+    [438, 116, 73],
+  ];
+  cloudPuffs.forEach(([x, y, radius]) => {
+    const cloudGlow = cloudContext.createRadialGradient(x, y, 2, x, y, radius);
+    cloudGlow.addColorStop(0, "rgba(236,232,247,.72)");
+    cloudGlow.addColorStop(0.46, "rgba(136,119,157,.48)");
+    cloudGlow.addColorStop(1, "rgba(75,57,90,0)");
+    cloudContext.fillStyle = cloudGlow;
+    cloudContext.fillRect(x - radius, y - radius, radius * 2, radius * 2);
+  });
+  const cloudTexture = new THREE.CanvasTexture(cloudCanvas);
+  cloudTexture.colorSpace = THREE.SRGBColorSpace;
+  for (let index = 0; index < 12; index += 1) {
+    const angle = (index / 12) * TAU + 0.16;
+    const cloud = new THREE.Sprite(new THREE.SpriteMaterial({
+      map: cloudTexture,
+      color: index % 3 === 0 ? "#f2eef8" : "#a99bb7",
+      transparent: true,
+      opacity: index % 3 === 0 ? 0.24 : 0.32,
+      depthWrite: false,
+      fog: false,
+    }));
+    const radius = 150 + (index % 3) * 7;
+    cloud.position.set(Math.cos(angle) * radius, 28 + (index % 4) * 5, Math.sin(angle) * radius);
+    cloud.scale.set(66 + (index % 4) * 11, 19 + (index % 3) * 4, 1);
+    scene.add(cloud);
+  }
 }
 
 function createPrintedStructure(scene: THREE.Scene, position: THREE.Vector3, color = "#d5ff50") {
@@ -1183,7 +1534,7 @@ export async function createSwoveeExperience(canvas: HTMLCanvasElement, callback
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.7));
   renderer.setSize(canvas.clientWidth, canvas.clientHeight, false);
   renderer.shadowMap.enabled = true;
-  renderer.shadowMap.type = THREE.PCFShadowMap;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1.34;
   renderer.outputColorSpace = THREE.SRGBColorSpace;
@@ -1192,6 +1543,7 @@ export async function createSwoveeExperience(canvas: HTMLCanvasElement, callback
   createSky(scene);
   createTerrain(scene);
   createLandscapeDetails(scene);
+  const operationVisuals = fieldOperations.map((operation) => createFieldOperationVisual(scene, operation));
   const windStreaks = createWindStreaks(scene);
   callbacks.onProgress(0.41, "MAPPING CYPRUS TERRAIN");
 
@@ -1200,7 +1552,7 @@ export async function createSwoveeExperience(canvas: HTMLCanvasElement, callback
   const sun = new THREE.DirectionalLight("#fffef8", 4.35);
   sun.position.copy(SUN_OFFSET);
   sun.castShadow = true;
-  sun.shadow.mapSize.set(1024, 1024);
+  sun.shadow.mapSize.set(2048, 2048);
   sun.shadow.camera.left = -34;
   sun.shadow.camera.right = 34;
   sun.shadow.camera.top = 34;
@@ -1493,6 +1845,9 @@ export async function createSwoveeExperience(canvas: HTMLCanvasElement, callback
   let accumulator = 0;
   let telemetryTimer = 0;
   let nearbyId: string | null = null;
+  let activeOperationId: string | null = null;
+  let activeOperationStage: OperationStage = "scan";
+  const collectedOperationCheckpoints = new Set<string>();
   let printCooldown = 0;
   let printedCount = 0;
   let smoothedSteering = 0;
@@ -1568,6 +1923,16 @@ export async function createSwoveeExperience(canvas: HTMLCanvasElement, callback
       item.body.setLinvel({ x: 0, y: 0, z: 0 }, true);
       item.body.setAngvel({ x: 0, y: 0, z: 0 }, true);
     });
+    activeOperationId = null;
+    activeOperationStage = "scan";
+    collectedOperationCheckpoints.clear();
+    operationVisuals.forEach((visual) => {
+      visual.buildSite.visible = false;
+      visual.checkpoints.forEach((checkpoint) => {
+        checkpoint.group.visible = false;
+        checkpoint.group.scale.setScalar(1);
+      });
+    });
   };
 
   const teleportTo = (x: number, z: number) => {
@@ -1589,11 +1954,21 @@ export async function createSwoveeExperience(canvas: HTMLCanvasElement, callback
     roverQuaternion.set(rotation.x, rotation.y, rotation.z, rotation.w);
     roverForward.copy(FORWARD).applyQuaternion(roverQuaternion).setY(0).normalize();
     const position = new THREE.Vector3(translation.x, 0.04, translation.z).addScaledVector(roverForward, -3.1);
-    const group = createPrintedStructure(scene, position);
+    const activeOperation = fieldOperations.find((operation) => operation.id === activeOperationId);
+    const objectivePrint = activeOperation && activeOperationStage === "print" && Math.hypot(translation.x - activeOperation.buildSite.x, translation.z - activeOperation.buildSite.z) < activeOperation.buildSite.radius + 1.8;
+    const group = createPrintedStructure(scene, position, objectivePrint ? activeOperation.color : "#d5ff50");
     printed.push({ group, born: now });
     printedCount += 1;
     printCooldown = now + 1050;
     callbacks.onPrint();
+    if (objectivePrint && activeOperation) {
+      callbacks.onOperationPrint(activeOperation.id);
+      activeOperationId = null;
+      operationVisuals.forEach((visual) => {
+        visual.buildSite.visible = false;
+        visual.checkpoints.forEach((checkpoint) => { checkpoint.group.visible = false; });
+      });
+    }
   };
 
   const updatePhysics = (delta: number) => {
@@ -1633,6 +2008,7 @@ export async function createSwoveeExperience(canvas: HTMLCanvasElement, callback
       wheel.strut.scale.y = Math.max(0.28, 1.12 - suspension * 0.65);
     });
     rover.lidar.rotation.y += delta * (actions.boost ? 7.2 : 3.8);
+    rover.scanCone.material.opacity = 0.055 + Math.sin(elapsed * 0.005) * 0.018;
     rover.armJoint.rotation.y = Math.sin(elapsed * 0.0007) * 0.11;
     const scanPhase = (elapsed % 1800) / 1800;
     rover.scanRing.scale.setScalar(0.65 + scanPhase * 2.8);
@@ -1665,6 +2041,7 @@ export async function createSwoveeExperience(canvas: HTMLCanvasElement, callback
     });
 
     scene.traverse((object) => {
+      if (object.userData.faceCamera) object.quaternion.copy(camera.quaternion);
       if (object.userData.animate === "brainCore") {
         object.rotation.y += delta * 0.45;
         const scale = 1 + Math.sin(elapsed * 0.0022) * 0.06;
@@ -1687,6 +2064,30 @@ export async function createSwoveeExperience(canvas: HTMLCanvasElement, callback
       }
     });
 
+    operationVisuals.forEach((visual, operationIndex) => {
+      const active = visual.operation.id === activeOperationId;
+      visual.buildSite.visible = active && activeOperationStage === "print";
+      if (visual.buildSite.visible) {
+        visual.buildRing.rotation.z += delta * 0.22;
+        const pulse = 1 + Math.sin(elapsed * 0.0032) * 0.035;
+        visual.buildSite.scale.set(pulse, 1, pulse);
+      }
+      visual.checkpoints.forEach((checkpoint, checkpointIndex) => {
+        const key = `${visual.operation.id}:${checkpoint.id}`;
+        const collected = collectedOperationCheckpoints.has(key);
+        checkpoint.group.visible = active && activeOperationStage === "scan" && !collected;
+        if (!checkpoint.group.visible) return;
+        checkpoint.ring.rotation.z += delta * (0.35 + checkpointIndex * 0.06);
+        checkpoint.beam.material.opacity = 0.07 + Math.sin(elapsed * 0.003 + checkpointIndex + operationIndex) * 0.035;
+        checkpoint.group.position.y = 0.08 + Math.sin(elapsed * 0.002 + checkpointIndex) * 0.045;
+        if (Math.hypot(checkpoint.group.position.x - translation.x, checkpoint.group.position.z - translation.z) < 3.1) {
+          collectedOperationCheckpoints.add(key);
+          checkpoint.group.visible = false;
+          callbacks.onOperationCheckpoint(visual.operation.id, checkpoint.id);
+        }
+      });
+    });
+
     printed.forEach((item) => {
       const age = elapsed - item.born;
       item.group.scale.y = THREE.MathUtils.lerp(item.group.scale.y, 1, 0.09);
@@ -1699,9 +2100,11 @@ export async function createSwoveeExperience(canvas: HTMLCanvasElement, callback
     followDirection.copy(roverForward).applyAxisAngle(worldUp, cameraYawOffset);
     cameraDesired.copy(roverPosition).addScaledVector(followDirection, -cameraDistance).addScaledVector(UP, cameraDistance * 0.58);
     camera.position.lerp(cameraDesired, 1 - Math.pow(0.0015, delta));
-    cameraFocusDesired.copy(roverPosition).addScaledVector(UP, 1.1).addScaledVector(roverForward, 1.6);
+    cameraFocusDesired.copy(roverPosition).addScaledVector(UP, 1.1).addScaledVector(roverForward, 1.6 + Math.min(speed * 0.12, 2.4));
     cameraTarget.lerp(cameraFocusDesired, 1 - Math.pow(0.005, delta));
     camera.lookAt(cameraTarget);
+    camera.fov = THREE.MathUtils.lerp(camera.fov, 54 + Math.min(speed * 0.42, actions.boost ? 9 : 5), 1 - Math.pow(0.025, delta));
+    camera.updateProjectionMatrix();
 
     let nearest: ExpeditionZone | null = null;
     let nearestDistance = Number.POSITIVE_INFINITY;
@@ -1810,6 +2213,18 @@ export async function createSwoveeExperience(canvas: HTMLCanvasElement, callback
     print,
     setMuted: (value) => { muted = value; },
     setAction: (action, active) => { actions[action] = active; },
+    setOperation: (operationId, stage = "scan") => {
+      activeOperationId = operationId;
+      activeOperationStage = stage;
+      operationVisuals.forEach((visual) => {
+        const active = visual.operation.id === operationId;
+        visual.buildSite.visible = active && stage === "print";
+        visual.checkpoints.forEach((checkpoint) => {
+          const key = `${visual.operation.id}:${checkpoint.id}`;
+          checkpoint.group.visible = active && stage === "scan" && !collectedOperationCheckpoints.has(key);
+        });
+      });
+    },
     destroy: () => {
       destroyed = true;
       window.removeEventListener("keydown", onKeyDown);

@@ -32,7 +32,11 @@ export type ExperienceCallbacks = {
   onOracle: (blockId: string) => void;
   onKnockdown: (item: FieldObjectEvent) => void;
   onCatHit: (catId: string) => void;
+  onOperationCheckpoint: (operationId: string, checkpointId: string) => void;
+  onOperationPrint: (operationId: string) => void;
 };
+
+export type OperationStage = "scan" | "print";
 
 export type DriveAction = "forward" | "backward" | "left" | "right" | "boost" | "brake";
 
@@ -44,5 +48,6 @@ export type ExperienceHandle = {
   print: () => void;
   setMuted: (muted: boolean) => void;
   setAction: (action: DriveAction, active: boolean) => void;
+  setOperation: (operationId: string | null, stage?: OperationStage) => void;
   destroy: () => void;
 };

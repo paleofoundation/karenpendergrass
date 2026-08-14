@@ -6,7 +6,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { SignedIn, SignedOut, SignInButton, UserButton, useUser } from "@clerk/nextjs";
 import { DONATION_PROGRAMS, type DonationPurpose } from "@/lib/donations";
 import { createSwoveeExperience } from "./engine";
-import { articleSignals, expeditionZones, mapExtent, markedZones, socialLinks, supportLinks, type ExpeditionZone } from "./zones";
+import { articleSignals, expeditionZones, fieldOperations, mapExtent, markedZones, socialLinks, supportLinks, type ExpeditionZone, type FieldOperation } from "./zones";
 import type { DriveAction, ExperienceHandle, FieldObjectEvent, Telemetry } from "./types";
 import KpCompanion from "./KpCompanion";
 
@@ -53,6 +53,35 @@ type Challenge = {
   bonus: number;
 };
 
+type OperationRun = {
+  scans: string[];
+  reasoned: boolean;
+  complete: boolean;
+};
+
+const emptyOperationRuns = () => Object.fromEntries(
+  fieldOperations.map((operation) => [operation.id, { scans: [], reasoned: false, complete: false }]),
+) as Record<string, OperationRun>;
+
+const WORLD_ROADS: Array<[[number, number], [number, number]]> = (() => {
+  const spawn: [number, number] = [-7, 17];
+  const driveZones = expeditionZones.filter((zone) => zone.id !== "finish");
+  const loop = [spawn, ...driveZones.map((zone) => [zone.x, zone.z] as [number, number]), spawn];
+  const segments: Array<[[number, number], [number, number]]> = [];
+  for (let index = 0; index < loop.length - 1; index += 1) segments.push([loop[index], loop[index + 1]]);
+  const receipts = expeditionZones.find((zone) => zone.id === "receipts");
+  const finish = expeditionZones.find((zone) => zone.id === "finish");
+  if (receipts && finish) segments.push([[receipts.x, receipts.z], [finish.x, finish.z]]);
+  segments.push(
+    [[-43, -12], [-72, -20]],
+    [[-72, -20], [-72, -43]],
+    [[-72, -20], [-72, 31]],
+    [[-72, 31], [-24, 42]],
+    [[-72, 31], [-57, 57]],
+  );
+  return segments;
+})();
+
 function formatTime(totalSeconds: number) {
   const minutes = Math.floor(totalSeconds / 60).toString().padStart(2, "0");
   const seconds = (totalSeconds % 60).toString().padStart(2, "0");
@@ -66,6 +95,23 @@ function directionLabel(heading: number) {
 
 function isInteriorPage(href: string) {
   return href.startsWith("/");
+}
+
+function mapPercent(value: number) {
+  return ((value + mapExtent) / (mapExtent * 2)) * 100;
+}
+
+function mapRoadStyle(from: [number, number], to: [number, number]) {
+  const left = mapPercent(from[0]);
+  const top = mapPercent(from[1]);
+  const deltaX = mapPercent(to[0]) - left;
+  const deltaY = mapPercent(to[1]) - top;
+  return {
+    left: `${left}%`,
+    top: `${top}%`,
+    width: `${Math.hypot(deltaX, deltaY)}%`,
+    transform: `rotate(${Math.atan2(deltaY, deltaX) * 180 / Math.PI}deg)`,
+  } as React.CSSProperties;
 }
 
 function TouchButton({
@@ -185,6 +231,10 @@ export default function SwoveeGame() {
   const [catHits, setCatHits] = useState<string[]>([]);
   const [catPenalty, setCatPenalty] = useState(0);
   const [completedChallenges, setCompletedChallenges] = useState<string[]>([]);
+  const [operationRuns, setOperationRuns] = useState<Record<string, OperationRun>>(emptyOperationRuns);
+  const [activeOperationId, setActiveOperationId] = useState<string | null>(null);
+  const [operationConsoleId, setOperationConsoleId] = useState<string | null>(null);
+  const [operationError, setOperationError] = useState<string | null>(null);
 
   const nearbyZone = useMemo(
     () => expeditionZones.find((zone) => zone.id === nearbyId) ?? null,
@@ -192,21 +242,26 @@ export default function SwoveeGame() {
   );
   const markedDiscovered = discovered.filter((id) => markedZones.some((zone) => zone.id === id)).length;
   const totalScore = Math.max(0, score - catPenalty);
+  const activeOperation = fieldOperations.find((operation) => operation.id === activeOperationId) ?? null;
+  const operationConsole = fieldOperations.find((operation) => operation.id === operationConsoleId) ?? null;
+  const missionOperation = mission ? fieldOperations.find((operation) => operation.zoneId === mission.id) ?? null : null;
+  const activeOperationRun = activeOperation ? operationRuns[activeOperation.id] : null;
+  const completedOperations = fieldOperations.filter((operation) => operationRuns[operation.id]?.complete).length;
   const challenges = useMemo<Challenge[]>(() => [
     { id: "signals", label: "MAP ALL PROJECT SIGNALS", progress: markedDiscovered, target: markedZones.length, bonus: 400 },
     { id: "briefings", label: "LOG 3 DASHBOARD BRIEFINGS", progress: Math.min(readArticles.length, 3), target: 3, bonus: 450 },
-    { id: "prints", label: "PRINT 6 FIELD STRUCTURES", progress: Math.min(printed, 6), target: 6, bonus: 250 },
+    { id: "operations", label: "COMPLETE 3 FIELD OPERATIONS", progress: completedOperations, target: fieldOperations.length, bonus: 900 },
     { id: "impacts", label: "KNOCK DOWN 12 SIGNALS", progress: Math.min(knockedDown.length, 12), target: 12, bonus: 500 },
     { id: "oracle", label: "RECOVER 3 ORACLE RECEIPTS", progress: oracleFound.length, target: 3, bonus: 600 },
-  ], [markedDiscovered, readArticles.length, printed, knockedDown.length, oracleFound.length]);
+  ], [markedDiscovered, readArticles.length, completedOperations, knockedDown.length, oracleFound.length]);
 
   useEffect(() => {
     startedRef.current = started;
   }, [started]);
 
   useEffect(() => {
-    modalOpenRef.current = Boolean(mission || supportMission || oracleCard || fieldLink || showMap || showLeaderboard);
-  }, [mission, supportMission, oracleCard, fieldLink, showMap, showLeaderboard]);
+    modalOpenRef.current = Boolean(mission || supportMission || oracleCard || fieldLink || operationConsoleId || showMap || showLeaderboard);
+  }, [mission, supportMission, oracleCard, fieldLink, operationConsoleId, showMap, showLeaderboard]);
 
   useEffect(() => {
     experienceRef.current?.setMuted(muted);
@@ -390,6 +445,39 @@ export default function SwoveeGame() {
             return [...current, catId];
           });
         },
+        onOperationCheckpoint: (operationId, checkpointId) => {
+          if (!experienceActiveRef.current) return;
+          const operation = fieldOperations.find((item) => item.id === operationId);
+          if (!operation) return;
+          setOperationRuns((current) => {
+            const run = current[operationId] ?? { scans: [], reasoned: false, complete: false };
+            if (run.scans.includes(checkpointId)) return current;
+            const scans = [...run.scans, checkpointId];
+            setScore((value) => value + 40);
+            setNotification(`FIELD SIGNAL CAPTURED · ${scans.length}/${operation.checkpoints.length}  +40`);
+            if (scans.length >= operation.checkpoints.length && !run.reasoned) {
+              setOperationError(null);
+              setOperationConsoleId(operationId);
+              experienceRef.current?.pause();
+            }
+            return { ...current, [operationId]: { ...run, scans } };
+          });
+        },
+        onOperationPrint: (operationId) => {
+          if (!experienceActiveRef.current) return;
+          const operation = fieldOperations.find((item) => item.id === operationId);
+          if (!operation) return;
+          setOperationRuns((current) => {
+            const run = current[operationId];
+            if (!run?.reasoned || run.complete) return current;
+            setScore((value) => value + operation.reward);
+            setNotification(`${operation.code} COMPLETE · STRUCTURE DEPLOYED  +${operation.reward}`);
+            setActiveOperationId(null);
+            setOperationConsoleId(operationId);
+            experienceRef.current?.pause();
+            return { ...current, [operationId]: { ...run, complete: true } };
+          });
+        },
       });
     }
 
@@ -454,6 +542,8 @@ export default function SwoveeGame() {
     setSupportMission(null);
     setOracleCard(null);
     setFieldLink(null);
+    setOperationConsoleId(null);
+    setOperationError(null);
     setShowMap(false);
     setShowLeaderboard(false);
     if (startedRef.current) experienceRef.current?.start();
@@ -502,6 +592,47 @@ export default function SwoveeGame() {
     setReadArticles((current) => [...current, zone.id]);
     setScore((value) => value + 225);
     setNotification("DASHBOARD BRIEFING LOGGED  +225");
+  };
+
+  const beginOperation = (operation: FieldOperation) => {
+    const run = operationRuns[operation.id] ?? { scans: [], reasoned: false, complete: false };
+    if (run.complete) {
+      setOperationConsoleId(operation.id);
+      setMission(null);
+      experienceRef.current?.pause();
+      return;
+    }
+    setMission(null);
+    setBriefingOpen(false);
+    setActiveOperationId(operation.id);
+    setOperationError(null);
+    if (run.scans.length >= operation.checkpoints.length && !run.reasoned) {
+      setOperationConsoleId(operation.id);
+      experienceRef.current?.pause();
+      return;
+    }
+    const stage = run.reasoned ? "print" : "scan";
+    experienceRef.current?.setOperation(operation.id, stage);
+    setNotification(stage === "scan" ? `${operation.code} ACTIVE · CAPTURE ${operation.checkpoints.length - run.scans.length} FIELD SIGNALS` : `${operation.code} READY · DRIVE TO THE FABRICATION PAD`);
+    experienceRef.current?.start();
+  };
+
+  const answerOperation = (operation: FieldOperation, optionIndex: number) => {
+    if (optionIndex !== operation.answer) {
+      setOperationError("MODEL REJECTED · THAT RULE COLLAPSES PART OF THE EVIDENCE CHAIN. TRY AGAIN.");
+      return;
+    }
+    setOperationRuns((current) => ({
+      ...current,
+      [operation.id]: { ...current[operation.id], reasoned: true },
+    }));
+    setOperationError(null);
+    setOperationConsoleId(null);
+    setActiveOperationId(operation.id);
+    experienceRef.current?.setOperation(operation.id, "print");
+    setScore((value) => value + 150);
+    setNotification(`${operation.code} REASONING LOCKED  +150 · FABRICATION PAD ONLINE`);
+    experienceRef.current?.start();
   };
 
   const beginSupportDonation = () => {
@@ -558,12 +689,17 @@ export default function SwoveeGame() {
     setCatHits([]);
     setCatPenalty(0);
     setCompletedChallenges([]);
+    setOperationRuns(emptyOperationRuns());
+    setActiveOperationId(null);
+    setOperationConsoleId(null);
+    setOperationError(null);
     lastCatStrikeRef.current = 0;
     setElapsed(0);
     setSubmitted(false);
     setShowLeaderboard(false);
     setMission(null);
     experienceRef.current?.reset();
+    experienceRef.current?.setOperation(null);
     experienceRef.current?.start();
     setNotification("NEW EXPEDITION STARTED");
   };
@@ -662,6 +798,30 @@ export default function SwoveeGame() {
 
       <div className="field-notification" key={notification}>{notification}</div>
 
+      {activeOperation && activeOperationRun && started && (
+        <button
+          className="active-operation-hud"
+          style={{ "--operation-color": activeOperation.color } as React.CSSProperties}
+          onClick={() => {
+            if (activeOperationRun.scans.length >= activeOperation.checkpoints.length && !activeOperationRun.reasoned) {
+              setOperationConsoleId(activeOperation.id);
+              experienceRef.current?.pause();
+            }
+          }}
+          aria-label={`${activeOperation.code} ${activeOperation.title}`}
+        >
+          <span><i>{activeOperation.code}</i><b>{activeOperation.title}</b></span>
+          <em>
+            {!activeOperationRun.reasoned
+              ? activeOperationRun.scans.length >= activeOperation.checkpoints.length
+                ? "OPEN REASONING CONSOLE"
+                : `SCAN ${activeOperationRun.scans.length}/${activeOperation.checkpoints.length}`
+              : "PRINT AT THE LIT FABRICATION PAD"}
+          </em>
+          <strong><i className={activeOperationRun.scans.length >= activeOperation.checkpoints.length ? "is-done" : ""}>SCAN</i><i className={activeOperationRun.reasoned ? "is-done" : ""}>REASON</i><i>PRINT</i></strong>
+        </button>
+      )}
+
       {nearbyZone && started && !mission && !showMap && !showLeaderboard && (
         <button className="interact-callout" onClick={() => openZone(nearbyZone)}>
           <kbd>E</kbd>
@@ -749,6 +909,16 @@ export default function SwoveeGame() {
                   <p className="mission-kicker">{mission.kicker}</p>
                   <p className="mission-description">{mission.description}</p>
                   <div className="mission-actions">
+                    {missionOperation && (
+                      <button
+                        className={`field-operation-button ${operationRuns[missionOperation.id]?.complete ? "is-complete" : ""}`}
+                        style={{ "--operation-color": missionOperation.color } as React.CSSProperties}
+                        onClick={() => beginOperation(missionOperation)}
+                      >
+                        <span><small>{missionOperation.code} · PLAYABLE FIELD OPERATION</small><b>{missionOperation.title}</b></span>
+                        <em>{operationRuns[missionOperation.id]?.complete ? "COMPLETE ✓" : `+${missionOperation.reward + 270}`}</em>
+                      </button>
+                    )}
                     {mission.briefing && (
                       <button className="dashboard-brief-button" onClick={() => setBriefingOpen(true)}>
                         <span><small>DASHBOARD BRIEFING · {mission.briefing.readingTime}</small><b>{mission.briefing.title}</b></span>
@@ -799,6 +969,59 @@ export default function SwoveeGame() {
                   </div>
                 </div>
               ) : null}
+            </div>
+          </article>
+        </div>
+      )}
+
+      {operationConsole && (
+        <div className="overlay operation-overlay" role="presentation" onMouseDown={closeOverlay}>
+          <article
+            className={`operation-console ${operationRuns[operationConsole.id]?.complete ? "is-complete" : ""}`}
+            style={{ "--operation-color": operationConsole.color } as React.CSSProperties}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="operation-title"
+            onMouseDown={(event) => event.stopPropagation()}
+          >
+            <button className="overlay-close" onClick={closeOverlay} aria-label="Close field operation">×</button>
+            <div className="operation-console-visual">
+              <span>{operationConsole.code}</span>
+              <div className="operation-radar"><i /><i /><i /><b /></div>
+              <strong>SCAN<br />REASON<br />PRINT</strong>
+            </div>
+            <div className="operation-console-copy">
+              <span>SWOVEE FIELD OPERATIONS · {operationConsole.zoneId.replaceAll("-", " ")}</span>
+              <h2 id="operation-title">{operationConsole.title}</h2>
+              <div className="operation-step-rail">
+                <i className="is-complete">01 <b>SCAN</b></i>
+                <i className={operationRuns[operationConsole.id]?.reasoned ? "is-complete" : "is-active"}>02 <b>REASON</b></i>
+                <i className={operationRuns[operationConsole.id]?.complete ? "is-complete" : operationRuns[operationConsole.id]?.reasoned ? "is-active" : ""}>03 <b>PRINT</b></i>
+              </div>
+              {operationRuns[operationConsole.id]?.complete ? (
+                <div className="operation-complete-copy">
+                  <strong>STRUCTURE DEPLOYED · FIELD LOOP CLOSED</strong>
+                  <p>{operationConsole.receipt}</p>
+                  <div><span>SCAN</span><b>{operationConsole.checkpoints.length}/{operationConsole.checkpoints.length}</b></div>
+                  <div><span>REASONING MODEL</span><b>ACCEPTED</b></div>
+                  <div><span>FABRICATION</span><b>VERIFIED</b></div>
+                  <button onClick={closeOverlay}>RETURN TO THE EXPEDITION →</button>
+                </div>
+              ) : (
+                <div className="operation-reasoning">
+                  <p>{operationConsole.intro}</p>
+                  <blockquote><span>FIELD RECEIPT</span>{operationConsole.receipt}</blockquote>
+                  <h3>{operationConsole.question}</h3>
+                  <div className="operation-options">
+                    {operationConsole.options.map((option, index) => (
+                      <button key={option} onClick={() => answerOperation(operationConsole, index)}>
+                        <i>{String(index + 1).padStart(2, "0")}</i><span>{option}</span><b>SELECT</b>
+                      </button>
+                    ))}
+                  </div>
+                  {operationError && <strong className="operation-error">{operationError}</strong>}
+                </div>
+              )}
             </div>
           </article>
         </div>
@@ -897,12 +1120,23 @@ export default function SwoveeGame() {
         <div className="overlay map-overlay" role="presentation" onMouseDown={closeOverlay}>
           <section className="field-map-panel" role="dialog" aria-modal="true" aria-labelledby="map-title" onMouseDown={(event) => event.stopPropagation()}>
             <button className="overlay-close" onClick={closeOverlay} aria-label="Close field map">×</button>
-            <header><span>SWOVEE NAVIGATION · FAST TRAVEL ENABLED</span><h2 id="map-title">FIELD MAP</h2><p>Select any visible project signal to jump the Rovalizer directly to its landing pad. The three Oracle blocks remain deliberately absent from navigation.</p></header>
-            <div className="field-map">
-              <div className="map-route route-a" /><div className="map-route route-b" /><div className="map-route route-c" />
+            <header><span>ROVALIZER LIDAR SURVEY · FAST TRAVEL ENABLED</span><h2 id="map-title">EXPEDITION TERRAIN</h2><p>This is the world as the Rovalizer has scanned it: roads, elevation, water, operations, and project districts. Select a discovered signal to jump to its landing pad. Oracle receipts remain deliberately off-grid.</p></header>
+            <div className="field-map lidar-map">
+              <div className="map-landform map-highland-west"><i /><i /><i /></div>
+              <div className="map-landform map-highland-south"><i /><i /><i /></div>
+              <div className="map-waterway"><i /><i /></div>
+              <span className="map-grid-coordinate coordinate-north">N</span>
+              <span className="map-grid-coordinate coordinate-scale">0&nbsp;&nbsp;&nbsp;250&nbsp;&nbsp;&nbsp;500 M</span>
+              {WORLD_ROADS.map(([from, to], index) => <i key={`road-${index}`} className="map-world-road" style={mapRoadStyle(from, to)} />)}
+              {discovered.map((zoneId) => {
+                const zone = expeditionZones.find((item) => item.id === zoneId);
+                if (!zone) return null;
+                return <i key={`scan-${zone.id}`} className="map-scan-reveal" style={{ left: `${mapPercent(zone.x)}%`, top: `${mapPercent(zone.z)}%`, "--scan-color": zone.color } as React.CSSProperties} />;
+              })}
+              <i className="map-scan-reveal is-current" style={{ left: `${mapPlayerX}%`, top: `${mapPlayerY}%` } as React.CSSProperties} />
               {expeditionZones.map((zone) => {
-                const left = ((zone.x + mapExtent) / (mapExtent * 2)) * 100;
-                const top = ((zone.z + mapExtent) / (mapExtent * 2)) * 100;
+                const left = mapPercent(zone.x);
+                const top = mapPercent(zone.z);
                 const hidden = zone.secret && !discovered.includes(zone.id);
                 return (
                   <button
@@ -916,13 +1150,21 @@ export default function SwoveeGame() {
                   </button>
                 );
               })}
-              <span className="map-expansion map-social" style={{ left: `${((-72 + mapExtent) / (mapExtent * 2)) * 100}%`, top: `${((-43 + mapExtent) / (mapExtent * 2)) * 100}%` }}>SOCIAL PLAZA · {socialLinks.length}</span>
-              <span className="map-expansion map-articles" style={{ left: `${((-73 + mapExtent) / (mapExtent * 2)) * 100}%`, top: `${((32 + mapExtent) / (mapExtent * 2)) * 100}%` }}>ARTICLE RANGE · {articleSignals.length}</span>
-              <span className="map-expansion map-support" style={{ left: `${((-57 + mapExtent) / (mapExtent * 2)) * 100}%`, top: `${((57 + mapExtent) / (mapExtent * 2)) * 100}%` }}>OPEN KNOWLEDGE CAFÉ · {supportLinks.length}</span>
-              <span className="map-expansion map-demolition" style={{ left: `${((-92 + mapExtent) / (mapExtent * 2)) * 100}%`, top: `${((-3 + mapExtent) / (mapExtent * 2)) * 100}%` }}>DEMOLITION LAB · 8</span>
+              {fieldOperations.map((operation) => (
+                <span
+                  key={`operation-${operation.id}`}
+                  className={`map-operation ${operationRuns[operation.id]?.complete ? "is-complete" : ""} ${activeOperationId === operation.id ? "is-active" : ""}`}
+                  style={{ left: `${mapPercent(operation.buildSite.x)}%`, top: `${mapPercent(operation.buildSite.z)}%`, "--operation-color": operation.color } as React.CSSProperties}
+                  title={`${operation.code} ${operation.title}`}
+                >{operationRuns[operation.id]?.complete ? "✓" : "◆"}</span>
+              ))}
+              <span className="map-expansion map-social" style={{ left: `${mapPercent(-72)}%`, top: `${mapPercent(-43)}%` }}>SOCIAL PLAZA · {socialLinks.length}</span>
+              <span className="map-expansion map-articles" style={{ left: `${mapPercent(-73)}%`, top: `${mapPercent(32)}%` }}>ARTICLE RANGE · {articleSignals.length}</span>
+              <span className="map-expansion map-support" style={{ left: `${mapPercent(-57)}%`, top: `${mapPercent(57)}%` }}>OPEN KNOWLEDGE CAFÉ · {supportLinks.length}</span>
+              <span className="map-expansion map-demolition" style={{ left: `${mapPercent(-92)}%`, top: `${mapPercent(-3)}%` }}>DEMOLITION LAB · 8</span>
               <span className="map-rover" style={{ left: `${mapPlayerX}%`, top: `${mapPlayerY}%`, transform: `translate(-50%,-50%) rotate(${telemetry.heading + 90}deg)` }}>▲</span>
             </div>
-            <footer><span><i className="map-key scanned" /> SCANNED</span><span><i className="map-key pending" /> PENDING</span><span>KNOCKDOWNS {knockedDown.length}/{TOTAL_KNOCKABLES} · ORACLE {oracleFound.length}/3 · R–01 / {Math.round(telemetry.x)}, {Math.round(telemetry.z)}</span></footer>
+            <footer><span><i className="map-key scanned" /> SURVEYED</span><span><i className="map-key pending" /> UNMAPPED</span><span>OPS {completedOperations}/{fieldOperations.length} · KNOCKDOWNS {knockedDown.length}/{TOTAL_KNOCKABLES} · R–01 / {Math.round(telemetry.x)}, {Math.round(telemetry.z)}</span></footer>
           </section>
         </div>
       )}

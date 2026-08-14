@@ -66,6 +66,24 @@ export type FieldLink = {
   rotation: number;
 };
 
+export type FieldOperation = {
+  id: string;
+  zoneId: string;
+  code: string;
+  title: string;
+  color: string;
+  reward: number;
+  intro: string;
+  scanInstruction: string;
+  checkpoints: Array<{ id: string; label: string; x: number; z: number }>;
+  question: string;
+  options: string[];
+  answer: number;
+  receipt: string;
+  printInstruction: string;
+  buildSite: { x: number; z: number; radius: number };
+};
+
 export const expeditionZones: ExpeditionZone[] = [
   {
     id: "heavy-metal-index",
@@ -363,6 +381,84 @@ export const articleSignals: FieldLink[] = [
   { id: "article-phage", label: "THE UNFUNDED ANSWER", eyebrow: "FIELD ARTICLE 04", href: "/writing/phage-therapy-the-answer-no-one-is-funding", color: "#d5ff50", x: -65, z: 27, rotation: -0.13 },
   { id: "article-flattening", label: "THE FLATTENING", eyebrow: "FIELD ARTICLE 05", href: "/writing/the-flattening", color: "#ff765e", x: -80, z: 37, rotation: 0.08 },
   { id: "article-tinies", label: "WHY I BUILT TINIES", eyebrow: "FIELD ARTICLE 06", href: "/writing/why-i-built-tinies", color: "#ff9cae", x: -68, z: 37, rotation: -0.08 },
+];
+
+export const fieldOperations: FieldOperation[] = [
+  {
+    id: "metals-survey",
+    zoneId: "heavy-metal-index",
+    code: "OP–01",
+    title: "Trace the Contamination",
+    color: "#ffad4f",
+    reward: 700,
+    intro: "A commodity lot has returned three conflicting metal readings. Survey the actual field samples, decide which evidence rule survives, then print a permanent sampling station.",
+    scanInstruction: "Drive through the three amber sample beacons around the foundry.",
+    checkpoints: [
+      { id: "ore-a", label: "SOURCE ORE", x: -50, z: -17 },
+      { id: "ore-b", label: "PROCESS LOT", x: -37, z: -19 },
+      { id: "ore-c", label: "FINISHED SAMPLE", x: -35, z: -7 },
+    ],
+    question: "Which rule produces the most defensible certification threshold?",
+    options: [
+      "Use one universal number for every product so the label stays simple.",
+      "Combine category, serving size, consumption pattern, exposure evidence, surveillance, and what is technically achievable.",
+      "Use whichever laboratory result is lowest and discard the rest as noise.",
+    ],
+    answer: 1,
+    receipt: "Category-specific thresholds preserve both toxicological meaning and the reality of how products are actually consumed.",
+    printInstruction: "Return to the amber construction pad east of the foundry and press SPACE to print the sampling station.",
+    buildSite: { x: -34, z: -13, radius: 5.4 },
+  },
+  {
+    id: "ecosystem-triangulation",
+    zoneId: "microbiome-medicine",
+    code: "OP–02",
+    title: "Reconstruct the Ecosystem",
+    color: "#5de5d6",
+    reward: 750,
+    intro: "Three microbial signals recur across the wetland. Collect them as a system, reject the seductive single-organism explanation, and print a field triangulation lab.",
+    scanInstruction: "Drive through all three cyan ecology beacons in the wetland.",
+    checkpoints: [
+      { id: "guild-a", label: "COMMUNITY SHIFT", x: -29, z: -49 },
+      { id: "guild-b", label: "METAL PRESSURE", x: -17, z: -51 },
+      { id: "guild-c", label: "HOST RESPONSE", x: -17, z: -39 },
+    ],
+    question: "What should the field model privilege before selecting an intervention?",
+    options: [
+      "The most famous organism in the dataset.",
+      "The intervention with the strongest marketing claim.",
+      "Converging patterns across community structure, function, environmental pressure, and host response.",
+    ],
+    answer: 2,
+    receipt: "A disease ecosystem is more than a passenger list. Functions, pressures, interactions, and host response determine what the organisms are doing there.",
+    printInstruction: "Move onto the cyan construction pad north-east of the wetland and press SPACE to print the triangulation lab.",
+    buildSite: { x: -12, z: -42, radius: 5.4 },
+  },
+  {
+    id: "terrain-print",
+    zoneId: "swovee",
+    code: "OP–03",
+    title: "Print for the Place",
+    color: "#5ba9ff",
+    reward: 800,
+    intro: "The site needs a stable field structure. Scan its slope, load path, and access corridor; choose the intervention that belongs to the terrain; then manufacture it in place.",
+    scanInstruction: "Survey the three blue terrain stakes surrounding the Swovee test yard.",
+    checkpoints: [
+      { id: "slope", label: "SLOPE MODEL", x: 35, z: -5 },
+      { id: "load", label: "LOAD PATH", x: 49, z: -6 },
+      { id: "access", label: "ACCESS CORRIDOR", x: 49, z: 6 },
+    ],
+    question: "What makes a Rovalizer intervention intelligent rather than merely automated?",
+    options: [
+      "It prints the same structure everywhere as quickly as possible.",
+      "It scans local geometry and constraints, reasons about what the site needs, and adapts the manufactured structure to those conditions.",
+      "It replaces every human decision with a larger machine.",
+    ],
+    answer: 1,
+    receipt: "The machine is not the idea. The closed loop between terrain, reasoning, tool control, and a site-specific build is the idea.",
+    printInstruction: "Align the Rovalizer inside the blue fabrication pad south-east of the yard and press SPACE to manufacture the structure.",
+    buildSite: { x: 38, z: 8, radius: 5.8 },
+  },
 ];
 
 export const mapExtent = 104;
