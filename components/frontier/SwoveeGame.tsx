@@ -665,7 +665,7 @@ export default function SwoveeGame() {
               <a className="static-site-button" href="/start"><span>ENTER THE STATIC SITE</span><b>↗</b></a>
             </div>
             <div className="loading-rail"><i style={{ width: `${loadingProgress * 100}%` }} /></div>
-            <p className="launch-credit">Three.js + Rapier physics · Architecture adapted from Bruno Simon's MIT-licensed Folio 2025</p>
+            <p className="launch-credit">Three.js + Rapier physics · Architecture adapted from Bruno Simon's MIT-licensed Folio 2025 · Atmosphere and performance studies informed by Revo Realms (MIT)</p>
           </div>
           <div className="vehicle-spec">
             <span className="spec-number">R–01</span>
