@@ -361,17 +361,17 @@ export const oracleBlocks: OracleBlock[] = [
 ];
 
 export const socialLinks: FieldLink[] = [
-  { id: "social-linkedin", label: "LINKEDIN", eyebrow: "KAREN ON", href: "https://www.linkedin.com/in/karenpendergras/", icon: "linkedin", color: "#0a66c2", x: -83, z: -43, rotation: 0.19 },
-  { id: "social-instagram", label: "INSTAGRAM", eyebrow: "MICROMETALLOMICS", href: "https://www.instagram.com/micrometallomics", icon: "instagram", color: "#e55292", x: -77, z: -46, rotation: 0.1 },
-  { id: "social-x", label: "X / TWITTER", eyebrow: "@MICROMETALOMICS", href: "https://x.com/micrometalomics", icon: "x", color: "#eef7e9", x: -71, z: -47, rotation: 0 },
-  { id: "social-facebook", label: "FACEBOOK", eyebrow: "KAREN PENDERGRASS", href: "https://www.facebook.com/karen.pendergrass/", icon: "facebook", color: "#1877f2", x: -65, z: -46, rotation: -0.1 },
-  { id: "social-email", label: "EMAIL KAREN", eyebrow: "FIELD CONTACT", href: "/contact", icon: "email", color: "#ffad4f", x: -59, z: -43, rotation: -0.19 },
-  { id: "social-orcid", label: "ORCID 0000-0002-2348-7259", eyebrow: "PAPERS · PUBLICATIONS · RECORD", href: "https://orcid.org/0000-0002-2348-7259", icon: "orcid", color: "#a6ce39", x: -71, z: -36, rotation: 0 },
+  { id: "social-linkedin", label: "LINKEDIN", eyebrow: "KAREN ON", href: "https://www.linkedin.com/in/karenpendergras/", icon: "linkedin", color: "#0a66c2", x: -83, z: -43, rotation: Math.PI + 0.19 },
+  { id: "social-instagram", label: "INSTAGRAM", eyebrow: "MICROMETALLOMICS", href: "https://www.instagram.com/micrometallomics", icon: "instagram", color: "#e55292", x: -77, z: -46, rotation: Math.PI + 0.1 },
+  { id: "social-x", label: "X / TWITTER", eyebrow: "@MICROMETALOMICS", href: "https://x.com/micrometalomics", icon: "x", color: "#eef7e9", x: -71, z: -47, rotation: Math.PI },
+  { id: "social-facebook", label: "FACEBOOK", eyebrow: "KAREN PENDERGRASS", href: "https://www.facebook.com/karen.pendergrass/", icon: "facebook", color: "#1877f2", x: -65, z: -46, rotation: Math.PI - 0.1 },
+  { id: "social-email", label: "EMAIL KAREN", eyebrow: "FIELD CONTACT", href: "/contact", icon: "email", color: "#ffad4f", x: -59, z: -43, rotation: Math.PI - 0.19 },
+  { id: "social-orcid", label: "ORCID 0000-0002-2348-7259", eyebrow: "PAPERS · PUBLICATIONS · RECORD", href: "https://orcid.org/0000-0002-2348-7259", icon: "orcid", color: "#a6ce39", x: -71, z: -36, rotation: Math.PI },
 ];
 
 export const supportLinks: FieldLink[] = [
-  { id: "support-microbiome", label: "MICROBIOME MEDICINE", eyebrow: "FREE RESEARCH PLATFORM · COFFEE OPTIONAL", href: "https://microbiomemedicine.com", icon: "microbiome", supportPurpose: "microbiome-medicine", color: "#5de5d6", x: -62, z: 56, rotation: 0.1 },
-  { id: "support-wikibiome", label: "WIKIBIOME", eyebrow: "FREE KNOWLEDGE PLATFORM · COFFEE OPTIONAL", href: "https://wikibiome.com", icon: "wikibiome", supportPurpose: "wikibiome", color: "#b98cff", x: -52, z: 58, rotation: -0.1 },
+  { id: "support-microbiome", label: "MICROBIOME MEDICINE", eyebrow: "FREE RESEARCH PLATFORM · COFFEE OPTIONAL", href: "https://microbiomemedicine.com", icon: "microbiome", supportPurpose: "microbiome-medicine", color: "#5de5d6", x: -62, z: 56, rotation: Math.PI + 0.1 },
+  { id: "support-wikibiome", label: "WIKIBIOME", eyebrow: "FREE KNOWLEDGE PLATFORM · COFFEE OPTIONAL", href: "https://wikibiome.com", icon: "wikibiome", supportPurpose: "wikibiome", color: "#b98cff", x: -52, z: 58, rotation: Math.PI - 0.1 },
 ];
 
 export const articleSignals: FieldLink[] = [

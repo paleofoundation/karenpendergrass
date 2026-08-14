@@ -145,23 +145,22 @@ function createPointsSprite(points: number, color: string, label = "POTENTIAL") 
   canvas.height = 160;
   const context = canvas.getContext("2d")!;
   context.clearRect(0, 0, canvas.width, canvas.height);
-  context.fillStyle = "rgba(35, 29, 49, .9)";
-  context.fillRect(8, 8, 496, 144);
-  context.strokeStyle = color;
-  context.lineWidth = 5;
-  context.strokeRect(9, 9, 494, 142);
+  context.shadowColor = "rgba(18, 13, 26, .82)";
+  context.shadowBlur = 16;
+  context.shadowOffsetY = 5;
   context.fillStyle = color;
-  context.font = "800 72px monospace";
+  context.font = "900 82px monospace";
   context.textAlign = "center";
   context.fillText(`${points > 0 ? "+" : ""}${points}`, 256, 86);
-  context.fillStyle = "rgba(238, 247, 233, .72)";
-  context.font = "700 24px monospace";
+  context.shadowBlur = 10;
+  context.fillStyle = "rgba(251, 250, 246, .86)";
+  context.font = "800 21px monospace";
   context.letterSpacing = "7px";
   context.fillText(label, 256, 126);
   const texture = new THREE.CanvasTexture(canvas);
   texture.colorSpace = THREE.SRGBColorSpace;
   const sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: texture, transparent: true, depthWrite: false }));
-  sprite.scale.set(3.6, 1.12, 1);
+  sprite.scale.set(2.8, 0.88, 1);
   return sprite;
 }
 
@@ -343,7 +342,125 @@ function addAreaMarker(scene: THREE.Scene, title: string, subtitle: string, x: n
   });
 }
 
+function createLogoKnockableVisual(event: FieldObjectEvent, width: number, height: number, depth: number) {
+  const group = new THREE.Group();
+  const icon = event.icon!;
+  const brand = new THREE.MeshStandardMaterial({ color: event.color, roughness: 0.34, metalness: 0.42, emissive: event.color, emissiveIntensity: 0.08 });
+  const white = new THREE.MeshStandardMaterial({ color: "#fbfaf6", roughness: 0.32, metalness: 0.28 });
+  const dark = new THREE.MeshStandardMaterial({ color: "#292532", roughness: 0.44, metalness: 0.58 });
+  const steel = new THREE.MeshStandardMaterial({ color: "#747781", roughness: 0.28, metalness: 0.82 });
+  const plinthY = -height * 0.5 + 0.22;
+  const plinth = mesh(new RoundedBoxGeometry(width * 0.82, 0.38, depth * 1.55, 4, 0.08), dark);
+  plinth.position.y = plinthY;
+  group.add(plinth);
+  const plinthBand = mesh(new RoundedBoxGeometry(width * 0.72, 0.11, depth * 1.62, 3, 0.03), brand, false, true);
+  plinthBand.position.y = plinthY + 0.22;
+  group.add(plinthBand);
+  [-0.72, 0.72].forEach((x) => {
+    const support = mesh(new THREE.CylinderGeometry(0.055, 0.075, 1.15, 8), steel);
+    support.position.set(x, plinthY + 0.72, 0);
+    group.add(support);
+  });
+
+  const mark = new THREE.Group();
+  mark.position.y = 0.25;
+  group.add(mark);
+  const addBar = (barWidth: number, barHeight: number, x: number, y: number, rotation = 0, barMaterial: THREE.Material = white, z = 0) => {
+    const bar = mesh(new RoundedBoxGeometry(barWidth, barHeight, 0.48, 3, Math.min(0.08, barWidth * 0.18)), barMaterial);
+    bar.position.set(x, y, z);
+    bar.rotation.z = rotation;
+    mark.add(bar);
+    return bar;
+  };
+  const addTile = (tileWidth = 2.8, tileHeight = 2.8, tileDepth = 0.34, tileMaterial: THREE.Material = brand) => {
+    const tile = mesh(new RoundedBoxGeometry(tileWidth, tileHeight, tileDepth, 6, 0.3), tileMaterial);
+    mark.add(tile);
+    return tile;
+  };
+
+  if (icon === "linkedin") {
+    addTile();
+    addBar(0.27, 1.2, -0.72, -0.24);
+    const dot = mesh(new THREE.SphereGeometry(0.19, 18, 12), white);
+    dot.position.set(-0.72, 0.78, 0);
+    mark.add(dot);
+    addBar(0.27, 1.58, -0.08, -0.05);
+    addBar(0.27, 1.16, 0.78, -0.26);
+    addBar(0.83, 0.28, 0.36, 0.45);
+  } else if (icon === "facebook") {
+    addTile();
+    addBar(0.34, 2.15, 0.18, -0.15);
+    addBar(1.18, 0.34, 0.58, 0.76);
+    addBar(1.05, 0.31, 0.36, 0.12);
+  } else if (icon === "instagram") {
+    addTile();
+    addBar(1.85, 0.22, 0, 1.02);
+    addBar(1.85, 0.22, 0, -1.02);
+    addBar(0.22, 1.85, -1.02, 0);
+    addBar(0.22, 1.85, 1.02, 0);
+    const lens = mesh(new THREE.TorusGeometry(0.55, 0.16, 12, 32), white);
+    mark.add(lens);
+    const flash = mesh(new THREE.SphereGeometry(0.15, 16, 10), white);
+    flash.position.set(0.7, 0.7, 0.04);
+    mark.add(flash);
+  } else if (icon === "x") {
+    const backRing = mesh(new THREE.TorusGeometry(1.45, 0.1, 10, 48), dark);
+    mark.add(backRing);
+    addBar(0.38, 3.3, 0, 0, Math.PI * 0.23, white);
+    addBar(0.38, 3.3, 0, 0, -Math.PI * 0.23, brand);
+  } else if (icon === "email") {
+    addTile(3.15, 2.3, 0.38);
+    addBar(1.9, 0.22, -0.67, 0.18, -0.55);
+    addBar(1.9, 0.22, 0.67, 0.18, 0.55);
+    addBar(1.45, 0.18, -0.72, -0.58, 0.48, dark);
+    addBar(1.45, 0.18, 0.72, -0.58, -0.48, dark);
+  } else if (icon === "orcid") {
+    const disc = mesh(new THREE.CylinderGeometry(1.62, 1.62, 0.42, 48), brand);
+    disc.rotation.x = Math.PI * 0.5;
+    mark.add(disc);
+    addBar(0.25, 1.35, -0.72, -0.25);
+    const dot = mesh(new THREE.SphereGeometry(0.18, 18, 12), white);
+    dot.position.set(-0.72, 0.78, 0);
+    mark.add(dot);
+    addBar(0.26, 1.82, 0.05, 0);
+    const dCurve = mesh(new THREE.TorusGeometry(0.62, 0.14, 12, 30, Math.PI), white);
+    dCurve.position.set(0.08, 0, 0);
+    dCurve.rotation.z = -Math.PI * 0.5;
+    mark.add(dCurve);
+  } else if (icon === "microbiome") {
+    const core = mesh(new THREE.SphereGeometry(1.02, 24, 18), brand);
+    core.scale.set(1.12, 0.94, 0.62);
+    mark.add(core);
+    for (let index = 0; index < 9; index += 1) {
+      const angle = (index / 9) * TAU;
+      const cell = mesh(new THREE.SphereGeometry(0.22 + (index % 3) * 0.045, 14, 10), index % 2 ? white : brand);
+      cell.position.set(Math.cos(angle) * 1.38, Math.sin(angle) * 1.18, (index % 2 ? 1 : -1) * 0.08);
+      mark.add(cell);
+    }
+    const orbit = mesh(new THREE.TorusGeometry(1.45, 0.06, 8, 48), white);
+    orbit.rotation.z = -0.28;
+    mark.add(orbit);
+  } else if (icon === "wikibiome") {
+    const leftPage = mesh(new RoundedBoxGeometry(1.45, 2.25, 0.3, 4, 0.12), brand);
+    const rightPage = leftPage.clone();
+    leftPage.position.x = -0.72;
+    rightPage.position.x = 0.72;
+    leftPage.rotation.y = -0.18;
+    rightPage.rotation.y = 0.18;
+    mark.add(leftPage, rightPage);
+    addBar(0.2, 1.7, -0.68, 0, -0.16);
+    addBar(0.2, 1.7, 0, 0, 0.16);
+    addBar(0.2, 1.7, 0.68, 0, -0.16);
+  }
+
+  const points = createPointsSprite(event.points, event.color, event.kind === "support" ? "OPEN KNOWLEDGE" : "SIGNAL");
+  points.position.y = height * 0.5 + 0.7;
+  group.add(points);
+  return group;
+}
+
 function createKnockableVisual(event: FieldObjectEvent, width: number, height: number, depth: number) {
+  if (event.icon) return createLogoKnockableVisual(event, width, height, depth);
   const group = new THREE.Group();
   const shell = mesh(
     new RoundedBoxGeometry(width, height, depth, 4, Math.min(0.18, depth * 0.1)),
@@ -1020,7 +1137,7 @@ function createTerrain(scene: THREE.Scene) {
   const mountainMaterial = material("#4e435d", 1, 0);
   for (let index = 0; index < 44; index += 1) {
     const angle = (index / 44) * TAU + Math.random() * 0.15;
-    const radius = 91 + Math.random() * 16;
+    const radius = 112 + Math.random() * 18;
     const height = 5 + Math.random() * 12;
     const mountain = mesh(new THREE.ConeGeometry(4 + Math.random() * 7, height, 5 + (index % 3)), mountainMaterial, false, true);
     mountain.position.set(Math.cos(angle) * radius, height * 0.5 - 0.1, Math.sin(angle) * radius);
@@ -1658,7 +1775,7 @@ export async function createSwoveeExperience(canvas: HTMLCanvasElement, callback
     points.position.y = 2.15;
     oracle.group.add(points);
   });
-  addAreaMarker(scene, "SOCIAL SIGNALS", "PHYSICAL LINKS · HIT + OPEN", -72, -50, "#6bb6ff");
+  addAreaMarker(scene, "SOCIAL ICON GARDEN", "3D LINKS · HIT + OPEN", -72, -50, "#6bb6ff", Math.PI);
   addAreaMarker(scene, "ARTICLE RANGE", "MODULAR FIELD ARCHIVE", -73, 44, "#ff765e", Math.PI);
   addAreaMarker(scene, "OPEN KNOWLEDGE CAFE", "FREE WEBSITES · COFFEE OPTIONAL", -57, 64, "#5de5d6", Math.PI);
   addAreaMarker(scene, "DEMOLITION LAB", "ROVALIZER IMPACT TEST", -92, -3, "#d5ff50", Math.PI * 0.5);
@@ -1728,9 +1845,9 @@ export async function createSwoveeExperience(canvas: HTMLCanvasElement, callback
 
   socialLinks.forEach((link) => {
     const isOrcid = link.icon === "orcid";
-    addKnockable({ ...link, kind: "social", points: isOrcid ? 250 : 90 }, link.x, link.z, link.rotation, isOrcid ? 6.8 : 5, isOrcid ? 4.5 : 3.4, isOrcid ? 1.3 : 1.15, isOrcid ? 0.82 : 0.62);
+    addKnockable({ ...link, kind: "social", points: isOrcid ? 250 : 90 }, link.x, link.z, link.rotation, isOrcid ? 4.4 : 3.6, isOrcid ? 4.8 : 4.2, isOrcid ? 1.65 : 1.45, isOrcid ? 0.82 : 0.62);
   });
-  supportLinks.forEach((link) => addKnockable({ ...link, kind: "support", points: 125 }, link.x, link.z, link.rotation, 6.2, 3.8, 1.2, 0.68));
+  supportLinks.forEach((link) => addKnockable({ ...link, kind: "support", points: 125 }, link.x, link.z, link.rotation, 4.4, 4.4, 1.55, 0.68));
   articleSignals.forEach((article) => addKnockable({ ...article, kind: "article", points: 140 }, article.x, article.z, article.rotation, 5, 3.3, 1.2, 0.66));
   const demolitionWords = ["DOUBT", "NO MARKET", "TOO EARLY", "STAY IN YOUR LANE", "IMPOSSIBLE", "CREDENTIALS", "CONSENSUS", "LATER"];
   demolitionWords.forEach((label, index) => {
