@@ -95,6 +95,66 @@ body {
   line-height: var(--line-height-normal);
 }
 
+.return-to-expedition {
+  position: fixed;
+  z-index: 850;
+  right: 22px;
+  bottom: 22px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  min-width: 220px;
+  padding: 11px 13px;
+  border: 1px solid rgba(var(--color-accent-rgb), 0.55);
+  color: var(--color-bg);
+  background: rgba(6, 17, 14, 0.93);
+  box-shadow: 0 12px 35px rgba(6, 17, 14, 0.22);
+  backdrop-filter: blur(12px);
+  font-family: var(--font-mono);
+  text-decoration: none;
+  transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+}
+
+.return-to-expedition span,
+.return-to-expedition strong {
+  grid-column: 1;
+}
+
+.return-to-expedition span {
+  color: rgba(238, 247, 233, 0.48);
+  font-size: 7px;
+  letter-spacing: 0.16em;
+}
+
+.return-to-expedition strong {
+  margin-top: 2px;
+  color: var(--color-accent);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+}
+
+.return-to-expedition b {
+  grid-column: 2;
+  grid-row: 1 / 3;
+  align-self: center;
+  padding-left: 16px;
+  color: var(--color-accent);
+  font-size: 18px;
+}
+
+.return-to-expedition:hover {
+  transform: translateY(-3px);
+  border-color: var(--color-accent);
+  background: var(--color-ink-deep);
+}
+
+@media (max-width: 640px) {
+  .return-to-expedition {
+    right: 12px;
+    bottom: 12px;
+    min-width: 185px;
+  }
+}
+
 /* ============================================
    TYPOGRAPHY HIERARCHY
    ============================================ */
