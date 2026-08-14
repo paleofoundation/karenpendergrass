@@ -1,15 +1,13 @@
 import { ImageResponse } from 'next/og';
 
-// Default site-wide Open Graph card. Renders for the homepage and any route
-// that does not define its own opengraph-image. Brand-matched to the dark/amber
-// editorial theme. Node runtime (default) — no edge, kept simple/robust for satori.
-export const alt =
-  'Karen Pendergrass — Standards Developer & Microbiome Researcher';
+// Default site-wide Open Graph card. Renders for the expedition homepage and
+// any route that does not define its own opengraph-image.
+export const alt = 'Drive the Frontier — a Swovee expedition through Karen Pendergrass’s work';
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 
-const LABEL = 'STANDARDS · RESEARCH · FRAMEWORKS';
-const TAGLINE = 'I build the frameworks that become the standard before there is a market.';
+const LABEL = 'EXPEDITION KP–01 · SWOVEE ROVALIZER R–01';
+const TAGLINE = 'DRIVE THE FRONTIER.';
 const NAME = 'Karen Pendergrass';
 const DOMAIN = 'karenpendergrass.com';
 
@@ -51,10 +49,11 @@ export default function OpengraphImage() {
         <div
           style={{
             display: 'flex',
-            fontSize: '66px',
-            lineHeight: 1.14,
+            fontSize: '108px',
+            lineHeight: 0.9,
             color: '#ffffff',
-            fontWeight: 500,
+            fontWeight: 800,
+            letterSpacing: '-0.055em',
             maxWidth: '1000px',
           }}
         >

@@ -5,3 +5,5 @@ tsconfig.tsbuildinfo
 
 # Stale WordPress-era scratch tree (kept locally, not part of the app)
 KarenPendergrass.com/
+.vercel
+.env*

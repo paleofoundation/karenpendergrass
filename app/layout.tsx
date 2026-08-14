@@ -1,11 +1,9 @@
 import type { Metadata } from 'next';
 import { Newsreader, Source_Sans_3, JetBrains_Mono } from 'next/font/google';
 import './globals.css';
-import SidebarNav from '@/components/SidebarNav';
-import TopBar from '@/components/TopBar';
-import AnnouncementBar from '@/components/AnnouncementBar';
-import Footer from '@/components/Footer';
+import './frontier-game.css';
 import { PersonSchema } from '@/components/JsonLd';
+import SiteFrame from '@/components/SiteFrame';
 
 const newsreader = Newsreader({
   subsets: ['latin'],
@@ -82,20 +80,8 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${newsreader.variable} ${sourceSans.variable} ${jetbrainsMono.variable}`}>
       <body className="min-h-screen flex flex-col">
-        <a
-          href="#main-content"
-          className="sr-only focus:not-sr-only focus:absolute focus:z-[9999] focus:top-4 focus:left-4 focus:px-4 focus:py-2 focus:bg-white focus:text-black focus:rounded focus:shadow-lg"
-        >
-          Skip to content
-        </a>
         <PersonSchema />
-        <header>
-          <SidebarNav />
-          <TopBar />
-        </header>
-        <AnnouncementBar />
-        <main id="main-content" className="flex-1">{children}</main>
-        <Footer />
+        <SiteFrame>{children}</SiteFrame>
       </body>
     </html>
   );
