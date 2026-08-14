@@ -14,11 +14,11 @@ export async function POST(request: Request) {
         {
           quantity: 1,
           price_data: {
-            currency: 'eur',
+            currency: 'usd',
             unit_amount: 100,
             product_data: {
               name: 'Gardens of St. Gertrude Cat Food Mission',
-              description: 'A €1 contribution toward food and care for the 90+ sanctuary cats behind Tinies.',
+              description: 'A $1 contribution toward food and care for the 90+ sanctuary cats behind Tinies.',
             },
           },
         },

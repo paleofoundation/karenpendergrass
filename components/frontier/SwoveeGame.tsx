@@ -336,7 +336,7 @@ export default function SwoveeGame() {
           setCatHits((current) => {
             if (current.includes(catId)) return current;
             setCatPenalty((value) => value + CAT_PENALTY);
-            setNotification(`CAT SAFETY STRIKE  -${CAT_PENALTY} · DONATE €1 TO RESTORE`);
+            setNotification(`CAT SAFETY STRIKE  -${CAT_PENALTY} · DONATE $1 TO RESTORE`);
             return [...current, catId];
           });
         },
@@ -456,7 +456,7 @@ export default function SwoveeGame() {
 
   const beginSupportDonation = () => {
     window.localStorage.setItem("kp-tinies-donation-start", String(Date.now()));
-    setNotification("SECURE €1 TINIES CHECKOUT OPENED · VERIFYING ON RETURN");
+    setNotification("SECURE $1 TINIES CHECKOUT OPENED · VERIFYING ON RETURN");
   };
 
   const submitScore = async () => {
@@ -601,7 +601,7 @@ export default function SwoveeGame() {
           experienceRef.current?.pause();
         }}>
           <span><i>{catHits.length > 0 ? `-${catPenalty}` : "SAFE"}</i>CAT GUARDIAN RULE</span>
-          <b>{catHits.length > 0 ? "RESTORE €1" : "AVOID 48 CATS"}</b>
+          <b>{catHits.length > 0 ? "RESTORE $1" : "AVOID 48 CATS"}</b>
         </button>
       </aside>
 
@@ -766,12 +766,12 @@ export default function SwoveeGame() {
               <div className="cat-food-meter"><span>ONE BAG OF CAT FOOD</span><i><b /></i><strong>EVERY SMALL GIFT MOVES THE MARKER</strong></div>
               <form className="cat-donation-form" action="/api/donations/checkout" method="post" target="_blank" onSubmit={beginSupportDonation}>
                 <button type="submit" disabled={supportClaimed}>
-                  <span>{supportClaimed ? "€1 DONATION VERIFIED" : `${supportMission.support.cta} · €1 SECURE CHECKOUT`}</span>
+                  <span>{supportClaimed ? "$1 DONATION VERIFIED" : `${supportMission.support.cta} · $1 SECURE CHECKOUT`}</span>
                   <strong>{supportClaimed ? "CAT POINTS RESTORED ✓" : `RESTORE PENALTIES + ${supportMission.support.bonus} PTS ↗`}</strong>
                 </button>
               </form>
               <button onClick={closeOverlay}>RETURN TO DRIVING →</button>
-              <small>Stripe checkout opens separately. Only a verified €1 donation restores cat-safety penalties and awards the sanctuary bonus.</small>
+              <small>Stripe checkout opens separately. Only a verified $1 donation restores cat-safety penalties and awards the sanctuary bonus.</small>
             </div>
           </article>
         </div>

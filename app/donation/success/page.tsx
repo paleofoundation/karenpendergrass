@@ -20,7 +20,7 @@ export default async function DonationSuccessPage({
   if (sessionId?.startsWith('cs_')) {
     try {
       const session = await stripe.checkout.sessions.retrieve(sessionId);
-      verified = session.payment_status === 'paid' && session.amount_total === 100 && session.currency === 'eur';
+      verified = session.payment_status === 'paid' && session.amount_total === 100 && session.currency === 'usd';
     } catch (error) {
       console.error('Unable to verify the Tinies donation', error);
     }
