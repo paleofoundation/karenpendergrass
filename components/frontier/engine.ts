@@ -8,6 +8,7 @@ const TAU = Math.PI * 2;
 const UP = new THREE.Vector3(0, 1, 0);
 const FORWARD = new THREE.Vector3(1, 0, 0);
 const SPAWN = new THREE.Vector3(-7, 2.6, 17);
+const SPAWN_YAW = 2.46;
 const SUN_OFFSET = new THREE.Vector3(58, 50, -32);
 const SUN_VISUAL_DIRECTION = new THREE.Vector3(80, -3, 0);
 
@@ -693,17 +694,18 @@ function createRovalizer(scene: THREE.Scene): RovalizerVisual {
   const limeDark = material("#819e28", 0.46, 0.5);
   const graphite = material("#343541", 0.3, 0.82);
   const steel = material("#9b9ca5", 0.22, 0.9);
+  const fieldPanel = material("#b7b8b0", 0.34, 0.62);
   const glass = new THREE.MeshPhysicalMaterial({ color: "#5b8491", roughness: 0.07, metalness: 0.12, transmission: 0.7, transparent: true, opacity: 0.82 });
   const cyanLight = new THREE.MeshStandardMaterial({ color: "#63f5ee", emissive: "#63f5ee", emissiveIntensity: 4, roughness: 0.25 });
 
-  const undercarriage = mesh(new RoundedBoxGeometry(4.7, 0.58, 2.25, 5, 0.18), graphite);
+  const undercarriage = mesh(new RoundedBoxGeometry(5.9, 0.58, 2.35, 5, 0.18), graphite);
   undercarriage.position.y = -0.05;
   root.add(undercarriage);
-  const belly = mesh(new RoundedBoxGeometry(3.9, 0.75, 1.82, 5, 0.22), limeDark);
+  const belly = mesh(new RoundedBoxGeometry(4.9, 0.78, 1.9, 5, 0.22), fieldPanel);
   belly.position.set(-0.15, 0.5, 0);
   root.add(belly);
-  const hood = mesh(new RoundedBoxGeometry(1.65, 0.72, 1.78, 5, 0.2), lime);
-  hood.position.set(1.55, 0.94, 0);
+  const hood = mesh(new RoundedBoxGeometry(1.85, 0.78, 1.88, 5, 0.2), fieldPanel);
+  hood.position.set(1.85, 0.97, 0);
   hood.rotation.z = -0.05;
   root.add(hood);
   const cab = mesh(new RoundedBoxGeometry(1.72, 1.32, 1.72, 5, 0.18), graphite);
@@ -720,44 +722,44 @@ function createRovalizer(scene: THREE.Scene): RovalizerVisual {
     root.add(sideWindow);
   });
 
-  const deck = mesh(new RoundedBoxGeometry(1.25, 0.34, 1.92, 4, 0.14), graphite);
-  deck.position.set(-1.55, 0.94, 0);
+  const deck = mesh(new RoundedBoxGeometry(1.55, 0.34, 2, 4, 0.14), graphite);
+  deck.position.set(-1.8, 0.94, 0);
   root.add(deck);
   const spoolA = mesh(new THREE.CylinderGeometry(0.5, 0.5, 0.52, 16), steel);
   const spoolB = spoolA.clone();
   spoolA.rotation.x = Math.PI * 0.5;
   spoolB.rotation.x = Math.PI * 0.5;
-  spoolA.position.set(-1.7, 1.42, 0.46);
-  spoolB.position.set(-1.7, 1.42, -0.46);
+  spoolA.position.set(-1.95, 1.42, 0.46);
+  spoolB.position.set(-1.95, 1.42, -0.46);
   root.add(spoolA, spoolB);
 
   const bumper = mesh(new RoundedBoxGeometry(0.34, 0.48, 2.55, 3, 0.1), steel);
-  bumper.position.set(2.45, 0.14, 0);
+  bumper.position.set(3.03, 0.14, 0);
   root.add(bumper);
   for (let index = 0; index < 8; index += 1) {
     const hazard = mesh(
       new THREE.BoxGeometry(0.035, 0.22, 0.22),
       material(index % 2 ? "#18221e" : "#d5ff50", 0.4, 0.38),
     );
-    hazard.position.set(2.635, 0.13, -0.82 + index * 0.235);
+    hazard.position.set(3.215, 0.13, -0.82 + index * 0.235);
     hazard.rotation.x = index % 2 ? 0.28 : -0.28;
     root.add(hazard);
   }
   const scanBlade = mesh(new RoundedBoxGeometry(0.22, 0.2, 2.82, 3, 0.06), graphite);
-  scanBlade.position.set(2.72, -0.27, 0);
+  scanBlade.position.set(3.3, -0.27, 0);
   scanBlade.rotation.z = -0.12;
   root.add(scanBlade);
   for (let index = 0; index < 7; index += 1) {
     const sensor = mesh(new THREE.SphereGeometry(0.045, 8, 6), cyanLight, false, false);
-    sensor.position.set(2.84, -0.22, -0.95 + index * 0.315);
+    sensor.position.set(3.42, -0.22, -0.95 + index * 0.315);
     root.add(sensor);
   }
   [-0.62, 0.62].forEach((z) => {
     const headlight = mesh(new THREE.BoxGeometry(0.07, 0.2, 0.38), cyanLight);
-    headlight.position.set(2.63, 0.72, z);
+    headlight.position.set(3.22, 0.72, z);
     root.add(headlight);
     const light = new THREE.PointLight("#70fff4", 2.2, 9, 2);
-    light.position.set(2.7, 0.75, z);
+    light.position.set(3.29, 0.75, z);
     root.add(light);
   });
 
@@ -792,27 +794,27 @@ function createRovalizer(scene: THREE.Scene): RovalizerVisual {
   root.add(lidar);
 
   const safetyOrange = new THREE.MeshStandardMaterial({ color: "#ff8a3d", emissive: "#ff572f", emissiveIntensity: 0.7, roughness: 0.32, metalness: 0.32 });
-  const rearModule = mesh(new RoundedBoxGeometry(0.95, 1.15, 1.82, 4, 0.16), graphite);
-  rearModule.position.set(-2.05, 1.02, 0);
+  const rearModule = mesh(new RoundedBoxGeometry(1.22, 1.28, 1.9, 4, 0.16), fieldPanel);
+  rearModule.position.set(-2.38, 1.04, 0);
   root.add(rearModule);
   [-0.48, 0.48].forEach((z, index) => {
     const canister = mesh(new THREE.CylinderGeometry(0.29, 0.32, 1.03, 16), index ? limeDark : steel);
-    canister.position.set(-2.1, 1.2, z);
+    canister.position.set(-2.5, 1.2, z);
     root.add(canister);
     const cap = mesh(new THREE.CylinderGeometry(0.16, 0.16, 0.12, 12), safetyOrange);
-    cap.position.set(-2.1, 1.79, z);
+    cap.position.set(-2.5, 1.79, z);
     root.add(cap);
   });
   const exhaust = mesh(new THREE.CylinderGeometry(0.075, 0.1, 1.35, 10), graphite);
-  exhaust.position.set(-1.95, 2.22, -0.72);
+  exhaust.position.set(-2.35, 2.22, -0.72);
   root.add(exhaust);
   const exhaustCap = mesh(new THREE.CylinderGeometry(0.12, 0.12, 0.09, 10), steel);
-  exhaustCap.position.set(-1.95, 2.91, -0.72);
+  exhaustCap.position.set(-2.35, 2.91, -0.72);
   exhaustCap.rotation.z = 0.16;
   root.add(exhaustCap);
   [-0.62, 0.62].forEach((z) => {
     const tailLight = mesh(new THREE.BoxGeometry(0.07, 0.24, 0.32), safetyOrange, false, false);
-    tailLight.position.set(-2.55, 0.75, z);
+    tailLight.position.set(-3.02, 0.75, z);
     root.add(tailLight);
   });
 
@@ -872,10 +874,12 @@ function createRovalizer(scene: THREE.Scene): RovalizerVisual {
   root.add(armJoint);
 
   const wheelPositions = [
-    new THREE.Vector3(1.55, -0.05, 1.24),
-    new THREE.Vector3(1.55, -0.05, -1.24),
-    new THREE.Vector3(-1.55, -0.05, 1.24),
-    new THREE.Vector3(-1.55, -0.05, -1.24),
+    new THREE.Vector3(2.05, -0.05, 1.3),
+    new THREE.Vector3(2.05, -0.05, -1.3),
+    new THREE.Vector3(0, -0.05, 1.3),
+    new THREE.Vector3(0, -0.05, -1.3),
+    new THREE.Vector3(-2.05, -0.05, 1.3),
+    new THREE.Vector3(-2.05, -0.05, -1.3),
   ];
   const wheels: WheelVisual[] = [];
   wheelPositions.forEach((position, index) => {
@@ -993,12 +997,12 @@ function createTerrainTexture() {
 
 function createTerrain(scene: THREE.Scene) {
   const terrainTexture = createTerrainTexture();
-  const groundMaterial = new THREE.MeshStandardMaterial({ color: "#83906d", map: terrainTexture, bumpMap: terrainTexture, bumpScale: 0.085, roughness: 0.98, metalness: 0, vertexColors: true });
+  const groundMaterial = new THREE.MeshStandardMaterial({ color: "#a4ae89", map: terrainTexture, bumpMap: terrainTexture, bumpScale: 0.085, roughness: 0.98, metalness: 0, vertexColors: true });
   const geometry = new THREE.PlaneGeometry(210, 210, 54, 54);
   geometry.rotateX(-Math.PI * 0.5);
   const colors: number[] = [];
-  const colorA = new THREE.Color("#718460");
-  const colorB = new THREE.Color("#a08b68");
+  const colorA = new THREE.Color("#8da478");
+  const colorB = new THREE.Color("#b39b79");
   const positions = geometry.attributes.position;
   for (let index = 0; index < positions.count; index += 1) {
     const x = positions.getX(index);
@@ -1221,6 +1225,74 @@ function createLandscapeDetails(scene: THREE.Scene) {
   }
 }
 
+function createOperationsGateway(scene: THREE.Scene) {
+  const base = new THREE.Vector3(-16.5, 0, 9.5);
+  const lateral = new THREE.Vector3(0.63, 0, -0.78);
+  const frameMaterial = material("#afb1b0", 0.3, 0.82);
+  fieldOperations.forEach((operation, index) => {
+    const group = new THREE.Group();
+    group.position.copy(base).addScaledVector(lateral, (index - 1) * 4.5);
+    const plinth = mesh(new THREE.CylinderGeometry(1.18, 1.42, 0.28, 24), frameMaterial);
+    plinth.position.y = 0.14;
+    group.add(plinth);
+    const halo = mesh(
+      new THREE.TorusGeometry(1.38, 0.07, 8, 48),
+      new THREE.MeshBasicMaterial({ color: operation.color, transparent: true, opacity: 0.82 }),
+      false,
+      false,
+    );
+    halo.rotation.x = Math.PI * 0.5;
+    halo.position.y = 0.31;
+    group.add(halo);
+    [-0.78, 0.78].forEach((offset) => {
+      const pylon = mesh(new THREE.CylinderGeometry(0.09, 0.16, 4.6, 9), frameMaterial);
+      pylon.position.set(offset, 2.45, 0);
+      group.add(pylon);
+      const marker = mesh(
+        new THREE.OctahedronGeometry(0.22, 0),
+        new THREE.MeshStandardMaterial({ color: operation.color, emissive: operation.color, emissiveIntensity: 3.2 }),
+        false,
+        false,
+      );
+      marker.position.set(offset, 4.82, 0);
+      group.add(marker);
+    });
+    const lintel = mesh(new RoundedBoxGeometry(1.9, 0.18, 0.18, 2, 0.03), frameMaterial);
+    lintel.position.y = 4.5;
+    group.add(lintel);
+    const beacon = mesh(
+      new THREE.CylinderGeometry(0.11, 0.72, 12, 20, 1, true),
+      new THREE.MeshBasicMaterial({ color: operation.color, transparent: true, opacity: 0.08, side: THREE.DoubleSide, depthWrite: false, blending: THREE.AdditiveBlending }),
+      false,
+      false,
+    );
+    beacon.position.y = 6;
+    group.add(beacon);
+    const labelTexture = createTextTexture(operation.code, operation.title, "#fbfaf6", operation.color);
+    const label = mesh(
+      new THREE.PlaneGeometry(3.4, 0.85),
+      new THREE.MeshBasicMaterial({ map: labelTexture, transparent: true, side: THREE.DoubleSide, depthWrite: false }),
+      false,
+      false,
+    );
+    label.position.y = 5.65;
+    label.userData.faceCamera = true;
+    group.add(label);
+    scene.add(group);
+  });
+
+  const gateTexture = createTextTexture("FIELD OPERATIONS", "SCAN · REASON · PRINT", "#fbfaf6", "#d5ff50");
+  const gateLabel = mesh(
+    new THREE.PlaneGeometry(7.6, 1.9),
+    new THREE.MeshBasicMaterial({ map: gateTexture, transparent: true, side: THREE.DoubleSide, depthWrite: false }),
+    false,
+    false,
+  );
+  gateLabel.position.set(base.x, 8.6, base.z);
+  gateLabel.userData.faceCamera = true;
+  scene.add(gateLabel);
+}
+
 function createFieldOperationVisual(scene: THREE.Scene, operation: FieldOperation): OperationVisual {
   const checkpoints = operation.checkpoints.map((checkpoint, index) => {
     const group = new THREE.Group();
@@ -1353,8 +1425,8 @@ function createWindStreaks(scene: THREE.Scene): WindStreakVisual {
 }
 
 function createSky(scene: THREE.Scene) {
-  scene.background = new THREE.Color("#8f88a8");
-  scene.fog = new THREE.FogExp2("#958da8", 0.0052);
+  scene.background = new THREE.Color("#a39caf");
+  scene.fog = new THREE.FogExp2("#aaa3b7", 0.0046);
   const sunDirection = SUN_VISUAL_DIRECTION.clone().normalize();
   const sky = mesh(
     new THREE.SphereGeometry(250, 36, 24),
@@ -1534,9 +1606,9 @@ export async function createSwoveeExperience(canvas: HTMLCanvasElement, callback
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.7));
   renderer.setSize(canvas.clientWidth, canvas.clientHeight, false);
   renderer.shadowMap.enabled = true;
-  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  renderer.shadowMap.type = THREE.PCFShadowMap;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.34;
+  renderer.toneMappingExposure = 1.52;
   renderer.outputColorSpace = THREE.SRGBColorSpace;
 
   const scene = new THREE.Scene();
@@ -1547,9 +1619,9 @@ export async function createSwoveeExperience(canvas: HTMLCanvasElement, callback
   const windStreaks = createWindStreaks(scene);
   callbacks.onProgress(0.41, "MAPPING CYPRUS TERRAIN");
 
-  const hemisphere = new THREE.HemisphereLight("#e3ddff", "#806f57", 2.35);
+  const hemisphere = new THREE.HemisphereLight("#eeeaff", "#948165", 2.9);
   scene.add(hemisphere);
-  const sun = new THREE.DirectionalLight("#fffef8", 4.35);
+  const sun = new THREE.DirectionalLight("#fffef8", 5.1);
   sun.position.copy(SUN_OFFSET);
   sun.castShadow = true;
   sun.shadow.mapSize.set(2048, 2048);
@@ -1578,6 +1650,7 @@ export async function createSwoveeExperience(canvas: HTMLCanvasElement, callback
   addRoad(scene, new THREE.Vector2(-72, -20), new THREE.Vector2(-72, 31), 6.4);
   addRoad(scene, new THREE.Vector2(-72, 31), new THREE.Vector2(-24, 42), 6.4);
   addRoad(scene, new THREE.Vector2(-72, 31), new THREE.Vector2(-57, 57), 6.4);
+  createOperationsGateway(scene);
   const sanctuaryCats = expeditionZones.flatMap((zone) => createZoneWorld(scene, zone));
   const oracleVisuals = oracleBlocks.map((block) => createOracleBlock(scene, block.id, block.x, block.z, block.rotation));
   oracleVisuals.forEach((oracle) => {
@@ -1687,20 +1760,21 @@ export async function createSwoveeExperience(canvas: HTMLCanvasElement, callback
         { x: 0, y: 0, z: 0, w: 1 },
       ),
   );
+  chassisBody.setRotation({ x: 0, y: Math.sin(SPAWN_YAW * 0.5), z: 0, w: Math.cos(SPAWN_YAW * 0.5) }, true);
   chassisBody.setEnabledRotations(true, true, true, true);
-  const chassisCollider = RAPIER.ColliderDesc.roundCuboid(2.25, 0.48, 1.12, 0.16)
+  const chassisCollider = RAPIER.ColliderDesc.roundCuboid(2.85, 0.48, 1.18, 0.16)
     .setTranslation(0, -0.18, 0)
     .setMass(4.8)
     .setFriction(0.45)
     .setRestitution(0.08);
   world.createCollider(chassisCollider, chassisBody);
   const climbingNose = RAPIER.ColliderDesc.convexHull(new Float32Array([
-    1.55, -0.6, -1.02,
-    1.55, -0.6, 1.02,
-    1.55, 0.14, -1.02,
-    1.55, 0.14, 1.02,
-    2.88, -0.38, -1.02,
-    2.88, -0.38, 1.02,
+    2.05, -0.6, -1.06,
+    2.05, -0.6, 1.06,
+    2.05, 0.14, -1.06,
+    2.05, 0.14, 1.06,
+    3.45, -0.38, -1.06,
+    3.45, -0.38, 1.06,
   ]));
   if (climbingNose) {
     world.createCollider(
@@ -1712,15 +1786,17 @@ export async function createSwoveeExperience(canvas: HTMLCanvasElement, callback
   vehicleController.indexUpAxis = 1;
 
   const wheelConnections = [
-    { x: 1.55, y: 0.05, z: 1.18 },
-    { x: 1.55, y: 0.05, z: -1.18 },
-    { x: -1.55, y: 0.05, z: 1.18 },
-    { x: -1.55, y: 0.05, z: -1.18 },
+    { x: 2.05, y: 0.05, z: 1.24 },
+    { x: 2.05, y: 0.05, z: -1.24 },
+    { x: 0, y: 0.05, z: 1.24 },
+    { x: 0, y: 0.05, z: -1.24 },
+    { x: -2.05, y: 0.05, z: 1.24 },
+    { x: -2.05, y: 0.05, z: -1.24 },
   ];
   wheelConnections.forEach((connection) => {
     vehicleController.addWheel(connection, { x: 0, y: -1, z: 0 }, { x: 0, y: 0, z: 1 }, 0.72, 0.62);
   });
-  for (let index = 0; index < 4; index += 1) {
+  for (let index = 0; index < wheelConnections.length; index += 1) {
     vehicleController.setWheelSuspensionStiffness(index, 36);
     vehicleController.setWheelSuspensionCompression(index, 5.6);
     vehicleController.setWheelSuspensionRelaxation(index, 3.8);
@@ -1896,7 +1972,7 @@ export async function createSwoveeExperience(canvas: HTMLCanvasElement, callback
 
   const reset = () => {
     chassisBody.setTranslation({ x: SPAWN.x, y: SPAWN.y, z: SPAWN.z }, true);
-    chassisBody.setRotation({ x: 0, y: 0, z: 0, w: 1 }, true);
+    chassisBody.setRotation({ x: 0, y: Math.sin(SPAWN_YAW * 0.5), z: 0, w: Math.cos(SPAWN_YAW * 0.5) }, true);
     chassisBody.setLinvel({ x: 0, y: 0, z: 0 }, true);
     chassisBody.setAngvel({ x: 0, y: 0, z: 0 }, true);
     cameraYawOffset = 0;
@@ -1983,8 +2059,10 @@ export async function createSwoveeExperience(canvas: HTMLCanvasElement, callback
     const steerAngle = smoothedSteering * THREE.MathUtils.lerp(0.7, 0.32, Math.min(currentSpeed / 15, 1));
     vehicleController.setWheelSteering(0, steerAngle);
     vehicleController.setWheelSteering(1, steerAngle);
-    for (let index = 0; index < 4; index += 1) {
-      vehicleController.setWheelEngineForce(index, engineForce * (index < 2 ? 0.38 : 1));
+    vehicleController.setWheelSteering(4, -steerAngle * 0.16);
+    vehicleController.setWheelSteering(5, -steerAngle * 0.16);
+    for (let index = 0; index < wheelConnections.length; index += 1) {
+      vehicleController.setWheelEngineForce(index, engineForce * (index < 2 ? 0.28 : 0.55));
       vehicleController.setWheelBrake(index, brakeForce);
     }
     vehicleController.updateVehicle(delta);
@@ -2003,7 +2081,7 @@ export async function createSwoveeExperience(canvas: HTMLCanvasElement, callback
     rover.wheels.forEach((wheel, index) => {
       const suspension = vehicleController.wheelSuspensionLength(index) ?? 0.72;
       wheel.container.position.set(wheelConnections[index].x, wheelConnections[index].y - suspension, wheelConnections[index].z);
-      wheel.container.rotation.y = index < 2 ? steering : 0;
+      wheel.container.rotation.y = index < 2 ? steering : index >= 4 ? -steering * 0.16 : 0;
       wheel.roll.rotation.z = vehicleController.wheelRotation(index) ?? 0;
       wheel.strut.scale.y = Math.max(0.28, 1.12 - suspension * 0.65);
     });
@@ -2097,8 +2175,8 @@ export async function createSwoveeExperience(canvas: HTMLCanvasElement, callback
 
     roverForward.copy(FORWARD).applyQuaternion(roverQuaternion).setY(0).normalize();
     if (pointerMode !== "camera" && performance.now() - lastPointerMove > 850) cameraYawOffset *= Math.pow(0.84, delta * 60);
-    followDirection.copy(roverForward).applyAxisAngle(worldUp, cameraYawOffset);
-    cameraDesired.copy(roverPosition).addScaledVector(followDirection, -cameraDistance).addScaledVector(UP, cameraDistance * 0.58);
+    followDirection.copy(roverForward).applyAxisAngle(worldUp, cameraYawOffset - 0.18);
+    cameraDesired.copy(roverPosition).addScaledVector(followDirection, -cameraDistance).addScaledVector(UP, cameraDistance * 0.48);
     camera.position.lerp(cameraDesired, 1 - Math.pow(0.0015, delta));
     cameraFocusDesired.copy(roverPosition).addScaledVector(UP, 1.1).addScaledVector(roverForward, 1.6 + Math.min(speed * 0.12, 2.4));
     cameraTarget.lerp(cameraFocusDesired, 1 - Math.pow(0.005, delta));

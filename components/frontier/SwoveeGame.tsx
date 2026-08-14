@@ -749,7 +749,7 @@ export default function SwoveeGame() {
       <KpCompanion />
 
       <aside className="rover-hud" aria-label="Rovalizer telemetry">
-        <div className="rover-id"><span>SWOVEE</span><b>ROVALIZER R–01</b></div>
+        <div className="rover-id"><span>SWOVEE</span><b>ROVALIZER R–01 · 6×6</b></div>
         <div className="speedometer">
           <strong>{Math.round(telemetry.speed).toString().padStart(2, "0")}</strong>
           <span>KM/H</span>
@@ -797,6 +797,28 @@ export default function SwoveeGame() {
       </aside>
 
       <div className="field-notification" key={notification}>{notification}</div>
+
+      {started && (
+        <nav className="operation-switcher" aria-label="Field operations fast travel">
+          <div className="operation-switcher-title"><span>FIELD OPERATIONS</span><b>{completedOperations}/3 COMPLETE</b></div>
+          {fieldOperations.map((operation) => {
+            const zone = expeditionZones.find((candidate) => candidate.id === operation.zoneId)!;
+            const run = operationRuns[operation.id];
+            return (
+              <button
+                key={operation.id}
+                className={`${activeOperationId === operation.id ? "is-active" : ""} ${run.complete ? "is-complete" : ""}`}
+                style={{ "--operation-color": operation.color } as React.CSSProperties}
+                onClick={() => jumpToZone(zone)}
+              >
+                <i>{run.complete ? "✓" : operation.code.replace("OP–", "")}</i>
+                <span><b>{operation.title}</b><small>{run.complete ? "COMPLETE" : "JUMP TO MISSION"}</small></span>
+                <em>+{operation.reward}</em>
+              </button>
+            );
+          })}
+        </nav>
+      )}
 
       {activeOperation && activeOperationRun && started && (
         <button
@@ -859,19 +881,19 @@ export default function SwoveeGame() {
       {!started && (
         <section className="launch-screen" aria-labelledby="launch-title">
           <div className="launch-panel">
-            <div className="launch-topline"><span>EXPEDITION KP–01</span><span>34.68° N / 33.14° E</span></div>
-            <p className="launch-kicker">THE 2017 IDEA · NOW A REAL-TIME 3D BODY OF WORK</p>
-            <h1 id="launch-title">DRIVE THE<br /><em>FRONTIER.</em></h1>
+            <div className="launch-topline"><span>EXPEDITION KP–01</span><span>WORLD BUILD 02 · 34.68° N / 33.14° E</span></div>
+            <p className="launch-kicker">THE 2017 IDEA · NOW AN OPERATING FIELD MACHINE</p>
+            <h1 id="launch-title">SCAN.<br /><em>REASON.</em><br />PRINT.</h1>
             <p className="launch-copy">
               In 2017, Karen imagined robotics, 3D printing, laser scanning, and AI having a baby. Swovee would scan terrain, understand it, and print what the place needed—someday for terraforming, and first for practical construction here on Earth.
             </p>
-            <p className="launch-instruction">Pilot the Rovalizer through Karen’s projects. Stop inside a glowing installation and press E for an in-dashboard briefing. The expedition never has to leave this screen.</p>
+            <p className="launch-instruction">This build turns that loop into the game: capture real field signals, make the scientific call, then manufacture the answer in place.</p>
             <div className="launch-loop">
-              <span><b>01</b> DRIVE THE PROJECT LOOP</span>
-              <span><b>02</b> READ DASHBOARD BRIEFINGS</span>
-              <span><b>03</b> KNOCK DOWN EVERYTHING</span>
-              <span><b>04</b> FIND ARTICLES + ORACLE BLOCKS</span>
-              <span className="cat-launch-rule"><b>05</b> DO NOT HIT THE CATS · −150 EACH</span>
+              <span><b>01</b> CAPTURE 3 FIELD SIGNALS</span>
+              <span><b>02</b> DEFEND THE EVIDENCE RULE</span>
+              <span><b>03</b> PRINT AT THE FABRICATION PAD</span>
+              <span><b>04</b> FAST-TRAVEL BETWEEN MISSIONS</span>
+              <span className="cat-launch-rule"><b>05</b> ALSO: DO NOT HIT THE CATS</span>
             </div>
             <div className="launch-actions">
               <button className="launch-button" onClick={begin} disabled={!ready}>
@@ -883,12 +905,17 @@ export default function SwoveeGame() {
             <div className="loading-rail"><i style={{ width: `${loadingProgress * 100}%` }} /></div>
             <p className="launch-credit">Three.js + Rapier physics · Architecture adapted from Bruno Simon's MIT-licensed Folio 2025 · Atmosphere and performance studies informed by Revo Realms (MIT)</p>
           </div>
-          <div className="vehicle-spec">
-            <span className="spec-number">R–01</span>
-            <div><small>PLATFORM</small><b>SWOVEE ROVALIZER</b></div>
-            <div><small>MISSION</small><b>SCAN · REASON · PRINT</b></div>
-            <div><small>STATUS</small><b className="online">{ready ? "FIELD READY" : "CALIBRATING"}</b></div>
-          </div>
+          <aside className="launch-operations" aria-label="Available field operations">
+            <header><span>MISSION CONTROL</span><b>3 OPERATIONS ONLINE</b></header>
+            {fieldOperations.map((operation) => (
+              <div key={operation.id} style={{ "--operation-color": operation.color } as React.CSSProperties}>
+                <i>{operation.code}</i>
+                <span><strong>{operation.title}</strong><small>SCAN · REASON · PRINT</small></span>
+                <em>+{operation.reward}</em>
+              </div>
+            ))}
+            <footer><span>PLATFORM</span><b>SWOVEE ROVALIZER · 6×6 FIELD FABRICATOR</b><strong className="online">{ready ? "FIELD READY" : "CALIBRATING"}</strong></footer>
+          </aside>
         </section>
       )}
 
