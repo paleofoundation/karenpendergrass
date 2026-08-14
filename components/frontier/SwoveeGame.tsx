@@ -3,13 +3,15 @@
 /* eslint-disable @next/next/no-img-element -- these sanctuary photos are served by the charities that maintain them */
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { SignedIn, SignedOut, SignInButton, UserButton, useUser } from "@clerk/nextjs";
 import { createSwoveeExperience } from "./engine";
 import { articleSignals, expeditionZones, mapExtent, markedZones, socialLinks, type ExpeditionZone } from "./zones";
 import type { DriveAction, ExperienceHandle, FieldObjectEvent, Telemetry } from "./types";
+import KpCompanion from "./KpCompanion";
 
 type Leader = {
   id: string;
-  callsign: string;
+  playerName: string;
   score: number;
   discoveries: number;
   articles: number;
@@ -27,6 +29,16 @@ const initialTelemetry: Telemetry = {
 };
 
 const receiptsZone = expeditionZones.find((zone) => zone.id === "receipts")!;
+const tiniesZone = expeditionZones.find((zone) => zone.id === "tinies")!;
+const CAT_PENALTY = 150;
+
+type Challenge = {
+  id: string;
+  label: string;
+  progress: number;
+  target: number;
+  bonus: number;
+};
 
 function formatTime(totalSeconds: number) {
   const minutes = Math.floor(totalSeconds / 60).toString().padStart(2, "0");
@@ -118,6 +130,7 @@ function TouchButton({
 }
 
 export default function SwoveeGame() {
+  const { user, isLoaded: userLoaded } = useUser();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const experienceRef = useRef<ExperienceHandle | null>(null);
   const initializationRef = useRef<Promise<ExperienceHandle> | null>(null);
@@ -126,6 +139,8 @@ export default function SwoveeGame() {
   const startedRef = useRef(false);
   const modalOpenRef = useRef(false);
   const nearbyRef = useRef<string | null>(null);
+  const playerNameSeededRef = useRef(false);
+  const lastCatStrikeRef = useRef(0);
   const [ready, setReady] = useState(false);
   const [loadingProgress, setLoadingProgress] = useState(0);
   const [loadingLabel, setLoadingLabel] = useState("INITIALIZING FIELD SYSTEM");
@@ -148,17 +163,28 @@ export default function SwoveeGame() {
   const [showMap, setShowMap] = useState(false);
   const [showLeaderboard, setShowLeaderboard] = useState(false);
   const [leaders, setLeaders] = useState<Leader[]>([]);
-  const [callsign, setCallsign] = useState("ROVER-01");
+  const [playerName, setPlayerName] = useState("EXPEDITION PILOT");
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [notification, setNotification] = useState("LIDAR LINK ESTABLISHED");
   const [muted, setMuted] = useState(false);
+  const [catHits, setCatHits] = useState<string[]>([]);
+  const [catPenalty, setCatPenalty] = useState(0);
+  const [completedChallenges, setCompletedChallenges] = useState<string[]>([]);
 
   const nearbyZone = useMemo(
     () => expeditionZones.find((zone) => zone.id === nearbyId) ?? null,
     [nearbyId],
   );
   const markedDiscovered = discovered.filter((id) => markedZones.some((zone) => zone.id === id)).length;
+  const totalScore = Math.max(0, score - catPenalty);
+  const challenges = useMemo<Challenge[]>(() => [
+    { id: "signals", label: "MAP ALL PROJECT SIGNALS", progress: markedDiscovered, target: markedZones.length, bonus: 400 },
+    { id: "briefings", label: "LOG 3 DASHBOARD BRIEFINGS", progress: Math.min(readArticles.length, 3), target: 3, bonus: 450 },
+    { id: "prints", label: "PRINT 6 FIELD STRUCTURES", progress: Math.min(printed, 6), target: 6, bonus: 250 },
+    { id: "impacts", label: "KNOCK DOWN 12 SIGNALS", progress: Math.min(knockedDown.length, 12), target: 12, bonus: 500 },
+    { id: "oracle", label: "RECOVER 3 ORACLE RECEIPTS", progress: oracleFound.length, target: 3, bonus: 600 },
+  ], [markedDiscovered, readArticles.length, printed, knockedDown.length, oracleFound.length]);
 
   useEffect(() => {
     startedRef.current = started;
@@ -175,6 +201,58 @@ export default function SwoveeGame() {
   useEffect(() => {
     nearbyRef.current = nearbyId;
   }, [nearbyId]);
+
+  useEffect(() => {
+    if (!userLoaded || !user || playerNameSeededRef.current) return;
+    const emailStem = user.primaryEmailAddress?.emailAddress.split("@")[0];
+    setPlayerName((user.fullName || emailStem || "EXPEDITION PILOT").slice(0, 32));
+    playerNameSeededRef.current = true;
+  }, [user, userLoaded]);
+
+  useEffect(() => {
+    const newlyCompleted = challenges.filter(
+      (challenge) => challenge.progress >= challenge.target && !completedChallenges.includes(challenge.id),
+    );
+    if (newlyCompleted.length === 0) return;
+    const challengeBonus = newlyCompleted.reduce((sum, challenge) => sum + challenge.bonus, 0);
+    setCompletedChallenges((current) => [...current, ...newlyCompleted.map((challenge) => challenge.id)]);
+    setScore((value) => value + challengeBonus);
+    setNotification(`${newlyCompleted[0].label} COMPLETE  +${challengeBonus}`);
+  }, [challenges, completedChallenges]);
+
+  useEffect(() => {
+    const awardVerifiedDonation = () => {
+      setSupportClaimed((current) => {
+        if (current) return current;
+        setCatPenalty(0);
+        setScore((value) => value + (tiniesZone.support?.bonus ?? 1000));
+        setNotification("TINIES DONATION VERIFIED · CAT POINTS RESTORED +1000");
+        setSupportMission(tiniesZone);
+        experienceRef.current?.pause();
+        window.localStorage.removeItem("kp-tinies-donation-start");
+        window.localStorage.removeItem("kp-tinies-donation-verified");
+        return true;
+      });
+    };
+    const checkStoredDonation = () => {
+      const startedAt = Number(window.localStorage.getItem("kp-tinies-donation-start") || 0);
+      const verifiedAt = Number(window.localStorage.getItem("kp-tinies-donation-verified") || 0);
+      if (startedAt > 0 && verifiedAt >= startedAt) awardVerifiedDonation();
+    };
+    const onStorage = (event: StorageEvent) => {
+      if (event.key === "kp-tinies-donation-verified") checkStoredDonation();
+    };
+    const onMessage = (event: MessageEvent) => {
+      if (event.origin === window.location.origin && event.data?.type === "kp-tinies-donation-verified") awardVerifiedDonation();
+    };
+    window.addEventListener("storage", onStorage);
+    window.addEventListener("message", onMessage);
+    checkStoredDonation();
+    return () => {
+      window.removeEventListener("storage", onStorage);
+      window.removeEventListener("message", onMessage);
+    };
+  }, []);
 
   useEffect(() => {
     if (!canvasRef.current) return;
@@ -240,7 +318,7 @@ export default function SwoveeGame() {
           if (!experienceActiveRef.current) return;
           setKnockedDown((current) => {
             if (current.includes(item.id)) return current;
-            const bonus = item.kind === "article" ? 140 : item.kind === "social" ? 90 : 35;
+            const bonus = item.points;
             setScore((value) => value + bonus);
             setNotification(`${item.kind === "demolition" ? "OBSTACLE DOWN" : item.kind === "social" ? "SOCIAL SIGNAL HIT" : "ARTICLE SIGNAL HIT"}  +${bonus}`);
             if (item.href) {
@@ -248,6 +326,18 @@ export default function SwoveeGame() {
               experienceRef.current?.pause();
             }
             return [...current, item.id];
+          });
+        },
+        onCatHit: (catId) => {
+          if (!experienceActiveRef.current) return;
+          const now = Date.now();
+          if (now - lastCatStrikeRef.current < 1500) return;
+          lastCatStrikeRef.current = now;
+          setCatHits((current) => {
+            if (current.includes(catId)) return current;
+            setCatPenalty((value) => value + CAT_PENALTY);
+            setNotification(`CAT SAFETY STRIKE  -${CAT_PENALTY} · DONATE €1 TO RESTORE`);
+            return [...current, catId];
           });
         },
       });
@@ -364,23 +454,25 @@ export default function SwoveeGame() {
     setNotification("DASHBOARD BRIEFING LOGGED  +225");
   };
 
-  const claimSupportMission = (zone: ExpeditionZone) => {
-    if (!zone.support || supportClaimed) return;
-    setSupportClaimed(true);
-    setScore((value) => value + zone.support!.bonus);
-    setNotification(`SANCTUARY SUPPLY MISSION  +${zone.support.bonus}`);
+  const beginSupportDonation = () => {
+    window.localStorage.setItem("kp-tinies-donation-start", String(Date.now()));
+    setNotification("SECURE €1 TINIES CHECKOUT OPENED · VERIFYING ON RETURN");
   };
 
   const submitScore = async () => {
     if (submitting || submitted) return;
+    if (!user) {
+      setNotification("EMAIL SIGN-IN REQUIRED TO LOG A PUBLIC SCORE");
+      return;
+    }
     setSubmitting(true);
     try {
       const response = await fetch("/api/scores", {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({
-          callsign,
-          score,
+          playerName,
+          score: totalScore,
           discoveries: discovered.length,
           articles: readArticles.length,
           timeSeconds: elapsed,
@@ -408,6 +500,10 @@ export default function SwoveeGame() {
     setBriefingOpen(false);
     setSupportMission(null);
     setSupportClaimed(false);
+    setCatHits([]);
+    setCatPenalty(0);
+    setCompletedChallenges([]);
+    lastCatStrikeRef.current = 0;
     setElapsed(0);
     setSubmitted(false);
     setShowLeaderboard(false);
@@ -415,6 +511,14 @@ export default function SwoveeGame() {
     experienceRef.current?.reset();
     experienceRef.current?.start();
     setNotification("NEW EXPEDITION STARTED");
+  };
+
+  const jumpToZone = (zone: ExpeditionZone) => {
+    const landingOffset = zone.id === "finish" ? -(zone.radius + 3) : zone.radius + 4;
+    experienceRef.current?.teleportTo(zone.x, zone.z + landingOffset);
+    setShowMap(false);
+    setNotification(`NAVIGATION JUMP COMPLETE · ${zone.title.toUpperCase()}`);
+    experienceRef.current?.start();
   };
 
   const mapPlayerX = ((telemetry.x + mapExtent) / (mapExtent * 2)) * 100;
@@ -432,9 +536,9 @@ export default function SwoveeGame() {
           <strong>DRIVE THE FRONTIER</strong>
         </div>
         <div className="header-telemetry">
-          <span><small>SCORE</small><b>{score.toString().padStart(4, "0")}</b></span>
+          <span><small>SCORE</small><b>{totalScore.toString().padStart(4, "0")}</b></span>
           <span><small>PROJECTS</small><b>{markedDiscovered}/{markedZones.length}</b></span>
-          <span><small>FIELD TIME</small><b>{formatTime(elapsed)}</b></span>
+          <span className="run-clock"><small>RUN CLOCK</small><b>{formatTime(elapsed)}</b></span>
         </div>
         <nav className="game-tools" aria-label="Game tools">
           <a href="/start" aria-label="Open Karen Pendergrass field guide" title="Open the main website">KP</a>
@@ -450,6 +554,8 @@ export default function SwoveeGame() {
           }} aria-label="Open signal board" title="Leaderboard">▥</button>
         </nav>
       </header>
+
+      <KpCompanion />
 
       <aside className="rover-hud" aria-label="Rovalizer telemetry">
         <div className="rover-id"><span>SWOVEE</span><b>ROVALIZER R–01</b></div>
@@ -477,6 +583,28 @@ export default function SwoveeGame() {
         </div>
       </aside>
 
+      <aside className="challenge-board" aria-label="Live expedition challenges">
+        <div className="challenge-heading"><span>LIVE CHALLENGES</span><b>{completedChallenges.length}/{challenges.length} COMPLETE</b></div>
+        <div className="challenge-list">
+          {challenges.map((challenge) => {
+            const complete = completedChallenges.includes(challenge.id);
+            return (
+              <div key={challenge.id} className={complete ? "is-complete" : ""}>
+                <span><i>{complete ? "✓" : `${challenge.progress}/${challenge.target}`}</i>{challenge.label}</span>
+                <b>{complete ? "BANKED" : `+${challenge.bonus}`}</b>
+              </div>
+            );
+          })}
+        </div>
+        <button className={catHits.length > 0 ? "cat-rule is-alert" : "cat-rule"} onClick={() => {
+          setSupportMission(tiniesZone);
+          experienceRef.current?.pause();
+        }}>
+          <span><i>{catHits.length > 0 ? `-${catPenalty}` : "SAFE"}</i>CAT GUARDIAN RULE</span>
+          <b>{catHits.length > 0 ? "RESTORE €1" : "AVOID 48 CATS"}</b>
+        </button>
+      </aside>
+
       <div className="field-notification" key={notification}>{notification}</div>
 
       {nearbyZone && started && !mission && !showMap && !showLeaderboard && (
@@ -492,6 +620,11 @@ export default function SwoveeGame() {
         <span><kbd>SPACE</kbd> PRINT</span>
         <span><kbd>E</kbd> INTERACT</span>
         <span><kbd>CTRL</kbd> BRAKE</span>
+      </div>
+
+      <div className="trackpad-hint" aria-label="Trackpad driving controls">
+        <b>TRACKPAD DRIVE</b>
+        <span>CLICK + DRAG TO DRIVE · TWO-FINGER SWIPE TO MOVE · SHIFT + DRAG TO LOOK</span>
       </div>
 
       <div className="touch-drive" aria-label="Touch driving controls">
@@ -522,11 +655,15 @@ export default function SwoveeGame() {
               <span><b>02</b> READ DASHBOARD BRIEFINGS</span>
               <span><b>03</b> KNOCK DOWN EVERYTHING</span>
               <span><b>04</b> FIND ARTICLES + ORACLE BLOCKS</span>
+              <span className="cat-launch-rule"><b>05</b> DO NOT HIT THE CATS · −150 EACH</span>
             </div>
-            <button className="launch-button" onClick={begin} disabled={!ready}>
-              <span>{ready ? "START THE ROVALIZER" : loadingLabel}</span>
-              <b>{ready ? "→" : `${Math.round(loadingProgress * 100)}%`}</b>
-            </button>
+            <div className="launch-actions">
+              <button className="launch-button" onClick={begin} disabled={!ready}>
+                <span>{ready ? "START THE ROVALIZER" : loadingLabel}</span>
+                <b>{ready ? "→" : `${Math.round(loadingProgress * 100)}%`}</b>
+              </button>
+              <a className="static-site-button" href="/start"><span>ENTER THE STATIC SITE</span><b>↗</b></a>
+            </div>
             <div className="loading-rail"><i style={{ width: `${loadingProgress * 100}%` }} /></div>
             <p className="launch-credit">Three.js + Rapier physics · Architecture adapted from Bruno Simon's MIT-licensed Folio 2025</p>
           </div>
@@ -569,7 +706,7 @@ export default function SwoveeGame() {
                         setBriefingOpen(false);
                       }}>
                         <span><small>SANCTUARY SUPPLY MISSION</small><b>{mission.support.title}</b></span>
-                        <em>{supportClaimed ? "OPENED ✓" : `+${mission.support.bonus}`}</em>
+                        <em>{supportClaimed ? "VERIFIED ✓" : `+${mission.support.bonus}`}</em>
                       </button>
                     )}
                     <button className="return-drive-button" onClick={closeOverlay}>RETURN TO DRIVING <span>→</span></button>
@@ -627,17 +764,14 @@ export default function SwoveeGame() {
               <h2 id="cat-support-title">HELP FEED THE<br /><em>90+.</em></h2>
               <p>{supportMission.support.description}</p>
               <div className="cat-food-meter"><span>ONE BAG OF CAT FOOD</span><i><b /></i><strong>EVERY SMALL GIFT MOVES THE MARKER</strong></div>
-              <a
-                href={supportMission.support.href}
-                target="_blank"
-                rel="noreferrer"
-                onClick={() => claimSupportMission(supportMission)}
-              >
-                <span>{supportClaimed ? "DONATION PAGE OPENED" : `${supportMission.support.cta} · ABOUT €1`}</span>
-                <strong>{supportClaimed ? "BONUS LOGGED ✓" : `+${supportMission.support.bonus} PTS ↗`}</strong>
-              </a>
+              <form className="cat-donation-form" action="/api/donations/checkout" method="post" target="_blank" onSubmit={beginSupportDonation}>
+                <button type="submit" disabled={supportClaimed}>
+                  <span>{supportClaimed ? "€1 DONATION VERIFIED" : `${supportMission.support.cta} · €1 SECURE CHECKOUT`}</span>
+                  <strong>{supportClaimed ? "CAT POINTS RESTORED ✓" : `RESTORE PENALTIES + ${supportMission.support.bonus} PTS ↗`}</strong>
+                </button>
+              </form>
               <button onClick={closeOverlay}>RETURN TO DRIVING →</button>
-              <small>The donation page opens separately and accepts a custom one-time amount. The expedition remains parked here.</small>
+              <small>Stripe checkout opens separately. Only a verified €1 donation restores cat-safety penalties and awards the sanctuary bonus.</small>
             </div>
           </article>
         </div>
@@ -685,7 +819,7 @@ export default function SwoveeGame() {
         <div className="overlay map-overlay" role="presentation" onMouseDown={closeOverlay}>
           <section className="field-map-panel" role="dialog" aria-modal="true" aria-labelledby="map-title" onMouseDown={(event) => event.stopPropagation()}>
             <button className="overlay-close" onClick={closeOverlay} aria-label="Close field map">×</button>
-            <header><span>SWOVEE NAVIGATION</span><h2 id="map-title">FIELD MAP</h2><p>Follow the wide illuminated road through every project installation. The three Oracle blocks are deliberately absent from navigation.</p></header>
+            <header><span>SWOVEE NAVIGATION · FAST TRAVEL ENABLED</span><h2 id="map-title">FIELD MAP</h2><p>Select any visible project signal to jump the Rovalizer directly to its landing pad. The three Oracle blocks remain deliberately absent from navigation.</p></header>
             <div className="field-map">
               <div className="map-route route-a" /><div className="map-route route-b" /><div className="map-route route-c" />
               {expeditionZones.map((zone) => {
@@ -697,8 +831,8 @@ export default function SwoveeGame() {
                     key={zone.id}
                     className={`map-zone ${discovered.includes(zone.id) ? "is-found" : ""} ${hidden ? "is-hidden" : ""}`}
                     style={{ left: `${left}%`, top: `${top}%`, "--zone-color": zone.color } as React.CSSProperties}
-                    onClick={() => !hidden && openZone(zone)}
-                    aria-label={hidden ? "Unmarked signal" : zone.title}
+                    onClick={() => !hidden && jumpToZone(zone)}
+                    aria-label={hidden ? "Unmarked signal" : `Jump to ${zone.title}`}
                   >
                     <i>{hidden ? "?" : zone.index}</i><span>{hidden ? "UNMARKED" : zone.title}</span>
                   </button>
@@ -721,25 +855,34 @@ export default function SwoveeGame() {
             <header>
               <span>GLOBAL EXPEDITION RECORD</span>
               <h2 id="board-title">SIGNAL BOARD</h2>
-              <p>{markedDiscovered === markedZones.length ? "All project signals mapped." : `${markedZones.length - markedDiscovered} project signal${markedZones.length - markedDiscovered === 1 ? "" : "s"} still missing.`} {oracleFound.length === 3 ? "All Oracle receipts recovered." : `${3 - oracleFound.length} Oracle block${3 - oracleFound.length === 1 ? "" : "s"} remain in the field.`}</p>
+              <p>{markedDiscovered === markedZones.length ? "All project signals mapped." : `${markedZones.length - markedDiscovered} project signal${markedZones.length - markedDiscovered === 1 ? "" : "s"} still missing.`} {oracleFound.length === 3 ? "All Oracle receipts recovered." : `${3 - oracleFound.length} Oracle block${3 - oracleFound.length === 1 ? "" : "s"} remain in the field.`} {catHits.length > 0 ? `${catHits.length} cat-safety strike${catHits.length === 1 ? "" : "s"} deducted ${catPenalty} points.` : "Cat Guardian status: clean."}</p>
             </header>
             <div className="run-summary">
-              <span><small>FIELD SCORE</small><b>{score.toString().padStart(4, "0")}</b></span>
+              <span><small>FIELD SCORE</small><b>{totalScore.toString().padStart(4, "0")}</b></span>
               <span><small>SCANS</small><b>{discovered.length}</b></span>
               <span><small>BRIEFINGS</small><b>{readArticles.length}</b></span>
               <span><small>TIME</small><b>{formatTime(elapsed)}</b></span>
             </div>
-            <div className="callsign-form">
-              <label htmlFor="callsign">CALLSIGN</label>
-              <input id="callsign" value={callsign} maxLength={12} onChange={(event) => setCallsign(event.target.value.replace(/[^a-zA-Z0-9_-]/g, "").toUpperCase())} />
-              <button onClick={submitScore} disabled={submitting || submitted || callsign.length < 3}>{submitted ? "RUN LOGGED ✓" : submitting ? "TRANSMITTING…" : "LOG THIS RUN"}</button>
-            </div>
+            <SignedOut>
+              <div className="score-sign-in">
+                <div><strong>EMAIL-VERIFIED LEADERBOARD</strong><span>Sign in with an email address before adding your name. Your email is never displayed.</span></div>
+                <SignInButton mode="modal"><button type="button">SIGN IN TO LOG THIS RUN →</button></SignInButton>
+              </div>
+            </SignedOut>
+            <SignedIn>
+              <div className="board-identity"><UserButton afterSignOutUrl="/" /><span>VERIFIED PILOT · EMAIL HIDDEN</span></div>
+              <div className="callsign-form">
+                <label htmlFor="player-name">PLAYER NAME</label>
+                <input id="player-name" value={playerName} maxLength={32} onChange={(event) => setPlayerName(event.target.value.replace(/[\r\n\t<>]/g, "").slice(0, 32))} />
+                <button onClick={submitScore} disabled={submitting || submitted || playerName.trim().length < 2}>{submitted ? "RUN LOGGED ✓" : submitting ? "TRANSMITTING…" : "LOG THIS RUN"}</button>
+              </div>
+            </SignedIn>
             <ol className="global-leaders">
               {leaders.length === 0 && <li className="empty-board">NO FIELD RECORDS RECEIVED YET. TAKE POLE POSITION.</li>}
               {leaders.map((leader, index) => (
                 <li key={leader.id}>
                   <span>{String(index + 1).padStart(2, "0")}</span>
-                  <b>{leader.callsign}</b>
+                  <b>{leader.playerName}</b>
                   <em>{leader.discoveries} SCANS · {leader.articles} BRIEFS · {formatTime(leader.timeSeconds)}</em>
                   <strong>{leader.score.toString().padStart(4, "0")}</strong>
                 </li>

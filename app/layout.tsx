@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { ClerkProvider } from '@clerk/nextjs';
 import { Newsreader, Source_Sans_3, JetBrains_Mono } from 'next/font/google';
 import './globals.css';
 import './frontier-game.css';
@@ -78,11 +79,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${newsreader.variable} ${sourceSans.variable} ${jetbrainsMono.variable}`}>
-      <body className="min-h-screen flex flex-col">
-        <PersonSchema />
-        <SiteFrame>{children}</SiteFrame>
-      </body>
-    </html>
+    <ClerkProvider>
+      <html lang="en" className={`${newsreader.variable} ${sourceSans.variable} ${jetbrainsMono.variable}`}>
+        <body className="min-h-screen flex flex-col">
+          <PersonSchema />
+          <SiteFrame>{children}</SiteFrame>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }

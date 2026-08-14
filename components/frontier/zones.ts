@@ -230,8 +230,8 @@ export const expeditionZones: ExpeditionZone[] = [
     support: {
       title: "Would you give about a dollar toward a bag of cat food?",
       description:
-        "A small gift goes to the real cats at Gardens of St. Gertrude. Tinies accepts a custom one-time amount, and every bit helps with food, litter, and veterinary care.",
-      href: "https://tinies.app/giving/donate",
+        "A verified €1 gift supports the real cats at Gardens of St. Gertrude. Every small contribution helps with food, litter, housing, and veterinary care.",
+      href: "/api/donations/checkout",
       cta: "HELP BUY A BAG OF CAT FOOD",
       bonus: 1000,
     },

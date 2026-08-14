@@ -9,10 +9,11 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@clerk/nextjs": "^6.39.6",
     "@dimforge/rapier3d-compat": "^0.20.0",
     "@upstash/redis": "^1.38.2",
     "gray-matter": "^4.0.3",
-    "next": "14.2.15",
+    "next": "^14.2.35",
     "next-mdx-remote": "^6.0.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
@@ -20,6 +21,7 @@
     "remark-html": "^16.0.1",
     "remark-parse": "^11.0.0",
     "remark-slug": "^7.0.1",
+    "stripe": "^22.5.0",
     "three": "^0.185.1",
     "unified": "^11.0.5"
   },

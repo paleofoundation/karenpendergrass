@@ -40,6 +40,13 @@ type KnockableVisual = {
   hit: boolean;
 };
 
+type CatVisual = {
+  id: string;
+  group: THREE.Group;
+  position: THREE.Vector3;
+  hit: boolean;
+};
+
 function material(color: string, roughness = 0.58, metalness = 0.08) {
   return new THREE.MeshStandardMaterial({ color, roughness, metalness });
 }
@@ -109,6 +116,32 @@ function createBrandTexture() {
   const texture = new THREE.CanvasTexture(canvas);
   texture.colorSpace = THREE.SRGBColorSpace;
   return texture;
+}
+
+function createPointsSprite(points: number, color: string, label = "POTENTIAL") {
+  const canvas = document.createElement("canvas");
+  canvas.width = 512;
+  canvas.height = 160;
+  const context = canvas.getContext("2d")!;
+  context.clearRect(0, 0, canvas.width, canvas.height);
+  context.fillStyle = "rgba(4, 16, 12, .9)";
+  context.fillRect(8, 8, 496, 144);
+  context.strokeStyle = color;
+  context.lineWidth = 5;
+  context.strokeRect(9, 9, 494, 142);
+  context.fillStyle = color;
+  context.font = "800 72px monospace";
+  context.textAlign = "center";
+  context.fillText(`${points > 0 ? "+" : ""}${points}`, 256, 86);
+  context.fillStyle = "rgba(238, 247, 233, .72)";
+  context.font = "700 24px monospace";
+  context.letterSpacing = "7px";
+  context.fillText(label, 256, 126);
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.colorSpace = THREE.SRGBColorSpace;
+  const sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: texture, transparent: true, depthWrite: false }));
+  sprite.scale.set(3.6, 1.12, 1);
+  return sprite;
 }
 
 function addRoad(scene: THREE.Scene, from: THREE.Vector2, to: THREE.Vector2, width = 4.2) {
@@ -216,6 +249,9 @@ function createKnockableVisual(event: FieldObjectEvent, width: number, height: n
   );
   top.position.y = height * 0.5 + 0.025;
   group.add(top);
+  const points = createPointsSprite(event.points, event.color, event.kind === "demolition" ? "IMPACT" : "SIGNAL");
+  points.position.y = height * 0.5 + 1.15;
+  group.add(points);
   return group;
 }
 
@@ -236,6 +272,12 @@ function addZonePad(scene: THREE.Scene, zone: ExpeditionZone) {
   ring.position.set(zone.x, 0.23, zone.z);
   ring.rotation.x = Math.PI * 0.5;
   scene.add(ring);
+
+  if (zone.id !== "finish") {
+    const points = createPointsSprite(zone.secret ? 400 : 65, zone.color, zone.secret ? "SECRET" : "SCAN");
+    points.position.set(zone.x, 3.05, zone.z + zone.radius * 0.46);
+    scene.add(points);
+  }
 }
 
 function createFoundry(scene: THREE.Scene, zone: ExpeditionZone) {
@@ -358,6 +400,7 @@ function createCat(color: string) {
 function createSanctuary(scene: THREE.Scene, zone: ExpeditionZone) {
   const group = new THREE.Group();
   group.position.set(zone.x, 0.2, zone.z - 1.5);
+  const cats: CatVisual[] = [];
   const wall = material("#d2c7aa", 0.94, 0);
   const roofMaterial = material("#9d5a40", 0.9, 0.02);
   const house = mesh(new THREE.BoxGeometry(5.5, 2.8, 3.8), wall);
@@ -378,13 +421,22 @@ function createSanctuary(scene: THREE.Scene, zone: ExpeditionZone) {
     const radius = 3.2 + (index % 7) * 0.72;
     cat.position.set(Math.cos(angle) * radius, 0, 1.5 + Math.sin(angle) * radius * 0.72);
     cat.rotation.y = -angle + (index % 2 ? 0.45 : -0.18);
-    cat.scale.setScalar(0.78 + (index % 5) * 0.075);
+    cat.scale.setScalar(1.35 + (index % 5) * 0.12);
     cat.userData.animate = "sanctuaryCat";
     cat.userData.offset = index * 0.73;
     cat.userData.baseY = cat.position.y;
+    cat.userData.startleUntil = 0;
     group.add(cat);
+    cats.push({
+      id: `sanctuary-cat-${index + 1}`,
+      group: cat,
+      position: new THREE.Vector3(zone.x + cat.position.x, 0.7, zone.z + cat.position.z - 1.5),
+      hit: false,
+    });
   }
   scene.add(group);
+  addAreaMarker(scene, "CAT SAFETY ZONE", "-150 PER STRIKE · DRIVE SLOW", zone.x + 9, zone.z + 3, "#ff9cae", -Math.PI * 0.5);
+  return cats;
 }
 
 function createPhage() {
@@ -473,7 +525,7 @@ function createFinish(scene: THREE.Scene, zone: ExpeditionZone) {
   scene.add(group);
 }
 
-function createZoneWorld(scene: THREE.Scene, zone: ExpeditionZone) {
+function createZoneWorld(scene: THREE.Scene, zone: ExpeditionZone): CatVisual[] {
   addZonePad(scene, zone);
   const sign = addSign(scene, zone);
   sign.position.z += zone.kind === "finish" ? -2.1 : 5.1;
@@ -482,10 +534,11 @@ function createZoneWorld(scene: THREE.Scene, zone: ExpeditionZone) {
   if (zone.kind === "wetlands") createWetlands(scene, zone);
   if (zone.kind === "brain") createBrain(scene, zone);
   if (zone.kind === "observatory") createObservatory(scene, zone);
-  if (zone.kind === "sanctuary") createSanctuary(scene, zone);
+  const cats = zone.kind === "sanctuary" ? createSanctuary(scene, zone) : [];
   if (zone.kind === "harbor") createHarbor(scene, zone);
   if (zone.kind === "lab") createLab(scene, zone);
   if (zone.kind === "finish") createFinish(scene, zone);
+  return cats;
 }
 
 function createRovalizer(scene: THREE.Scene): RovalizerVisual {
@@ -741,6 +794,97 @@ function createTerrain(scene: THREE.Scene) {
   }
 }
 
+function createLandscapeDetails(scene: THREE.Scene) {
+  const streamCurve = new THREE.CatmullRomCurve3([
+    new THREE.Vector3(82, 0.02, -96),
+    new THREE.Vector3(91, 0.02, -66),
+    new THREE.Vector3(79, 0.02, -32),
+    new THREE.Vector3(93, 0.02, 2),
+    new THREE.Vector3(81, 0.02, 36),
+    new THREE.Vector3(91, 0.02, 70),
+    new THREE.Vector3(83, 0.02, 98),
+  ]);
+  const stream = mesh(
+    new THREE.TubeGeometry(streamCurve, 96, 2.15, 6, false),
+    new THREE.MeshPhysicalMaterial({
+      color: "#285f63",
+      roughness: 0.16,
+      metalness: 0.2,
+      transmission: 0.18,
+      transparent: true,
+      opacity: 0.82,
+    }),
+    false,
+    true,
+  );
+  stream.scale.y = 0.12;
+  scene.add(stream);
+
+  const rockGeometry = new THREE.DodecahedronGeometry(1, 0);
+  const rockMaterial = material("#596457", 0.96, 0.03);
+  const rocks = new THREE.InstancedMesh(rockGeometry, rockMaterial, 42);
+  rocks.castShadow = true;
+  rocks.receiveShadow = true;
+  const transform = new THREE.Object3D();
+  for (let index = 0; index < 42; index += 1) {
+    const lane = index % 3;
+    const x = lane === 0 ? -88 + Math.random() * 22 : lane === 1 ? 63 + Math.random() * 25 : -18 + Math.random() * 36;
+    const z = lane === 2 ? -82 + Math.random() * 13 : -84 + Math.random() * 168;
+    transform.position.set(x, 0.45, z);
+    transform.rotation.set(Math.random() * 0.35, Math.random() * TAU, Math.random() * 0.3);
+    const scale = 0.45 + Math.random() * 1.45;
+    transform.scale.set(scale * 1.25, scale * 0.78, scale);
+    transform.updateMatrix();
+    rocks.setMatrixAt(index, transform.matrix);
+  }
+  rocks.instanceMatrix.needsUpdate = true;
+  scene.add(rocks);
+
+  const grassGeometry = new THREE.ConeGeometry(0.18, 1.15, 4);
+  const grassMaterial = material("#6a8647", 1, 0);
+  const grass = new THREE.InstancedMesh(grassGeometry, grassMaterial, 110);
+  grass.castShadow = true;
+  for (let index = 0; index < 110; index += 1) {
+    const grove = index % 4;
+    const anchors = [
+      new THREE.Vector2(-55, 58),
+      new THREE.Vector2(58, 65),
+      new THREE.Vector2(69, -66),
+      new THREE.Vector2(-58, -66),
+    ];
+    const anchor = anchors[grove];
+    const angle = Math.random() * TAU;
+    const radius = 5 + Math.random() * 15;
+    transform.position.set(anchor.x + Math.cos(angle) * radius, 0.52, anchor.y + Math.sin(angle) * radius);
+    transform.rotation.set(0, Math.random() * TAU, (Math.random() - 0.5) * 0.16);
+    const scale = 0.65 + Math.random() * 1.2;
+    transform.scale.set(scale, scale, scale);
+    transform.updateMatrix();
+    grass.setMatrixAt(index, transform.matrix);
+  }
+  grass.instanceMatrix.needsUpdate = true;
+  scene.add(grass);
+
+  const beaconMaterial = material("#314039", 0.35, 0.76);
+  for (let index = 0; index < 16; index += 1) {
+    const angle = (index / 16) * TAU;
+    const radius = 72 + (index % 2) * 7;
+    const beacon = new THREE.Group();
+    const mast = mesh(new THREE.CylinderGeometry(0.08, 0.14, 4.2, 8), beaconMaterial);
+    mast.position.y = 2.1;
+    const lamp = mesh(
+      new THREE.OctahedronGeometry(0.3, 0),
+      new THREE.MeshStandardMaterial({ color: "#d5ff50", emissive: "#d5ff50", emissiveIntensity: 3.2 }),
+      false,
+      false,
+    );
+    lamp.position.y = 4.25;
+    beacon.add(mast, lamp);
+    beacon.position.set(Math.cos(angle) * radius, 0, Math.sin(angle) * radius);
+    scene.add(beacon);
+  }
+}
+
 function createSky(scene: THREE.Scene) {
   scene.background = new THREE.Color("#071512");
   scene.fog = new THREE.FogExp2("#0b1d18", 0.0095);
@@ -837,6 +981,7 @@ export async function createSwoveeExperience(canvas: HTMLCanvasElement, callback
   const scene = new THREE.Scene();
   createSky(scene);
   createTerrain(scene);
+  createLandscapeDetails(scene);
   callbacks.onProgress(0.41, "MAPPING CYPRUS TERRAIN");
 
   const hemisphere = new THREE.HemisphereLight("#b8e8dc", "#1b1710", 1.85);
@@ -868,8 +1013,13 @@ export async function createSwoveeExperience(canvas: HTMLCanvasElement, callback
   addRoad(scene, new THREE.Vector2(-72, -20), new THREE.Vector2(-72, -43), 6.4);
   addRoad(scene, new THREE.Vector2(-72, -20), new THREE.Vector2(-72, 31), 6.4);
   addRoad(scene, new THREE.Vector2(-72, 31), new THREE.Vector2(-24, 42), 6.4);
-  expeditionZones.forEach((zone) => createZoneWorld(scene, zone));
+  const sanctuaryCats = expeditionZones.flatMap((zone) => createZoneWorld(scene, zone));
   const oracleVisuals = oracleBlocks.map((block) => createOracleBlock(scene, block.id, block.x, block.z, block.rotation));
+  oracleVisuals.forEach((oracle) => {
+    const points = createPointsSprite(175, "#d5ff50", "ORACLE");
+    points.position.y = 2.15;
+    oracle.group.add(points);
+  });
   addAreaMarker(scene, "SOCIAL SIGNALS", "PHYSICAL LINKS · HIT + OPEN", -72, -50, "#6bb6ff");
   addAreaMarker(scene, "ARTICLE RANGE", "MODULAR FIELD ARCHIVE", -73, 44, "#ff765e", Math.PI);
   addAreaMarker(scene, "DEMOLITION LAB", "ROVALIZER IMPACT TEST", -92, -3, "#d5ff50", Math.PI * 0.5);
@@ -887,6 +1037,14 @@ export async function createSwoveeExperience(canvas: HTMLCanvasElement, callback
   addBarrier(105.5, 3, 0, 0.5, 3, 105);
   addBarrier(0, 3, -105.5, 105, 3, 0.5);
   addBarrier(0, 3, 105.5, 105, 3, 0.5);
+  sanctuaryCats.forEach((cat) => {
+    world.createCollider(
+      RAPIER.ColliderDesc.ball(0.78)
+        .setTranslation(cat.position.x, cat.position.y, cat.position.z)
+        .setFriction(0.9)
+        .setRestitution(0.28),
+    );
+  });
 
   const knockables: KnockableVisual[] = [];
   const addKnockable = (
@@ -929,8 +1087,8 @@ export async function createSwoveeExperience(canvas: HTMLCanvasElement, callback
     });
   };
 
-  socialLinks.forEach((link) => addKnockable({ ...link, kind: "social" }, link.x, link.z, link.rotation, 5, 3.4, 1.15, 0.62));
-  articleSignals.forEach((article) => addKnockable({ ...article, kind: "article" }, article.x, article.z, article.rotation, 5, 3.3, 1.2, 0.66));
+  socialLinks.forEach((link) => addKnockable({ ...link, kind: "social", points: 90 }, link.x, link.z, link.rotation, 5, 3.4, 1.15, 0.62));
+  articleSignals.forEach((article) => addKnockable({ ...article, kind: "article", points: 140 }, article.x, article.z, article.rotation, 5, 3.3, 1.2, 0.66));
   const demolitionWords = ["DOUBT", "NO MARKET", "TOO EARLY", "STAY IN YOUR LANE", "IMPOSSIBLE", "CREDENTIALS", "CONSENSUS", "LATER"];
   demolitionWords.forEach((label, index) => {
     const row = Math.floor(index / 4);
@@ -941,6 +1099,7 @@ export async function createSwoveeExperience(canvas: HTMLCanvasElement, callback
       eyebrow: "KNOCK IT DOWN",
       kind: "demolition",
       color: index % 2 ? "#ff765e" : "#d5ff50",
+      points: 35,
     };
     addKnockable(event, -95 + row * 5.2, -13 + column * 4.1, row % 2 ? 0.08 : -0.08, 4.4, 3.8, 1.4, 0.55);
   });
@@ -989,9 +1148,12 @@ export async function createSwoveeExperience(canvas: HTMLCanvasElement, callback
   const cameraDesired = new THREE.Vector3();
   let cameraYawOffset = 0;
   let cameraDistance = 11;
-  let pointerDown = false;
+  let pointerMode: "drive" | "camera" | null = null;
+  let pointerStartX = 0;
+  let pointerStartY = 0;
   let pointerX = 0;
   let lastPointerMove = 0;
+  let trackpadReleaseTimer = 0;
 
   const actions: Record<DriveAction, boolean> = {
     forward: false,
@@ -1025,20 +1187,56 @@ export async function createSwoveeExperience(canvas: HTMLCanvasElement, callback
     const action = keyMap[event.key.toLowerCase()];
     if (action) actions[action] = false;
   };
+  const clearPointerDrive = () => {
+    actions.forward = false;
+    actions.backward = false;
+    actions.left = false;
+    actions.right = false;
+  };
   const onPointerDown = (event: PointerEvent) => {
-    pointerDown = true;
+    if (event.button > 1) return;
+    pointerMode = event.shiftKey || event.button === 1 ? "camera" : "drive";
+    pointerStartX = event.clientX;
+    pointerStartY = event.clientY;
     pointerX = event.clientX;
     canvas.setPointerCapture(event.pointerId);
   };
   const onPointerMove = (event: PointerEvent) => {
-    if (!pointerDown) return;
-    cameraYawOffset += (event.clientX - pointerX) * 0.007;
-    pointerX = event.clientX;
-    lastPointerMove = performance.now();
+    if (!pointerMode) return;
+    if (pointerMode === "camera") {
+      cameraYawOffset += (event.clientX - pointerX) * 0.007;
+      pointerX = event.clientX;
+      lastPointerMove = performance.now();
+      return;
+    }
+    const horizontal = event.clientX - pointerStartX;
+    const vertical = event.clientY - pointerStartY;
+    actions.forward = vertical < -10;
+    actions.backward = vertical > 10;
+    actions.left = horizontal < -10;
+    actions.right = horizontal > 10;
   };
-  const onPointerUp = () => { pointerDown = false; };
+  const onPointerUp = () => {
+    if (pointerMode === "drive") clearPointerDrive();
+    pointerMode = null;
+  };
   const onWheel = (event: WheelEvent) => {
-    cameraDistance = THREE.MathUtils.clamp(cameraDistance + Math.sign(event.deltaY) * 1.1, 7.5, 17);
+    event.preventDefault();
+    if (event.altKey) {
+      cameraDistance = THREE.MathUtils.clamp(cameraDistance + Math.sign(event.deltaY) * 1.1, 7.5, 17);
+      return;
+    }
+    const horizontalDominant = Math.abs(event.deltaX) > Math.abs(event.deltaY) * 0.72;
+    if (!horizontalDominant) {
+      actions.forward = event.deltaY < -0.5;
+      actions.backward = event.deltaY > 0.5;
+    }
+    if (Math.abs(event.deltaX) > 0.5) {
+      actions.left = event.deltaX < 0;
+      actions.right = event.deltaX > 0;
+    }
+    window.clearTimeout(trackpadReleaseTimer);
+    trackpadReleaseTimer = window.setTimeout(clearPointerDrive, 170);
   };
   window.addEventListener("keydown", onKeyDown, { passive: false });
   window.addEventListener("keyup", onKeyUp);
@@ -1046,7 +1244,7 @@ export async function createSwoveeExperience(canvas: HTMLCanvasElement, callback
   canvas.addEventListener("pointermove", onPointerMove);
   canvas.addEventListener("pointerup", onPointerUp);
   canvas.addEventListener("pointercancel", onPointerUp);
-  canvas.addEventListener("wheel", onWheel, { passive: true });
+  canvas.addEventListener("wheel", onWheel, { passive: false });
 
   let paused = true;
   let destroyed = false;
@@ -1113,6 +1311,10 @@ export async function createSwoveeExperience(canvas: HTMLCanvasElement, callback
       oracle.group.scale.setScalar(1);
       oracle.group.position.y = oracle.baseY;
     });
+    sanctuaryCats.forEach((cat) => {
+      cat.hit = false;
+      cat.group.userData.startleUntil = 0;
+    });
     knockables.forEach((item) => {
       item.hit = false;
       item.body.setTranslation(item.startPosition, true);
@@ -1125,6 +1327,17 @@ export async function createSwoveeExperience(canvas: HTMLCanvasElement, callback
       item.body.setLinvel({ x: 0, y: 0, z: 0 }, true);
       item.body.setAngvel({ x: 0, y: 0, z: 0 }, true);
     });
+  };
+
+  const teleportTo = (x: number, z: number) => {
+    chassisBody.setTranslation({ x, y: SPAWN.y + 0.4, z }, true);
+    chassisBody.setLinvel({ x: 0, y: 0, z: 0 }, true);
+    chassisBody.setAngvel({ x: 0, y: 0, z: 0 }, true);
+    clearPointerDrive();
+    smoothedSteering = 0;
+    nearbyId = null;
+    callbacks.onProximity(null);
+    cameraTarget.set(x, 1.2, z);
   };
 
   const print = () => {
@@ -1213,7 +1426,9 @@ export async function createSwoveeExperience(canvas: HTMLCanvasElement, callback
         object.position.y += Math.sin(elapsed * 0.0018 + object.userData.offset) * 0.0025;
       }
       if (object.userData.animate === "sanctuaryCat") {
-        object.position.y = object.userData.baseY + Math.max(0, Math.sin(elapsed * 0.0014 + object.userData.offset)) * 0.035;
+        const startled = elapsed < object.userData.startleUntil;
+        const startledJump = startled ? Math.abs(Math.sin(elapsed * 0.012)) * 0.72 : 0;
+        object.position.y = object.userData.baseY + Math.max(0, Math.sin(elapsed * 0.0014 + object.userData.offset)) * 0.035 + startledJump;
         object.rotation.z = Math.sin(elapsed * 0.0011 + object.userData.offset) * 0.025;
       }
     });
@@ -1226,7 +1441,7 @@ export async function createSwoveeExperience(canvas: HTMLCanvasElement, callback
     });
 
     roverForward.copy(FORWARD).applyQuaternion(roverQuaternion).setY(0).normalize();
-    if (!pointerDown && performance.now() - lastPointerMove > 850) cameraYawOffset *= Math.pow(0.84, delta * 60);
+    if (pointerMode !== "camera" && performance.now() - lastPointerMove > 850) cameraYawOffset *= Math.pow(0.84, delta * 60);
     const followDirection = roverForward.clone().applyAxisAngle(worldUp, cameraYawOffset);
     cameraDesired.copy(roverPosition).addScaledVector(followDirection, -cameraDistance).addScaledVector(UP, cameraDistance * 0.58);
     camera.position.lerp(cameraDesired, 1 - Math.pow(0.0015, delta));
@@ -1259,6 +1474,14 @@ export async function createSwoveeExperience(canvas: HTMLCanvasElement, callback
         oracle.group.scale.multiplyScalar(Math.pow(0.02, delta));
         oracle.group.position.y += delta * 2.6;
         if (oracle.group.scale.x < 0.035) oracle.group.visible = false;
+      }
+    });
+    sanctuaryCats.forEach((cat) => {
+      if (cat.hit) return;
+      if (Math.hypot(cat.position.x - translation.x, cat.position.z - translation.z) < 3.05) {
+        cat.hit = true;
+        cat.group.userData.startleUntil = elapsed + 1400;
+        callbacks.onCatHit(cat.id);
       }
     });
     knockables.forEach((item) => {
@@ -1328,6 +1551,7 @@ export async function createSwoveeExperience(canvas: HTMLCanvasElement, callback
     start: () => { ensureAudio(); paused = false; },
     pause: () => { paused = true; },
     reset,
+    teleportTo,
     print,
     setMuted: (value) => { muted = value; },
     setAction: (action, active) => { actions[action] = active; },
@@ -1341,6 +1565,7 @@ export async function createSwoveeExperience(canvas: HTMLCanvasElement, callback
       canvas.removeEventListener("pointerup", onPointerUp);
       canvas.removeEventListener("pointercancel", onPointerUp);
       canvas.removeEventListener("wheel", onWheel);
+      window.clearTimeout(trackpadReleaseTimer);
       // The controller is owned by the world and is released by world.free().
       // Freeing it separately corrupts the shared WASM object table during
       // React Strict Mode's mount/unmount verification cycle.
