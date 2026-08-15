@@ -197,6 +197,12 @@ body {
 .safari-score-badge a:last-child { color: var(--color-accent); }
 .safari-return-dock:hover .safari-return-icon { transform: translateY(-3px) rotate(-3deg); }
 .safari-return-dock:hover .safari-score-badge { border-color: var(--color-accent); }
+.safari-return-dock.is-safari { z-index: 45; }
+.safari-reward-toast { position: absolute; right: 0; bottom: calc(100% + 14px); width: max-content; min-width: 230px; display: grid; padding: 13px 15px; border: 1px solid #d5ff50; color: #eef7e9; background: rgba(6,17,14,.96); box-shadow: 0 18px 42px rgba(6,17,14,.32),0 0 28px rgba(213,255,80,.13); animation: safariRewardIn .28s ease-out; }
+.safari-reward-toast span,.safari-reward-toast small { color: rgba(238,247,233,.55); font: 750 7px var(--font-mono); letter-spacing: .13em; }
+.safari-reward-toast strong { margin: 2px 0; color: #d5ff50; font: 800 28px/.95 var(--font-mono); }
+.safari-reward-toast small { color: rgba(238,247,233,.78); letter-spacing: .05em; }
+@keyframes safariRewardIn { from { opacity: 0; transform: translateY(10px) scale(.96); } }
 
 .leaderboard-page { min-height: 100vh; color: #eef7e9; background: #161d1a; }
 .leaderboard-hero { min-height: 520px; display: flex; flex-direction: column; justify-content: flex-end; padding: clamp(70px,10vw,140px) max(6vw,24px) 70px; background: radial-gradient(circle at 78% 15%,rgba(213,255,80,.14),transparent 30%),linear-gradient(135deg,#352c43,#14201b 62%,#0b1713); }
@@ -244,11 +250,14 @@ body {
 
 @media (max-width: 640px) {
   .safari-return-dock { right: 12px; bottom: 12px; }
+  .safari-return-dock.is-safari { bottom: 82px; }
   .safari-return-icon { width: 62px; height: 62px; }
   .safari-return-icon::before,.safari-return-icon::after { top: 20px; width: 11px; }
   .safari-return-icon::before { left: 16px; }
   .safari-return-icon::after { right: 16px; }
   .safari-score-badge { min-width: 175px; }
+  .safari-return-dock.is-safari .safari-score-badge { display: none; }
+  .safari-reward-toast { min-width: 205px; }
   .leaderboard-hero { min-height: 470px; }
   .score-board > header { grid-template-columns: 34px 1fr auto; }
   .score-board article { grid-template-columns: 34px minmax(0,1fr); padding-inline: 4px; }

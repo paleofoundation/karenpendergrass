@@ -52,6 +52,17 @@ function formatTime(value: number) {
   return `${minutes}:${seconds}`;
 }
 
+function publishSafariReward(label: string, points: number) {
+  const at = Date.now();
+  try {
+    const previous = JSON.parse(window.localStorage.getItem("kp-safari-return-reward") || "null") as { label?: string; points?: number; at?: number } | null;
+    if (previous?.label === label && previous.points === points && at - Number(previous.at || 0) < 750) return;
+  } catch { /* A malformed previous reward is replaced below. */ }
+  const reward = { id: `${at}-${Math.random().toString(36).slice(2)}`, label, points, at };
+  window.localStorage.setItem("kp-safari-return-reward", JSON.stringify(reward));
+  window.dispatchEvent(new CustomEvent("kp-safari-reward", { detail: reward }));
+}
+
 function TouchButton({ action, label, className = "", setAction }: { action: DriveAction; label: string; className?: string; setAction: (action: DriveAction, active: boolean) => void }) {
   const pointerRef = useRef<number | null>(null);
   const release = useCallback((pointerId?: number) => {
@@ -182,8 +193,13 @@ export default function SwoveeGame() {
   useEffect(() => {
     if (!runLoaded) return;
     window.localStorage.setItem(RUN_STORAGE_KEY, JSON.stringify({ score, catPenalty, multiplier, elapsedSeconds, discovered, knockedDown, linkRewards, knowledgeOpened, articleRewards, oracleFound, totalScore }));
-    window.localStorage.setItem("kp-safari-score", String(totalScore));
   }, [articleRewards, catPenalty, discovered, elapsedSeconds, knockedDown, linkRewards, knowledgeOpened, multiplier, oracleFound, runLoaded, score, totalScore]);
+
+  useEffect(() => {
+    if (!runLoaded) return;
+    window.localStorage.setItem("kp-safari-score", String(totalScore));
+    window.dispatchEvent(new CustomEvent("kp-safari-score-change", { detail: { score: totalScore } }));
+  }, [runLoaded, totalScore]);
 
   useEffect(() => {
     if (!started || endOpen) return;
@@ -247,6 +263,7 @@ export default function SwoveeGame() {
           setDiscovered((current) => {
             if (current.includes(zoneId)) return current;
             setScore((value) => value + 100);
+            publishSafariReward(`${zone.title} discovered`, 100);
             setNotification(`${zone.title.toUpperCase()} DISCOVERED · +100`);
             return [...current, zoneId];
           });
@@ -257,6 +274,7 @@ export default function SwoveeGame() {
           setOracleFound((current) => {
             if (current) return current;
             setScore((value) => value + 250);
+            publishSafariReward("The Oracle found", 250);
             setNotification("THE ORACLE · RECEIPT FOUND +250");
             setOracleOpen(true);
             experienceRef.current?.pause();
@@ -267,7 +285,10 @@ export default function SwoveeGame() {
           if (!activeRef.current) return;
           setKnockedDown((current) => {
             if (current.includes(item.id)) return current;
-            if (item.kind === "demolition") setScore((value) => value + item.points);
+            if (item.kind === "demolition") {
+              setScore((value) => value + item.points);
+              publishSafariReward(`${item.label} flattened`, item.points);
+            }
             setNotification(item.kind === "definition" ? `QUESTION FOUND · REVEAL FOR +${item.points}` : item.kind === "demolition" ? `ASSUMPTION FLATTENED · +${item.points}` : `BRIEFING FOUND · OPEN THE SELECTED LINK FOR +${item.points}`);
             setFieldLink(item);
             experienceRef.current?.pause();
@@ -377,6 +398,7 @@ export default function SwoveeGame() {
     setKnowledgeOpened((current) => {
       if (current.includes(item.id)) return current;
       setScore((value) => value + item.points);
+      publishSafariReward(`${item.label} answered`, item.points);
       setNotification(`ANSWER LOGGED · +${item.points}`);
       return [...current, item.id];
     });
@@ -385,6 +407,7 @@ export default function SwoveeGame() {
     setArticleRewards((current) => {
       if (current.includes(id)) return current;
       setScore((value) => value + 250);
+      publishSafariReward("Tinies story opened", 250);
       setNotification("TINIES STORY OPENED · +250");
       return [...current, id];
     });
@@ -393,6 +416,7 @@ export default function SwoveeGame() {
     setLinkRewards((current) => {
       if (current.includes(item.id)) return current;
       setScore((value) => value + item.points);
+      publishSafariReward(`${item.label} opened`, item.points);
       setNotification(`${item.label} OPENED · +${item.points}`);
       return [...current, item.id];
     });

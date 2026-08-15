@@ -10,7 +10,7 @@ import SafariScoreBadge from '@/components/frontier/SafariScoreBadge';
 export default function SiteFrame({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
 
-  if (pathname === '/') return <>{children}</>;
+  if (pathname === '/') return <><SafariScoreBadge safariActive />{children}</>;
 
   return (
     <div className="min-h-screen flex flex-col">
