@@ -118,7 +118,7 @@ export const ventures: Venture[] = [
   {
     name: 'Tinies',
     slug: 'tinies',
-    url: 'https://tinies.com',
+    url: 'https://tinies.app',
     tag: 'Social Impact',
     homeDescription: 'Connecting animal sanctuaries with sponsors worldwide',
     role: 'Founder',

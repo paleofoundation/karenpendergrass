@@ -26,7 +26,7 @@ const footerSections = [
       { href: 'https://heavymetalindex.com', label: 'Heavy Metal Index', external: true },
       { href: 'https://swovee.com', label: 'Swovee', external: true },
       { href: 'https://wikibiome.com', label: 'WikiBiome', external: true },
-      { href: 'https://tinies.com', label: 'Tinies', external: true },
+      { href: 'https://tinies.app', label: 'Tinies', external: true },
       { href: 'https://gardensofstgertrude.org', label: 'Gardens of St. Gertrude', external: true },
     ],
   },

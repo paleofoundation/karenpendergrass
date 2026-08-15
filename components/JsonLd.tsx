@@ -50,7 +50,7 @@ export function PersonSchema() {
       'https://microbiomemedicine.com',
       'https://microbialmetallomics.com',
       'https://wikibiome.com',
-      'https://tinies.com',
+      'https://tinies.app',
       'https://gardensofstgertrude.org',
       'https://heavymetalcertified.com',
       'https://heavymetalindex.com',

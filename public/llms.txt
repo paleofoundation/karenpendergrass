@@ -24,7 +24,7 @@ Karen has founded six organizations. Heavy Metal Tested & Certified (HMTc) is a 
 - Microbiome Medicine (https://microbiomemedicine.com) — Disease-associated microbiome patterns database
 - Journal of Food Metallomics (https://microbialmetallomics.com) — Trace metal analysis and microbiome research
 - WikiBiome (https://wikibiome.com) — Open microbiome knowledge platform
-- Tinies (https://tinies.com) — Connecting animal sanctuaries with sponsors
+- Tinies (https://tinies.app) — Pet services, rescue adoption, and animal-welfare funding
 - Gardens of St. Gertrude (https://gardensofstgertrude.org) — Cat sanctuary in Parekklisia, Cyprus
 
 ## Additional Project

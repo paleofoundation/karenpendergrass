@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { awardSafariOutboundLink } from "@/lib/safari-rewards";
 
 type ReturnReward = {
   id: string;
@@ -51,6 +52,13 @@ export default function SafariScoreBadge({ safariActive = false }: { safariActiv
       }
     };
     const onVisibility = () => { if (document.visibilityState === "visible") onReturn(); };
+    const onDocumentClick = (event: MouseEvent) => {
+      const target = event.target;
+      if (!(target instanceof Element)) return;
+      const anchor = target.closest<HTMLAnchorElement>("a[href]");
+      if (!anchor || anchor.dataset.safariReward === "off") return;
+      awardSafariOutboundLink(anchor.href);
+    };
 
     readScore();
     readPendingReward();
@@ -59,6 +67,7 @@ export default function SafariScoreBadge({ safariActive = false }: { safariActiv
     window.addEventListener("kp-safari-score-change", onScoreChange);
     window.addEventListener("kp-safari-reward", onReward);
     document.addEventListener("visibilitychange", onVisibility);
+    document.addEventListener("click", onDocumentClick);
     return () => {
       window.clearTimeout(rewardTimer);
       window.removeEventListener("storage", onStorage);
@@ -66,6 +75,7 @@ export default function SafariScoreBadge({ safariActive = false }: { safariActiv
       window.removeEventListener("kp-safari-score-change", onScoreChange);
       window.removeEventListener("kp-safari-reward", onReward);
       document.removeEventListener("visibilitychange", onVisibility);
+      document.removeEventListener("click", onDocumentClick);
     };
   }, []);
 

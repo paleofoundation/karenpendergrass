@@ -382,6 +382,32 @@ function createBillboardCopyTexture(title: string, eyebrow: string, color: strin
   return texture;
 }
 
+function createBillboardFooterTexture(link: FieldLink) {
+  const canvas = document.createElement("canvas");
+  canvas.width = 1024;
+  canvas.height = 160;
+  const context = canvas.getContext("2d")!;
+  context.fillStyle = "rgba(25,22,34,.96)";
+  context.fillRect(0, 0, canvas.width, canvas.height);
+  context.fillStyle = link.color;
+  context.fillRect(0, 0, canvas.width, 7);
+  context.fillStyle = "rgba(251,250,246,.72)";
+  context.font = "800 25px monospace";
+  context.letterSpacing = "3px";
+  context.fillText(link.founder ?? link.eyebrow, 34, 55, 930);
+  context.fillStyle = "#fbfaf6";
+  context.font = "900 34px Arial";
+  context.letterSpacing = "0px";
+  context.fillText(`${link.label} · OPEN LINK`, 34, 119, 760);
+  context.fillStyle = link.color;
+  context.font = "900 34px monospace";
+  context.textAlign = "right";
+  context.fillText(`+${link.points ?? 200}`, 978, 119);
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.colorSpace = THREE.SRGBColorSpace;
+  return texture;
+}
+
 function createAdvertisingBillboard(scene: THREE.Scene, link: FieldLink): BillboardVisual {
   const group = new THREE.Group();
   group.position.set(link.x, 0, link.z);
@@ -430,6 +456,14 @@ function createAdvertisingBillboard(scene: THREE.Scene, link: FieldLink): Billbo
     copy.position.set(0, 5.8, 0.255);
     group.add(copy);
   }
+  const footer = mesh(
+    new THREE.PlaneGeometry(width - 0.34, 1.18),
+    new THREE.MeshBasicMaterial({ map: createBillboardFooterTexture(link), side: THREE.DoubleSide }),
+    false,
+    false,
+  );
+  footer.position.set(0, 3.47, 0.268);
+  group.add(footer);
   const points = createPointsSprite(link.points ?? 200, link.color, "OPEN SELECTED LINK");
   points.position.set(0, 9.35, 0);
   group.add(points);
@@ -2060,7 +2094,7 @@ export async function createSwoveeExperience(canvas: HTMLCanvasElement, callback
 
   socialLinks.forEach((link) => {
     const isOrcid = link.icon === "orcid";
-    addKnockable({ ...link, kind: "social", points: isOrcid ? 250 : 90 }, link.x, link.z, link.rotation, isOrcid ? 4.4 : 3.6, isOrcid ? 4.8 : 4.2, isOrcid ? 1.65 : 1.45, isOrcid ? 0.82 : 0.62);
+    addKnockable({ ...link, kind: "social", points: link.points ?? 100 }, link.x, link.z, link.rotation, isOrcid ? 4.4 : 3.6, isOrcid ? 4.8 : 4.2, isOrcid ? 1.65 : 1.45, isOrcid ? 0.82 : 0.62);
   });
   supportLinks.forEach((link) => addKnockable({ ...link, kind: "support", points: link.points ?? 125 }, link.x, link.z, link.rotation, 3.9, 4.15, 1.45, 0.66));
   knowledgeSigns.forEach((sign) => addKnockable({ ...sign, kind: "definition", points: sign.points ?? 150 }, sign.x, sign.z, sign.rotation, 5.2, 3.15, 0.46, 0.34));

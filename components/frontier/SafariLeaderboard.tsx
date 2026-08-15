@@ -27,6 +27,7 @@ type LocalRun = {
   linkRewards?: string[];
   knowledgeOpened?: string[];
   articleRewards?: string[];
+  completedChallenges?: string[];
 };
 
 function formatTime(value: number) {
@@ -74,9 +75,10 @@ export default function SafariLeaderboard() {
   const safariScore = Number(run.totalScore ?? rawScore * (Number(run.multiplier) === 10 ? 10 : 1));
   const discoveries = run.discovered?.length ?? 0;
   const insights = (run.knowledgeOpened?.length ?? 0) + (run.articleRewards?.length ?? 0);
-  const researchFinds = run.linkRewards?.filter((id) => id.startsWith("project-") || id.startsWith("billboard-")).length ?? 0;
+  const researchFinds = run.linkRewards?.filter((id) => id.startsWith("project-") || id.startsWith("billboard-") || (id.startsWith("site-") && id !== "site-advisory" && id !== "site-receipts")).length ?? 0;
   const socialFinds = run.linkRewards?.some((id) => id.startsWith("social-")) ?? false;
-  const challenges = [discoveries >= 4, (run.knowledgeOpened?.length ?? 0) >= 5, researchFinds >= 3, socialFinds, Number(run.catPenalty || 0) === 0 && discoveries >= 2].filter(Boolean).length;
+  const calculatedChallenges = [discoveries >= 4, (run.knowledgeOpened?.length ?? 0) >= 5, researchFinds >= 3, socialFinds, Number(run.catPenalty || 0) === 0 && discoveries >= 2].filter(Boolean).length;
+  const challenges = Math.max(run.completedChallenges?.length ?? 0, calculatedChallenges);
 
   const submit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();

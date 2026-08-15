@@ -7,11 +7,12 @@ import { createSwoveeExperience } from "./engine";
 import { billboards, expeditionZones, mapExtent, markedZones, type ExpeditionZone } from "./zones";
 import type { DriveAction, ExperienceHandle, FieldObjectEvent, Telemetry } from "./types";
 import KpCompanion from "./KpCompanion";
+import { awardSafariOutboundLink, getSafariLinkReward, SAFARI_RUN_STORAGE_KEY } from "@/lib/safari-rewards";
 
 const initialTelemetry: Telemetry = { speed: 0, heading: 0, x: -7, z: 17, boosting: false, scanning: true };
 const tiniesZone = expeditionZones.find((zone) => zone.id === "tinies")!;
 const CAT_PENALTY = 150;
-const RUN_STORAGE_KEY = "kp-swovee-safari-run";
+const CHALLENGE_REWARD = 500;
 const DEMOLITION_QUIPS: Record<string, string> = {
   "NO MARKET": "Market research complete: there was, in fact, a market. It was hiding behind this block.",
   "TOO EARLY": "Early is just on time with worse catering.",
@@ -141,6 +142,8 @@ export default function SwoveeGame() {
   const [linkRewards, setLinkRewards] = useState<string[]>([]);
   const [knowledgeOpened, setKnowledgeOpened] = useState<string[]>([]);
   const [articleRewards, setArticleRewards] = useState<string[]>([]);
+  const [completedChallenges, setCompletedChallenges] = useState<string[]>([]);
+  const [catStrikeAt, setCatStrikeAt] = useState(0);
   const [showMap, setShowMap] = useState(false);
   const [muted, setMuted] = useState(false);
   const [runLoaded, setRunLoaded] = useState(false);
@@ -151,15 +154,18 @@ export default function SwoveeGame() {
   const mapPlayerX = mapPercent(telemetry.x);
   const mapPlayerY = mapPercent(telemetry.z);
   const socialFinds = linkRewards.filter((id) => id.startsWith("social-")).length;
-  const researchFinds = linkRewards.filter((id) => id.startsWith("project-") || id.startsWith("billboard-")).length;
+  const researchFinds = linkRewards.filter((id) => id.startsWith("project-") || id.startsWith("billboard-") || (id.startsWith("site-") && id !== "site-advisory" && id !== "site-receipts")).length;
   const challenges = useMemo(() => [
-    { id: "districts", title: "Discover all four districts", progress: discovered.length, target: markedZones.length },
-    { id: "questions", title: "Answer the roadside questions", progress: knowledgeOpened.length, target: 5 },
-    { id: "research", title: "Open three research landmarks", progress: Math.min(researchFinds, 3), target: 3 },
-    { id: "social", title: "Find Social Plaza", progress: Math.min(socialFinds, 1), target: 1 },
-    { id: "cats", title: "Reach two districts without hitting a cat", progress: catPenalty === 0 ? Math.min(discovered.length, 2) : 0, target: 2 },
+    { id: "districts", title: "Discover all four districts", progress: discovered.length, target: markedZones.length, reward: CHALLENGE_REWARD },
+    { id: "questions", title: "Answer the roadside questions", progress: knowledgeOpened.length, target: 5, reward: CHALLENGE_REWARD },
+    { id: "research", title: "Open three research landmarks", progress: Math.min(researchFinds, 3), target: 3, reward: CHALLENGE_REWARD },
+    { id: "social", title: "Find Social Plaza", progress: Math.min(socialFinds, 1), target: 1, reward: CHALLENGE_REWARD },
+    { id: "cats", title: "Reach two districts without hitting a cat", progress: catPenalty === 0 ? Math.min(discovered.length, 2) : 0, target: 2, reward: CHALLENGE_REWARD },
   ], [catPenalty, discovered.length, knowledgeOpened.length, researchFinds, socialFinds]);
-  const completeChallenges = challenges.filter((challenge) => challenge.progress >= challenge.target).length;
+  const completeChallenges = challenges.filter((challenge) => completedChallenges.includes(challenge.id) || challenge.progress >= challenge.target).length;
+  const projectPrimaryReward = project ? getSafariLinkReward(project.href) : null;
+  const projectSecondaryReward = project?.secondaryHref ? getSafariLinkReward(project.secondaryHref) : null;
+  const fieldReward = fieldLink?.href ? getSafariLinkReward(fieldLink.href) : null;
 
   useEffect(() => { startedRef.current = started; }, [started]);
   useEffect(() => { nearbyRef.current = nearbyId; }, [nearbyId]);
@@ -170,8 +176,8 @@ export default function SwoveeGame() {
 
   useEffect(() => {
     try {
-      const saved = JSON.parse(window.localStorage.getItem(RUN_STORAGE_KEY) || "null") as null | {
-        score?: number; catPenalty?: number; multiplier?: number; elapsedSeconds?: number; discovered?: string[]; knockedDown?: string[]; linkRewards?: string[]; knowledgeOpened?: string[]; articleRewards?: string[]; oracleFound?: boolean;
+      const saved = JSON.parse(window.localStorage.getItem(SAFARI_RUN_STORAGE_KEY) || "null") as null | {
+        score?: number; catPenalty?: number; multiplier?: number; elapsedSeconds?: number; discovered?: string[]; knockedDown?: string[]; linkRewards?: string[]; knowledgeOpened?: string[]; articleRewards?: string[]; completedChallenges?: string[]; oracleFound?: boolean;
       };
       if (saved) {
         setScore(Math.max(0, Number(saved.score) || 0));
@@ -183,6 +189,7 @@ export default function SwoveeGame() {
         setLinkRewards(Array.isArray(saved.linkRewards) ? saved.linkRewards : []);
         setKnowledgeOpened(Array.isArray(saved.knowledgeOpened) ? saved.knowledgeOpened : []);
         setArticleRewards(Array.isArray(saved.articleRewards) ? saved.articleRewards : []);
+        setCompletedChallenges(Array.isArray(saved.completedChallenges) ? saved.completedChallenges : []);
         setOracleFound(Boolean(saved.oracleFound));
         setSupportClaimed(Number(saved.multiplier) === 10);
       }
@@ -192,8 +199,8 @@ export default function SwoveeGame() {
 
   useEffect(() => {
     if (!runLoaded) return;
-    window.localStorage.setItem(RUN_STORAGE_KEY, JSON.stringify({ score, catPenalty, multiplier, elapsedSeconds, discovered, knockedDown, linkRewards, knowledgeOpened, articleRewards, oracleFound, totalScore }));
-  }, [articleRewards, catPenalty, discovered, elapsedSeconds, knockedDown, linkRewards, knowledgeOpened, multiplier, oracleFound, runLoaded, score, totalScore]);
+    window.localStorage.setItem(SAFARI_RUN_STORAGE_KEY, JSON.stringify({ score, catPenalty, multiplier, elapsedSeconds, discovered, knockedDown, linkRewards, knowledgeOpened, articleRewards, completedChallenges, oracleFound, totalScore }));
+  }, [articleRewards, catPenalty, completedChallenges, discovered, elapsedSeconds, knockedDown, linkRewards, knowledgeOpened, multiplier, oracleFound, runLoaded, score, totalScore]);
 
   useEffect(() => {
     if (!runLoaded) return;
@@ -206,6 +213,23 @@ export default function SwoveeGame() {
     const timer = window.setInterval(() => setElapsedSeconds((value) => value + 1), 1000);
     return () => window.clearInterval(timer);
   }, [endOpen, started]);
+
+  useEffect(() => {
+    if (!runLoaded) return;
+    const newlyCompleted = challenges.filter((challenge) => challenge.progress >= challenge.target && !completedChallenges.includes(challenge.id));
+    if (!newlyCompleted.length) return;
+    setCompletedChallenges((current) => [...current, ...newlyCompleted.map((challenge) => challenge.id)]);
+    setScore((value) => value + newlyCompleted.reduce((sum, challenge) => sum + challenge.reward, 0));
+    newlyCompleted.forEach((challenge) => publishSafariReward(`${challenge.title} challenge complete`, challenge.reward));
+    const latest = newlyCompleted[newlyCompleted.length - 1];
+    setNotification(`${latest.title.toUpperCase()} · CHALLENGE COMPLETE +${latest.reward}`);
+  }, [challenges, completedChallenges, runLoaded]);
+
+  useEffect(() => {
+    if (!catStrikeAt) return;
+    const timer = window.setTimeout(() => setCatStrikeAt((current) => current === catStrikeAt ? 0 : current), 2300);
+    return () => window.clearTimeout(timer);
+  }, [catStrikeAt]);
 
   useEffect(() => {
     const awardDonation = () => {
@@ -301,6 +325,8 @@ export default function SwoveeGame() {
           if (now - lastCatStrikeRef.current < 1500) return;
           lastCatStrikeRef.current = now;
           setCatPenalty((value) => value + CAT_PENALTY);
+          setCatStrikeAt(now);
+          if ("vibrate" in navigator) navigator.vibrate?.([90, 45, 120]);
           setNotification(`CAT SAFETY STRIKE · -${CAT_PENALTY} · DRIVE GENTLY`);
         },
         onOperationCheckpoint: () => undefined,
@@ -346,6 +372,7 @@ export default function SwoveeGame() {
     setLinkRewards([]);
     setKnowledgeOpened([]);
     setArticleRewards([]);
+    setCompletedChallenges([]);
     setOracleFound(false);
     setElapsedSeconds(0);
     setNotification("ROVALIZER RECOVERED · NEW SAFARI RUN");
@@ -403,23 +430,21 @@ export default function SwoveeGame() {
       return [...current, item.id];
     });
   };
-  const claimArticle = (id: string) => {
-    setArticleRewards((current) => {
-      if (current.includes(id)) return current;
-      setScore((value) => value + 250);
-      publishSafariReward("Tinies story opened", 250);
-      setNotification("TINIES STORY OPENED · +250");
-      return [...current, id];
-    });
+  const claimHref = (href: string) => {
+    const reward = awardSafariOutboundLink(href);
+    if (!reward?.awarded) return reward;
+    setScore((value) => value + reward.points);
+    setLinkRewards((current) => current.includes(reward.id) ? current : [...current, reward.id]);
+    setNotification(`${reward.label.toUpperCase()} · +${reward.points}`);
+    return reward;
+  };
+  const claimArticle = (href: string, id: string) => {
+    const reward = claimHref(href);
+    if (!reward?.awarded) return;
+    setArticleRewards((current) => current.includes(id) ? current : [...current, id]);
   };
   const claimLink = (item: FieldObjectEvent) => {
-    setLinkRewards((current) => {
-      if (current.includes(item.id)) return current;
-      setScore((value) => value + item.points);
-      publishSafariReward(`${item.label} opened`, item.points);
-      setNotification(`${item.label} OPENED · +${item.points}`);
-      return [...current, item.id];
-    });
+    if (item.href) claimHref(item.href);
   };
   const openEnd = () => {
     setEndOpen(true);
@@ -427,7 +452,7 @@ export default function SwoveeGame() {
   };
 
   return (
-    <main className={`swovee-game ${started ? "is-started" : ""} ${muted ? "is-muted" : ""}`}>
+    <main className={`swovee-game ${started ? "is-started" : ""} ${muted ? "is-muted" : ""} ${catStrikeAt ? "has-cat-strike" : ""}`}>
       <canvas ref={canvasRef} className="game-canvas" aria-label="Three-dimensional Swovee Safari" />
       <div className="screen-vignette" aria-hidden="true" />
 
@@ -452,8 +477,8 @@ export default function SwoveeGame() {
           <div className="challenge-board">
             <header><span>CHALLENGES</span><b>{completeChallenges}/{challenges.length} COMPLETE</b></header>
             {challenges.map((challenge) => {
-              const complete = challenge.progress >= challenge.target;
-              return <div className={complete ? "is-complete" : ""} key={challenge.id}><i>{complete ? "✓" : challenge.progress}</i><span>{challenge.title}<small>{challenge.progress}/{challenge.target}</small></span></div>;
+              const complete = completedChallenges.includes(challenge.id) || challenge.progress >= challenge.target;
+              return <div className={complete ? "is-complete" : ""} key={challenge.id}><i>{complete ? "✓" : challenge.progress}</i><span>{challenge.title}<small>{complete ? "AWARDED" : `${challenge.progress}/${challenge.target}`} · +{challenge.reward}</small></span></div>;
             })}
           </div>
         </aside>
@@ -465,6 +490,7 @@ export default function SwoveeGame() {
         <span>GARDENS OF ST. GERTRUDE</span><strong>{multiplier === 10 ? "10× SCORE ACTIVE · THANK YOU" : catPenalty ? `-${catPenalty} · $10 UNLOCKS 10×` : "HELP FEED 90+ CATS · $10 = 10×"}</strong>
       </button>
       <div className="field-notification" key={notification}>{notification}</div>
+      {catStrikeAt > 0 && <div className="cat-strike-alert" key={catStrikeAt} role="status" aria-live="assertive"><span>CAT SAFETY STRIKE</span><strong>−{CAT_PENALTY}</strong><small>SAFARI POINTS DEDUCTED · THE CAT JUMPED CLEAR</small></div>}
 
       {nearbyZone && started && !modalOpenRef.current && (
         <button className="interact-callout" onClick={() => openZone(nearbyZone)}><kbd>E</kbd><span><small>{nearbyZone.label}</small><b>OPEN {nearbyZone.title}</b></span></button>
@@ -476,9 +502,9 @@ export default function SwoveeGame() {
         <section className="launch-screen" aria-labelledby="launch-title">
           <div className="launch-panel">
             <div className="launch-topline"><span>SWOVEE SAFARI</span><span>CYPRUS · 34.68° N / 33.14° E</span></div>
-            <p className="launch-kicker">HEAVY METALS · MICROBES · ROBOTICS · AI · 90+ CATS</p>
+            <p className="launch-kicker">HEAVY METAL CERTIFICATION · MICROBIAL SCIENCE · ROBOTICS · AI · 90+ CATS</p>
             <h1 id="launch-title">ENTER THE<br /><em>SWOVEE</em><br />SAFARI.</h1>
-            <p className="launch-copy">Drive Karen&apos;s 2017 idea for a terrain-scanning, AI-guided, 3D-printing machine through the connected worlds of heavy-metal standards, microbiome research, animal care, and the work that links them.</p>
+            <p className="launch-copy">Drive Karen&apos;s 2017 terrain-scanning, AI-guided 3D-printing machine through the work behind her career: Heavy Metal Certified as the commercial engine, microbial science as the research frontier, and the Gardens as the real-world impact.</p>
             <p className="launch-note">Collect points. Answer roadside questions. Find the research. Do not hit the cats.</p>
             <div className="launch-actions">
               <button className="launch-button" onClick={requestBegin} disabled={!ready}><span>{ready ? "START THE SWOVEE SAFARI" : loadingLabel}</span><b>{ready ? "→" : `${Math.round(loadingProgress * 100)}%`}</b></button>
@@ -507,7 +533,7 @@ export default function SwoveeGame() {
           <article className="project-card" style={{ "--project-color": project.color } as React.CSSProperties} role="dialog" aria-modal="true" aria-labelledby="project-title" onMouseDown={(event) => event.stopPropagation()}>
             <button className="overlay-close" onClick={closeOverlay} aria-label="Close project">×</button>
             {project.logo ? <div className="project-logo"><img src={project.logo} alt="Heavy Metal Certified" /></div> : <div className={`project-mark mark-${project.kind}`} aria-hidden="true"><span>{project.index}</span></div>}
-            <div className="project-copy"><span>{project.index} · {project.label}</span>{project.founder && <strong className="founder-stamp">{project.founder}</strong>}<h2 id="project-title">{project.title}</h2><p className="project-kicker">{project.kicker}</p><p>{project.description}</p><div className="project-actions"><a href={project.href} target={isInteriorPage(project.href) ? undefined : "_blank"} rel={isInteriorPage(project.href) ? undefined : "noreferrer"}>{project.cta} {isInteriorPage(project.href) ? "→" : "↗"}</a>{project.secondaryHref && <a className="secondary" href={project.secondaryHref} target={isInteriorPage(project.secondaryHref) ? undefined : "_blank"} rel={isInteriorPage(project.secondaryHref) ? undefined : "noreferrer"}>{project.secondaryCta} {isInteriorPage(project.secondaryHref) ? "→" : "↗"}</a>}{project.support && <button className="donate" onClick={() => { setProject(null); setSupportOpen(true); }}>{project.support.cta} →</button>}<button onClick={closeOverlay}>RETURN TO THE SAFARI</button></div></div>
+            <div className="project-copy"><span>{project.index} · {project.label}</span>{project.id === "heavy-metal-certified" && <b className="commercial-anchor">PRIMARY COMMERCIAL DESTINATION</b>}{project.founder && <strong className="founder-stamp">{project.founder}</strong>}<h2 id="project-title">{project.title}</h2><p className="project-kicker">{project.kicker}</p><p>{project.description}</p><div className="project-actions"><a href={project.href} target={isInteriorPage(project.href) ? undefined : "_blank"} rel={isInteriorPage(project.href) ? undefined : "noreferrer"} onClick={() => claimHref(project.href)}>{project.cta}{projectPrimaryReward ? ` · +${projectPrimaryReward.points}` : ""} {isInteriorPage(project.href) ? "→" : "↗"}</a>{project.secondaryHref && <a className="secondary" href={project.secondaryHref} target={isInteriorPage(project.secondaryHref) ? undefined : "_blank"} rel={isInteriorPage(project.secondaryHref) ? undefined : "noreferrer"} onClick={() => claimHref(project.secondaryHref!)}>{project.secondaryCta}{projectSecondaryReward ? ` · +${projectSecondaryReward.points}` : ""} {isInteriorPage(project.secondaryHref) ? "→" : "↗"}</a>}{project.support && <button className="donate" onClick={() => { setProject(null); setSupportOpen(true); }}>{project.support.cta} →</button>}<button onClick={closeOverlay}>RETURN TO THE SAFARI</button></div></div>
           </article>
         </div>
       )}
@@ -530,7 +556,7 @@ export default function SwoveeGame() {
         <div className="overlay" role="presentation" onMouseDown={closeOverlay}>
           <article className={`field-link-card ${fieldLink.kind === "definition" ? "definition-card" : ""} ${fieldLink.kind === "support" || fieldLink.kind === "billboard" ? "rich-briefing-card" : ""} ${fieldLink.image ? "has-briefing-image" : ""}`} style={{ "--field-link-color": fieldLink.color } as React.CSSProperties} role="dialog" aria-modal="true" aria-labelledby="field-link-title" onMouseDown={(event) => event.stopPropagation()}>
             <button className="overlay-close" onClick={closeOverlay}>×</button>
-            {fieldLink.image && <div className={`briefing-visual ${fieldLink.id === "billboard-gutsies" ? "is-product" : ""}`}><img src={fieldLink.image} alt={`${fieldLink.label} campaign artwork`} /><i style={{ background: `linear-gradient(180deg,transparent,${fieldLink.color})` }} /></div>}
+            {fieldLink.image && <div className={`briefing-visual ${fieldLink.id === "billboard-gutsies" ? "is-product" : ""} ${fieldLink.id === "billboard-consulting" ? "is-portrait" : ""}`}><img src={fieldLink.image} alt={`${fieldLink.label} campaign artwork`} /><i style={{ background: `linear-gradient(180deg,transparent,${fieldLink.color})` }} /></div>}
             <div className="briefing-copy">
               <span>{fieldLink.kind === "demolition" ? "ROVALIZER 1 · OBSTACLE 0" : fieldLink.eyebrow}</span>
               {fieldLink.founder && <strong className="founder-stamp">{fieldLink.founder}</strong>}
@@ -543,8 +569,8 @@ export default function SwoveeGame() {
               {fieldLink.details && <ul className="briefing-details">{fieldLink.details.map((detail) => <li key={detail}>{detail}</li>)}</ul>}
               {fieldLink.kind !== "definition" && fieldLink.kind !== "demolition" && <p className="link-reward-note">POINTS ARE EARNED WHEN YOU OPEN KAREN&apos;S SELECTED LINK—not merely when you find the marker.</p>}
               <div className="briefing-actions">
-                {fieldLink.href && (fieldLink.kind !== "definition" || knowledgeOpened.includes(fieldLink.id)) && <a href={fieldLink.href} target={isInteriorPage(fieldLink.href) ? undefined : "_blank"} rel={isInteriorPage(fieldLink.href) ? undefined : "noreferrer"} onClick={() => { if (fieldLink.kind !== "definition") claimLink(fieldLink); }}>{linkRewards.includes(fieldLink.id) ? `LINK OPENED · +${fieldLink.points} COLLECTED` : fieldLink.cta ?? (fieldLink.icon === "orcid" ? `OPEN ORCID · +${fieldLink.points}` : fieldLink.icon === "email" ? `CONTACT KAREN · +${fieldLink.points}` : `OPEN SELECTED LINK · +${fieldLink.points}`)} {isInteriorPage(fieldLink.href) ? "→" : "↗"}</a>}
-                {fieldLink.articleHref && knowledgeOpened.includes(fieldLink.id) && <a className="article-reward-link" href={fieldLink.articleHref} target="_blank" rel="noreferrer" onClick={() => claimArticle("tinies-story")}>{articleRewards.includes("tinies-story") ? "TINIES STORY OPENED · +250 COLLECTED" : fieldLink.articleCta} ↗</a>}
+                {fieldLink.href && (fieldLink.kind !== "definition" || knowledgeOpened.includes(fieldLink.id)) && <a href={fieldLink.href} target={isInteriorPage(fieldLink.href) ? undefined : "_blank"} rel={isInteriorPage(fieldLink.href) ? undefined : "noreferrer"} onClick={() => claimLink(fieldLink)}>{fieldReward && linkRewards.includes(fieldReward.id) ? `LINK OPENED · +${fieldReward.points} COLLECTED` : fieldLink.cta ?? (fieldLink.icon === "orcid" ? `OPEN ORCID · +${fieldLink.points}` : fieldLink.icon === "email" ? `CONTACT KAREN · +${fieldLink.points}` : `OPEN SELECTED LINK · +${fieldLink.points}`)} {isInteriorPage(fieldLink.href) ? "→" : "↗"}</a>}
+                {fieldLink.articleHref && knowledgeOpened.includes(fieldLink.id) && <a className="article-reward-link" href={fieldLink.articleHref} target="_blank" rel="noreferrer" onClick={() => claimArticle(fieldLink.articleHref!, "tinies-story")}>{articleRewards.includes("tinies-story") || linkRewards.includes("article-tinies-story") ? "TINIES STORY OPENED · +250 COLLECTED" : fieldLink.articleCta} ↗</a>}
                 <button onClick={closeOverlay}>RETURN TO THE SAFARI</button>
               </div>
             </div>
@@ -553,7 +579,7 @@ export default function SwoveeGame() {
       )}
 
       {showMap && (
-        <div className="overlay" role="presentation" onMouseDown={closeOverlay}><section className="field-map-panel" role="dialog" aria-modal="true" aria-labelledby="map-title" onMouseDown={(event) => event.stopPropagation()}><button className="overlay-close" onClick={closeOverlay}>×</button><header><span>SWOVEE SAFARI · FAST TRAVEL</span><h2 id="map-title">CHOOSE A DISTRICT.</h2><p>Heavy Metals, Microbes, Swovee, Tinies—and three campaign billboards between them.</p></header><div className="field-map">{WORLD_ROADS.map(([from, to], index) => <i key={index} className="map-world-road" style={mapRoadStyle(from, to)} />)}{expeditionZones.map((zone) => <button key={zone.id} className={`map-zone ${discovered.includes(zone.id) ? "is-found" : ""}`} style={{ left: `${mapPercent(zone.x)}%`, top: `${mapPercent(zone.z)}%`, "--zone-color": zone.color } as React.CSSProperties} onClick={() => jumpToZone(zone)}><i>{zone.index}</i><span>{zone.title}</span></button>)}{billboards.map((billboard) => <button key={billboard.id} className="map-billboard" style={{ left: `${mapPercent(billboard.x)}%`, top: `${mapPercent(billboard.z)}%`, "--billboard-color": billboard.color } as React.CSSProperties} onClick={() => { experienceRef.current?.teleportTo(billboard.x, billboard.z + 9); setShowMap(false); experienceRef.current?.start(); }}><i>▰</i><span>{billboard.label}</span></button>)}<button className="map-social" style={{ left: `${mapPercent(-8)}%`, top: `${mapPercent(35)}%` }} onClick={() => { experienceRef.current?.teleportTo(-8, 29); setShowMap(false); experienceRef.current?.start(); }}>SOCIAL PLAZA</button><span className="map-rover" style={{ left: `${mapPlayerX}%`, top: `${mapPlayerY}%`, transform: `translate(-50%,-50%) rotate(${telemetry.heading + 90}deg)` }}>▲</span></div></section></div>
+        <div className="overlay" role="presentation" onMouseDown={closeOverlay}><section className="field-map-panel" role="dialog" aria-modal="true" aria-labelledby="map-title" onMouseDown={(event) => event.stopPropagation()}><button className="overlay-close" onClick={closeOverlay}>×</button><header><span>SWOVEE SAFARI · FAST TRAVEL</span><h2 id="map-title">CHOOSE A DISTRICT.</h2><p>Heavy Metal Certification leads the route; Microbes, Swovee, Tinies, Social Plaza, and four campaign billboards branch from it.</p></header><div className="field-map">{WORLD_ROADS.map(([from, to], index) => <i key={index} className="map-world-road" style={mapRoadStyle(from, to)} />)}{expeditionZones.map((zone) => <button key={zone.id} className={`map-zone ${zone.id === "heavy-metal-certified" ? "is-primary" : ""} ${discovered.includes(zone.id) ? "is-found" : ""}`} style={{ left: `${mapPercent(zone.x)}%`, top: `${mapPercent(zone.z)}%`, "--zone-color": zone.color } as React.CSSProperties} onClick={() => jumpToZone(zone)}><i>{zone.index}</i><span>{zone.title}</span></button>)}{billboards.map((billboard) => <button key={billboard.id} className="map-billboard" style={{ left: `${mapPercent(billboard.x)}%`, top: `${mapPercent(billboard.z)}%`, "--billboard-color": billboard.color } as React.CSSProperties} onClick={() => { experienceRef.current?.teleportTo(billboard.x, billboard.z + 9); setShowMap(false); experienceRef.current?.start(); }}><i>▰</i><span>{billboard.label}</span></button>)}<button className="map-social" style={{ left: `${mapPercent(-8)}%`, top: `${mapPercent(35)}%` }} onClick={() => { experienceRef.current?.teleportTo(-8, 29); setShowMap(false); experienceRef.current?.start(); }}>SOCIAL PLAZA</button><span className="map-rover" style={{ left: `${mapPlayerX}%`, top: `${mapPlayerY}%`, transform: `translate(-50%,-50%) rotate(${telemetry.heading + 90}deg)` }}>▲</span></div></section></div>
       )}
 
       {endOpen && (

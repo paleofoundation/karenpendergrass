@@ -88,17 +88,17 @@ export const expeditionZones: ExpeditionZone[] = [
     id: "heavy-metal-certified",
     index: "01",
     kind: "foundry",
-    title: "Heavy Metal Certified",
+    title: "Heavy Metal Certification Foundry",
     label: "HEAVY METALS",
-    kicker: "The evidence becomes a standard people can use.",
+    kicker: "Karen's commercial engine: evidence turned into a standard people can use.",
     description:
       "Karen founded Heavy Metal Certified to turn heavy-metal toxicology, real food categories, serving size, surveillance, and ALARA principles into practical certification standards. Its evidence layer lives at Heavy Metal Index—and this work has quietly helped fund the care of her sanctuary cats for years.",
     x: -40,
     z: -18,
-    radius: 10,
+    radius: 14,
     color: "#e23d36",
     href: "https://heavymetalcertified.com",
-    cta: "VISIT HEAVY METAL CERTIFIED",
+    cta: "CERTIFY A PRODUCT · VISIT HEAVY METAL CERTIFIED",
     secondaryHref: "https://heavymetalindex.com",
     secondaryCta: "EXPLORE THE HEAVY METAL INDEX",
     founder: "FOUNDED BY KAREN PENDERGRASS",
@@ -153,8 +153,8 @@ export const expeditionZones: ExpeditionZone[] = [
     z: 38,
     radius: 11,
     color: "#ff9cae",
-    href: "https://tinies.com",
-    cta: "VISIT TINIES.COM",
+    href: "https://tinies.app",
+    cta: "VISIT TINIES.APP",
     secondaryHref: "https://gardensofstgertrude.org",
     secondaryCta: "MEET THE GARDENS OF ST. GERTRUDE",
     founder: "SANCTUARY + PLATFORM FOUNDED BY KAREN PENDERGRASS",
@@ -175,45 +175,45 @@ export const oracleBlocks: OracleBlock[] = [
 
 /** Social Plaza stays compact: three sculptural identity marks, not text boxes. */
 export const socialLinks: FieldLink[] = [
-  { id: "social-linkedin", label: "LINKEDIN", eyebrow: "KAREN PENDERGRASS", href: "https://www.linkedin.com/in/karenpendergras/", icon: "linkedin", color: "#0a66c2", x: -16, z: 33, rotation: Math.PI + 0.08 },
-  { id: "social-email", label: "EMAIL KAREN", eyebrow: "CONTACT", href: "/contact", icon: "email", color: "#ffad4f", x: -8, z: 35, rotation: Math.PI },
-  { id: "social-orcid", label: "ORCID 0000-0002-2348-7259", eyebrow: "PAPERS + PUBLICATIONS", href: "https://orcid.org/0000-0002-2348-7259", icon: "orcid", color: "#a6ce39", x: 0, z: 33, rotation: Math.PI - 0.08 },
+  { id: "social-linkedin", label: "LINKEDIN", eyebrow: "KAREN PENDERGRASS", href: "https://www.linkedin.com/in/karenpendergras/", icon: "linkedin", color: "#0a66c2", x: -16, z: 33, rotation: Math.PI + 0.08, points: 100 },
+  { id: "social-email", label: "EMAIL KAREN", eyebrow: "CONTACT", href: "/contact", icon: "email", color: "#ffad4f", x: -8, z: 35, rotation: Math.PI, points: 100 },
+  { id: "social-orcid", label: "ORCID 0000-0002-2348-7259", eyebrow: "PAPERS + PUBLICATIONS", href: "https://orcid.org/0000-0002-2348-7259", icon: "orcid", color: "#a6ce39", x: 0, z: 33, rotation: Math.PI - 0.08, points: 100 },
 ];
 
 /** Sculptural project marks placed inside the three research/life districts. */
 export const supportLinks: FieldLink[] = [
   {
-    id: "project-hmc", label: "HEAVY METAL CERTIFIED", eyebrow: "HUMAN-GRADE STANDARDS", href: "https://heavymetalcertified.com", icon: "heavy-metal", color: "#e23d36", x: -47, z: -11, rotation: 0.08, points: 180, cta: "OPEN HEAVY METAL CERTIFIED · +180", founder: "FOUNDED BY KAREN PENDERGRASS",
+    id: "project-hmc", label: "HEAVY METAL CERTIFIED", eyebrow: "KAREN'S COMMERCIAL ENGINE", href: "https://heavymetalcertified.com", icon: "heavy-metal", color: "#e23d36", x: -47, z: -11, rotation: 0.08, points: 250, cta: "CERTIFY A PRODUCT · +250", founder: "FOUNDED BY KAREN PENDERGRASS",
     copy: "Heavy Metal Certified translates toxicology, serving-size reality, food categories, surveillance, and ALARA principles into certification standards people can actually use.",
     details: ["Independent certification standards", "Human-grade thinking for food and pet food", "The work that has helped Karen feed the sanctuary cats"],
   },
   {
-    id: "project-hmi", label: "HEAVY METAL INDEX", eyebrow: "EVIDENCE LIBRARY", href: "https://heavymetalindex.com", icon: "heavy-metal-index", color: "#f18a52", x: -36, z: -10, rotation: -0.08, points: 160, cta: "EXPLORE THE HEAVY METAL INDEX · +160", founder: "FOUNDED BY KAREN PENDERGRASS",
+    id: "project-hmi", label: "HEAVY METAL INDEX", eyebrow: "EVIDENCE LIBRARY", href: "https://heavymetalindex.com", icon: "heavy-metal-index", color: "#f18a52", x: -36, z: -10, rotation: -0.08, points: 150, cta: "EXPLORE THE HEAVY METAL INDEX · +150", founder: "FOUNDED BY KAREN PENDERGRASS",
     copy: "A public evidence layer for understanding heavy metals in foods, products, exposures, and standards—built to make a confusing risk landscape legible.",
     details: ["Evidence before alarm", "Food-category and serving-size context", "Research designed for real decisions"],
   },
   {
-    id: "project-microbiome", label: "MICROBIOME MEDICINE", eyebrow: "OPEN RESEARCH", href: "https://microbiomemedicine.com", icon: "microbiome", color: "#38cfc5", x: -27, z: -41, rotation: 0.08, points: 200, cta: "SEE KAREN'S MICROBIOME WORK · +200", founder: "FOUNDED BY KAREN PENDERGRASS",
+    id: "project-microbiome", label: "MICROBIOME MEDICINE", eyebrow: "OPEN RESEARCH", href: "https://microbiomemedicine.com", icon: "microbiome", color: "#38cfc5", x: -27, z: -41, rotation: 0.08, points: 150, cta: "SEE KAREN'S MICROBIOME WORK · +150", founder: "FOUNDED BY KAREN PENDERGRASS",
     copy: "MicrobiomeMedicine.com organizes condition-associated microbial signatures and explains what changes in the microbial ecosystem may mean for diagnosis, mechanism, and treatment.",
     details: ["Condition-specific microbial signatures", "Bacteria, fungi, viruses, and host context", "Free research infrastructure"],
   },
   {
-    id: "project-phage", label: "PHAGE COCKTAILS", eyebrow: "PRECISION ANTIBIOTICS", href: "https://phagecocktails.com", icon: "phage", color: "#8ce0be", x: -18, z: -39, rotation: 0, points: 200, cta: "ENTER PHAGECOCKTAILS.COM · +200", founder: "FOUNDED BY KAREN PENDERGRASS",
+    id: "project-phage", label: "PHAGE COCKTAILS", eyebrow: "PRECISION ANTIBIOTICS", href: "https://phagecocktails.com", icon: "phage", color: "#8ce0be", x: -18, z: -39, rotation: 0, points: 150, cta: "ENTER PHAGECOCKTAILS.COM · +150", founder: "FOUNDED BY KAREN PENDERGRASS",
     copy: "A scientific platform about bacteriophage therapy: strain-targeted viruses that can kill pathogenic bacteria while preserving the surrounding microbiome.",
     details: ["Phage Therapy 101 and landmark cases", "A Build-a-Cocktail Lab", "50 open-source, CC0 grant proposals"],
   },
   {
-    id: "project-wikibiome", label: "WIKIBIOME", eyebrow: "FREE KNOWLEDGE", href: "https://wikibiome.com", icon: "wikibiome", color: "#b997e8", x: -9, z: -41, rotation: -0.08, points: 160, cta: "OPEN WIKIBIOME · +160", founder: "FOUNDED BY KAREN PENDERGRASS",
+    id: "project-wikibiome", label: "WIKIBIOME", eyebrow: "FREE KNOWLEDGE", href: "https://wikibiome.com", icon: "wikibiome", color: "#b997e8", x: -9, z: -41, rotation: -0.08, points: 150, cta: "OPEN WIKIBIOME · +150", founder: "FOUNDED BY KAREN PENDERGRASS",
     copy: "WikiBiome is open microbiome infrastructure: a public, browsable knowledge project for making microbial evidence easier to find and connect.",
     details: ["Free to use", "Built for cross-condition discovery", "Part of Karen's open microbiome work"],
   },
   {
-    id: "project-tinies", label: "TINIES", eyebrow: "OUR ANIMALS", href: "https://tinies.app", icon: "tinies", color: "#ff9cae", x: 27, z: 31, rotation: 0.1, points: 180, cta: "OPEN TINIES.APP · +180", founder: "FOUNDED BY KAREN PENDERGRASS",
+    id: "project-tinies", label: "TINIES", eyebrow: "OUR ANIMALS", href: "https://tinies.app", icon: "tinies", color: "#ff9cae", x: 27, z: 31, rotation: 0.1, points: 150, cta: "OPEN TINIES.APP · +150", founder: "FOUNDED BY KAREN PENDERGRASS",
     copy: "Tinies is a pet-services marketplace and international animal-adoption platform created from Karen's daily experience caring for more than 90 sanctuary cats.",
     details: ["Verified pet care", "Rescue adoption", "A business model intended to help fund animal welfare"],
   },
   {
-    id: "project-gardens", label: "THE GARDENS", eyebrow: "GARDENS OF ST. GERTRUDE", href: "https://gardensofstgertrude.org", icon: "gardens", color: "#f4c56c", x: 39, z: 27, rotation: -0.08, points: 180, cta: "MEET THE SANCTUARY · +180", founder: "FOUNDED BY KAREN PENDERGRASS",
+    id: "project-gardens", label: "THE GARDENS", eyebrow: "GARDENS OF ST. GERTRUDE", href: "https://gardensofstgertrude.org", icon: "gardens", color: "#f4c56c", x: 39, z: 27, rotation: -0.08, points: 150, cta: "MEET THE SANCTUARY · +150", founder: "FOUNDED BY KAREN PENDERGRASS",
     copy: "Gardens of St. Gertrude is Karen's real 501(c)(3) cat sanctuary in Cyprus. The work is daily, physical, expensive, and currently supports more than 90 cats.",
     details: ["Rescue and long-term sanctuary care", "Food, veterinary care, shelter, and sterilization", "A real place—not a brand metaphor"],
   },
@@ -222,22 +222,28 @@ export const supportLinks: FieldLink[] = [
 /** Real advertising boards: large, photographic landmarks rather than boxes. */
 export const billboards: FieldLink[] = [
   {
-    id: "billboard-tinies", label: "TINIES.APP", eyebrow: "NO MATTER THE SIZE", href: "https://tinies.app/blog/she-built-a-tech-company-to-feed-92-cats", cta: "READ THE STORY BEHIND TINIES · +300", color: "#ff9cae", x: 54, z: 35, rotation: -Math.PI * 0.5, points: 300,
+    id: "billboard-tinies", label: "TINIES.APP", eyebrow: "NO MATTER THE SIZE", href: "https://tinies.app/blog/she-built-a-tech-company-to-feed-92-cats", cta: "READ THE STORY BEHIND TINIES · +250", color: "#ff9cae", x: 54, z: 35, rotation: -Math.PI * 0.5, points: 250,
     founder: "FOUNDED BY KAREN PENDERGRASS", image: "https://raw.githubusercontent.com/paleofoundation/Cats/main/assets/hero_cats_v2.jpg",
     copy: "Book trusted pet care. Find a rescue animal. Meet the platform built from the reality of caring for 92 cats.",
     details: ["Pet services marketplace", "International animal adoption", "Read why Karen built a tech company to feed 92 cats"],
   },
   {
-    id: "billboard-gutsies", label: "GUTSIES", eyebrow: "HAPPY GUTS FOR KIDS", href: "https://gutsies.com/#products", cta: "SEE THE CHILDREN'S GUT-HEALTH PRODUCTS · +250", color: "#36bbb6", x: 17, z: -13, rotation: 0.22, points: 250,
+    id: "billboard-gutsies", label: "GUTSIES.COM", eyebrow: "HAPPY GUTS FOR KIDS", href: "https://gutsies.com/#products", cta: "OPEN GUTSIES.COM · +150", color: "#36bbb6", x: 17, z: -13, rotation: 0.22, points: 150,
     founder: "FOUNDED BY KAREN PENDERGRASS", image: "https://gutsies.com/assets/gutsies-tiny-tummies-strawberry-probiotic-gummies-bottle.png", logoImage: "https://gutsies.com/assets/gutsies-logo-happy-guts-for-kids.png",
     copy: "Pediatric gut health without the daily battle: probiotic and prebiotic products for children, with clinically studied strains, no synthetic dyes, and heavy-metal testing with public certificates of analysis.",
     details: ["Probiotic + prebiotic gummies", "Products for infants and children", "Every batch tested for lead, arsenic, cadmium, and mercury"],
   },
   {
-    id: "billboard-swovee", label: "SWOVEE.COM", eyebrow: "EARTH · MOON · MARS", href: "https://swovee.com/real-world", cta: "OPEN THE REAL-WORLD ROVALIZER · +300", color: "#63aef8", x: 51, z: -22, rotation: -0.72, points: 300,
+    id: "billboard-swovee", label: "SWOVEE.COM", eyebrow: "EARTH · MOON · MARS", href: "https://swovee.com/real-world", cta: "OPEN THE REAL-WORLD ROVALIZER · +150", color: "#63aef8", x: 51, z: -22, rotation: -0.72, points: 150,
     founder: "A PROJECT FOUNDED BY KAREN PENDERGRASS · 2017", image: "https://swovee.com/swovee-simulator-first-shelter.png",
     copy: "Swovee explores mobile additive construction and autonomous surface industrialization across Earth, Moon, and Mars simulations. The A02 Rovalizer scans terrain, plans within constraints, mixes material onboard, and prints while moving.",
     details: ["Robotics + laser scanning + AI", "Mobile large-format 3D printing", "Playable Earth, Moon, and Mars simulations"],
+  },
+  {
+    id: "billboard-consulting", label: "KAREN PENDERGRASS", eyebrow: "AVAILABLE FOR CONSULTING", href: "/advisory", cta: "VIEW KAREN'S ADVISORY WORK · +250", color: "#d5ff50", x: 8, z: 49, rotation: Math.PI - 0.08, points: 250,
+    founder: "HEAVY METALS · MICROBIOME · METALLOMICS · AI", image: "/images/Karen_Pendergrass.png",
+    copy: "Karen advises organizations working across heavy-metal regulations, certification systems, microbiome science, microbial metallomics, AI-first operations, and animal-welfare governance.",
+    details: ["Heavy-metal regulation + certification", "Microbiome science + microbial metallomics", "Board, scientific advisory, consulting, and speaking engagements"],
   },
 ];
 
@@ -254,7 +260,7 @@ export const knowledgeSigns: FieldLink[] = [
     x: -17,
     z: -29,
     rotation: 0.08,
-    points: 225,
+    points: 150,
   },
   {
     id: "definition-tinies",
@@ -269,7 +275,7 @@ export const knowledgeSigns: FieldLink[] = [
     x: 17,
     z: 28,
     rotation: -0.18,
-    points: 175,
+    points: 150,
   },
   {
     id: "definition-microbiome",
@@ -282,7 +288,7 @@ export const knowledgeSigns: FieldLink[] = [
     x: -7,
     z: -31,
     rotation: 0.15,
-    points: 175,
+    points: 150,
   },
   {
     id: "definition-metallomics",
@@ -295,7 +301,7 @@ export const knowledgeSigns: FieldLink[] = [
     x: -31,
     z: -32,
     rotation: -0.12,
-    points: 225,
+    points: 150,
   },
   {
     id: "definition-pet-food",
@@ -308,7 +314,7 @@ export const knowledgeSigns: FieldLink[] = [
     x: -13,
     z: 12,
     rotation: -0.5,
-    points: 125,
+    points: 150,
   },
 ];
 export const articleSignals: FieldLink[] = [];
