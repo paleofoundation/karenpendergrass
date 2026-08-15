@@ -1759,8 +1759,8 @@ function createWindStreaks(scene: THREE.Scene): WindStreakVisual {
 }
 
 function createSky(scene: THREE.Scene) {
-  scene.background = new THREE.Color("#a39caf");
-  scene.fog = new THREE.FogExp2("#aaa3b7", 0.0046);
+  scene.background = new THREE.Color("#8f88a8");
+  scene.fog = new THREE.FogExp2("#958da8", 0.0052);
   const sunDirection = SUN_VISUAL_DIRECTION.clone().normalize();
   const sky = mesh(
     new THREE.SphereGeometry(250, 36, 24),
@@ -1946,7 +1946,7 @@ export async function createSwoveeExperience(canvas: HTMLCanvasElement, callback
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFShadowMap;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.52;
+  renderer.toneMappingExposure = 1.34;
   renderer.outputColorSpace = THREE.SRGBColorSpace;
 
   const scene = new THREE.Scene();
@@ -1957,9 +1957,9 @@ export async function createSwoveeExperience(canvas: HTMLCanvasElement, callback
   const windStreaks = createWindStreaks(scene);
   callbacks.onProgress(0.41, "MAPPING CYPRUS TERRAIN");
 
-  const hemisphere = new THREE.HemisphereLight("#eeeaff", "#948165", 2.9);
+  const hemisphere = new THREE.HemisphereLight("#e3ddff", "#806f57", 2.35);
   scene.add(hemisphere);
-  const sun = new THREE.DirectionalLight("#fffef8", 5.1);
+  const sun = new THREE.DirectionalLight("#fffef8", 4.35);
   sun.position.copy(SUN_OFFSET);
   sun.castShadow = true;
   sun.shadow.mapSize.set(2048, 2048);
