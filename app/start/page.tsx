@@ -80,7 +80,7 @@ export default function StartHerePage() {
                   Meet Karen
                 </Link>
                 <Link href="/" className="px-7 py-3.5 text-[11px] tracking-[.12em] uppercase" style={{ border: '1px solid rgba(255,255,255,.42)', color: PAPER, fontFamily: 'var(--font-mono)' }}>
-                  Enter Karen&apos;s Brain
+                  Enter Swovee Safari
                 </Link>
               </div>
               <div className="mt-8">

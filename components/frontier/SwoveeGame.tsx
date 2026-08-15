@@ -522,10 +522,10 @@ export default function SwoveeGame() {
             <div className="launch-topline"><span>KAREN&apos;S BRAIN · SWOVEE EXPEDITION</span><span>CYPRUS · 34.68° N / 33.14° E</span></div>
             <p className="launch-kicker">HEAVY METAL CERTIFICATION · MICROBIAL SCIENCE · ROBOTICS · AI · 90+ CATS</p>
             <h1 id="launch-title">ENTER<br /><em>KAREN&apos;S</em><br />BRAIN.</h1>
-            <p className="launch-copy">Drive Karen&apos;s 2017 terrain-scanning, AI-guided 3D-printing machine through the work behind her career: Heavy Metal Certified as the commercial engine, microbial science as the research frontier, and the Gardens as the real-world impact.</p>
+            <p className="launch-copy">Drive Karen&apos;s Swovee, a 2017 terrain-scanning, AI-guided 3D-printing machine through the work behind her career: Heavy Metal Certified as the commercial engine, microbial science as the research frontier, and the Gardens as the real-world impact.</p>
             <p className="launch-note">Collect points. Answer roadside questions. Find the research. Do not hit the cats.</p>
             <div className="launch-actions">
-              <button className="launch-button" onClick={requestBegin} disabled={!ready}><span>{ready ? "ENTER KAREN'S BRAIN" : loadingLabel}</span><b>{ready ? "→" : `${Math.round(loadingProgress * 100)}%`}</b></button>
+              <button className="launch-button" onClick={requestBegin} disabled={!ready}><span>{ready ? "ENTER SWOVEE SAFARI" : loadingLabel}</span><b>{ready ? "→" : `${Math.round(loadingProgress * 100)}%`}</b></button>
               <a className="static-site-button" href="/start"><span>MEET KAREN · STATIC SITE</span><b>↗</b></a>
             </div>
             <div className="loading-rail"><i style={{ width: `${loadingProgress * 100}%` }} /></div>
