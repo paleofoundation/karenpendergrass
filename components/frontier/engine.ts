@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { RoundedBoxGeometry } from "three/examples/jsm/geometries/RoundedBoxGeometry.js";
 import type { DynamicRayCastVehicleController, RigidBody, World } from "@dimforge/rapier3d-compat";
-import { articleSignals, expeditionZones, fieldOperations, knowledgeSigns, oracleBlocks, socialLinks, supportLinks, type ExpeditionZone, type FieldOperation } from "./zones";
+import { articleSignals, billboards, expeditionZones, fieldOperations, knowledgeSigns, oracleBlocks, socialLinks, supportLinks, type ExpeditionZone, type FieldLink, type FieldOperation } from "./zones";
 import type { DriveAction, ExperienceCallbacks, ExperienceHandle, FieldObjectEvent, OperationStage } from "./types";
 
 const TAU = Math.PI * 2;
@@ -46,6 +46,13 @@ type KnockableVisual = {
 
 type CatVisual = {
   id: string;
+  group: THREE.Group;
+  position: THREE.Vector3;
+  hit: boolean;
+};
+
+type BillboardVisual = {
+  event: FieldObjectEvent;
   group: THREE.Group;
   position: THREE.Vector3;
   hit: boolean;
@@ -340,6 +347,99 @@ function addAreaMarker(scene: THREE.Scene, title: string, subtitle: string, x: n
     post.position.set(x + Math.cos(rotation) * offset, 1.65, z - Math.sin(rotation) * offset);
     scene.add(post);
   });
+}
+
+function createBillboardCopyTexture(title: string, eyebrow: string, color: string) {
+  const canvas = document.createElement("canvas");
+  canvas.width = 1024;
+  canvas.height = 512;
+  const context = canvas.getContext("2d")!;
+  context.clearRect(0, 0, 1024, 512);
+  const gradient = context.createLinearGradient(0, 0, 720, 0);
+  gradient.addColorStop(0, "rgba(28,24,38,.96)");
+  gradient.addColorStop(0.62, "rgba(28,24,38,.82)");
+  gradient.addColorStop(1, "rgba(28,24,38,0)");
+  context.fillStyle = gradient;
+  context.fillRect(0, 0, 1024, 512);
+  context.fillStyle = color;
+  context.font = "800 30px monospace";
+  context.letterSpacing = "7px";
+  context.fillText(eyebrow, 50, 86, 760);
+  context.fillStyle = "#fbfaf6";
+  context.font = "900 92px Arial";
+  context.letterSpacing = "-3px";
+  context.fillText(title, 46, 220, 780);
+  context.fillStyle = "rgba(251,250,246,.84)";
+  context.font = "700 29px Arial";
+  context.fillText("DRIVE CLOSER FOR THE FULL BRIEFING", 50, 294, 720);
+  context.fillStyle = color;
+  context.fillRect(50, 342, 360, 5);
+  context.font = "800 24px monospace";
+  context.letterSpacing = "5px";
+  context.fillText("SELECTED LINK · POINTS INSIDE", 50, 402, 700);
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.colorSpace = THREE.SRGBColorSpace;
+  return texture;
+}
+
+function createAdvertisingBillboard(scene: THREE.Scene, link: FieldLink): BillboardVisual {
+  const group = new THREE.Group();
+  group.position.set(link.x, 0, link.z);
+  group.rotation.y = link.rotation;
+  const width = 10.8;
+  const height = 5.8;
+  const steel = material("#5f626b", 0.28, 0.86);
+  const frame = material("#26232f", 0.38, 0.72);
+  const board = mesh(new RoundedBoxGeometry(width, height, 0.46, 5, 0.12), frame);
+  board.position.y = 5.8;
+  group.add(board);
+  [-4.25, 4.25].forEach((x) => {
+    const post = mesh(new THREE.CylinderGeometry(0.16, 0.23, 6.4, 10), steel);
+    post.position.set(x, 2.8, 0);
+    group.add(post);
+    const footing = mesh(new THREE.CylinderGeometry(0.62, 0.78, 0.28, 12), material("#706b68", 0.94, 0.02));
+    footing.position.set(x, 0.12, 0);
+    group.add(footing);
+  });
+  const loader = new THREE.TextureLoader();
+  if (link.image) {
+    const imageTexture = loader.load(link.image);
+    imageTexture.colorSpace = THREE.SRGBColorSpace;
+    const image = mesh(
+      new THREE.PlaneGeometry(link.id === "billboard-gutsies" ? 4.4 : width - 0.34, height - 0.34),
+      new THREE.MeshBasicMaterial({ map: imageTexture, color: "#ffffff", transparent: link.id === "billboard-gutsies", side: THREE.DoubleSide }),
+      false,
+      false,
+    );
+    image.position.set(link.id === "billboard-gutsies" ? 2.65 : 0, 5.8, 0.242);
+    if (link.id === "billboard-gutsies") {
+      const cream = mesh(new THREE.PlaneGeometry(width - 0.34, height - 0.34), new THREE.MeshBasicMaterial({ color: "#fff7ea" }), false, false);
+      cream.position.set(0, 5.8, 0.236);
+      group.add(cream);
+    }
+    group.add(image);
+  }
+  if (link.logoImage) {
+    const logoTexture = loader.load(link.logoImage);
+    logoTexture.colorSpace = THREE.SRGBColorSpace;
+    const logo = mesh(new THREE.PlaneGeometry(5.2, 3.1), new THREE.MeshBasicMaterial({ map: logoTexture, transparent: true, side: THREE.DoubleSide }), false, false);
+    logo.position.set(-2.55, 6.2, 0.255);
+    group.add(logo);
+  } else {
+    const copy = mesh(new THREE.PlaneGeometry(width - 0.32, height - 0.32), new THREE.MeshBasicMaterial({ map: createBillboardCopyTexture(link.label, link.eyebrow, link.color), transparent: true }), false, false);
+    copy.position.set(0, 5.8, 0.255);
+    group.add(copy);
+  }
+  const points = createPointsSprite(link.points ?? 200, link.color, "OPEN SELECTED LINK");
+  points.position.set(0, 9.35, 0);
+  group.add(points);
+  scene.add(group);
+  return {
+    event: { ...link, kind: "billboard", points: link.points ?? 200 },
+    group,
+    position: new THREE.Vector3(link.x, 0, link.z),
+    hit: false,
+  };
 }
 
 function createLogoKnockableVisual(event: FieldObjectEvent, width: number, height: number, depth: number) {
@@ -1886,8 +1986,9 @@ export async function createSwoveeExperience(canvas: HTMLCanvasElement, callback
   ];
   addAreaMarker(scene, "SOCIAL PLAZA", "LINKEDIN · EMAIL · ORCID", -8, 42, "#a6ce39", Math.PI);
   addAreaMarker(scene, "CAT SAFARI", "AVOID THE CATS · -150 PER STRIKE", 4, 9, "#ff9cae", -0.35);
+  const billboardVisuals = billboards.map((link) => createAdvertisingBillboard(scene, link));
   const oracleVisuals = oracleBlocks.map((block) => createOracleBlock(scene, block.id, block.x, block.z, block.rotation));
-  callbacks.onProgress(0.62, "ASSEMBLING FOUR FIELD DISTRICTS");
+  callbacks.onProgress(0.62, "RAISING SAFARI BILLBOARDS");
 
   const world: World = new RAPIER.World({ x: 0, y: -9.81, z: 0 });
   world.timestep = 1 / 60;
@@ -1901,6 +2002,7 @@ export async function createSwoveeExperience(canvas: HTMLCanvasElement, callback
   addBarrier(105.5, 3, 0, 0.5, 3, 105);
   addBarrier(0, 3, -105.5, 105, 3, 0.5);
   addBarrier(0, 3, 105.5, 105, 3, 0.5);
+  billboards.forEach((link) => addBarrier(link.x, 3.1, link.z, 5.4, 3.1, 0.28, link.rotation));
   sanctuaryCats.forEach((cat) => {
     world.createCollider(
       RAPIER.ColliderDesc.ball(0.78)
@@ -1922,7 +2024,8 @@ export async function createSwoveeExperience(canvas: HTMLCanvasElement, callback
     mass = 0.7,
   ) => {
     const group = createKnockableVisual(event, width, height, depth);
-    const points = createPointsSprite(event.points, event.color, event.kind === "definition" ? "REVEAL ANSWER" : "DISCOVER");
+    const pointLabel = event.kind === "definition" ? "REVEAL ANSWER" : event.kind === "support" || event.kind === "social" ? "OPEN SELECTED LINK" : "DISCOVER";
+    const points = createPointsSprite(event.points, event.color, pointLabel);
     points.position.set(0, height * 0.78 + 1.05, 0);
     points.userData.faceCamera = true;
     group.add(points);
@@ -2215,6 +2318,7 @@ export async function createSwoveeExperience(canvas: HTMLCanvasElement, callback
       cat.hit = false;
       cat.group.userData.startleUntil = 0;
     });
+    billboardVisuals.forEach((billboard) => { billboard.hit = false; });
     knockables.forEach((item) => {
       item.hit = false;
       item.body.setTranslation(item.startPosition, true);
@@ -2446,6 +2550,13 @@ export async function createSwoveeExperience(canvas: HTMLCanvasElement, callback
         cat.hit = true;
         cat.group.userData.startleUntil = elapsed + 1400;
         callbacks.onCatHit(cat.id);
+      }
+    });
+    billboardVisuals.forEach((billboard) => {
+      if (billboard.hit) return;
+      if (Math.hypot(billboard.position.x - translation.x, billboard.position.z - translation.z) < 7.2) {
+        billboard.hit = true;
+        callbacks.onKnockdown(billboard.event);
       }
     });
     knockables.forEach((item) => {

@@ -27,7 +27,7 @@ const footerSections = [
       { href: 'https://swovee.com', label: 'Swovee', external: true },
       { href: 'https://wikibiome.com', label: 'WikiBiome', external: true },
       { href: 'https://tinies.com', label: 'Tinies', external: true },
-      { href: 'https://gardensofstgertrude.com', label: 'Gardens of St. Gertrude', external: true },
+      { href: 'https://gardensofstgertrude.org', label: 'Gardens of St. Gertrude', external: true },
     ],
   },
   {

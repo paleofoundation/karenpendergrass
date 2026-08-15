@@ -221,12 +221,12 @@ export default function AboutPage() {
             </Link>{' '}
             (
             <a
-              href="https://gardensofstgertrude.com"
+              href="https://gardensofstgertrude.org"
               target="_blank"
               rel="noopener noreferrer"
               className="text-accent"
             >
-              gardensofstgertrude.com
+              gardensofstgertrude.org
             </a>
             ), a cat sanctuary caring for 92 cats. The operational reality of running a
             sanctuary is that fundraising tools designed for general nonprofits fail
@@ -385,12 +385,12 @@ export default function AboutPage() {
             </strong>{' '}
             (
             <a
-              href="https://gardensofstgertrude.com"
+              href="https://gardensofstgertrude.org"
               target="_blank"
               rel="noopener noreferrer"
               className="text-accent"
             >
-              gardensofstgertrude.com
+              gardensofstgertrude.org
             </a>
             ): The cat sanctuary in Cyprus.
           </p>

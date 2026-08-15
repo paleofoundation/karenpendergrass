@@ -17,5 +17,14 @@ export default function SafariScoreBadge() {
     };
   }, []);
 
-  return <Link href="/leaderboard" className="safari-score-badge"><span>YOUR SAFARI SCORE</span><strong>{score.toLocaleString()} PTS</strong><b>SEE LEADERBOARD →</b></Link>;
+  return (
+    <aside className="safari-return-dock" aria-label="Swovee Safari score and return controls">
+      <Link href="/" className="safari-return-icon" aria-label="Return to the Swovee Safari"><span>↙</span><b>SWOVEE</b></Link>
+      <div className="safari-score-badge">
+        <Link href="/">RETURN TO THE SAFARI</Link>
+        <strong>{score.toLocaleString()} PTS</strong>
+        <Link href="/leaderboard">SEE LEADERBOARD →</Link>
+      </div>
+    </aside>
+  );
 }

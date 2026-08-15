@@ -132,7 +132,7 @@ export const ventures: Venture[] = [
   {
     name: 'Gardens of St. Gertrude',
     slug: 'gardens-of-st-gertrude',
-    url: 'https://gardensofstgertrude.com',
+    url: 'https://gardensofstgertrude.org',
     tag: 'Sanctuary',
     homeDescription: 'Cat sanctuary in Parekklisia, Cyprus. 92 cats.',
     role: 'Founder',

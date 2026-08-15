@@ -155,25 +155,48 @@ body {
   }
 }
 
-.safari-score-badge {
+.safari-return-dock {
   position: fixed;
   z-index: 45;
   right: 28px;
-  bottom: 96px;
-  min-width: 210px;
+  bottom: 28px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.safari-return-icon {
+  position: relative;
+  width: 74px;
+  height: 74px;
+  display: grid;
+  place-items: center;
+  border: 2px solid #d5ff50;
+  border-radius: 50%;
+  color: #101713;
+  background: #d5ff50;
+  text-decoration: none;
+  box-shadow: 0 0 0 7px rgba(213,255,80,.14),0 18px 40px rgba(6,17,14,.28);
+}
+.safari-return-icon::before,.safari-return-icon::after { content: ""; position: absolute; top: 24px; width: 14px; height: 8px; border-bottom: 3px solid #101713; border-radius: 50%; }
+.safari-return-icon::before { left: 18px; }
+.safari-return-icon::after { right: 18px; }
+.safari-return-icon span { margin-top: 8px; font: 900 20px var(--font-mono); }
+.safari-return-icon b { position: absolute; bottom: 9px; font: 900 6px var(--font-mono); letter-spacing: .08em; }
+.safari-score-badge {
+  min-width: 220px;
   display: grid;
   padding: 11px 13px;
   border: 1px solid rgba(213,255,80,.44);
   color: var(--color-bg);
   background: rgba(6,17,14,.92);
   backdrop-filter: blur(12px);
-  text-decoration: none;
   box-shadow: 0 12px 32px rgba(6,17,14,.18);
 }
-.safari-score-badge span,.safari-score-badge b { color: rgba(238,247,233,.48); font: 700 7px var(--font-mono); letter-spacing: .13em; }
+.safari-score-badge a { color: rgba(238,247,233,.56); text-decoration: none; font: 700 7px var(--font-mono); letter-spacing: .13em; }
 .safari-score-badge strong { margin: 2px 0; color: var(--color-accent); font: 700 19px var(--font-mono); }
-.safari-score-badge b { color: var(--color-accent); }
-.safari-score-badge:hover { border-color: var(--color-accent); transform: translateY(-2px); }
+.safari-score-badge a:last-child { color: var(--color-accent); }
+.safari-return-dock:hover .safari-return-icon { transform: translateY(-3px) rotate(-3deg); }
+.safari-return-dock:hover .safari-score-badge { border-color: var(--color-accent); }
 
 .leaderboard-page { min-height: 100vh; color: #eef7e9; background: #161d1a; }
 .leaderboard-hero { min-height: 520px; display: flex; flex-direction: column; justify-content: flex-end; padding: clamp(70px,10vw,140px) max(6vw,24px) 70px; background: radial-gradient(circle at 78% 15%,rgba(213,255,80,.14),transparent 30%),linear-gradient(135deg,#352c43,#14201b 62%,#0b1713); }
@@ -220,7 +243,12 @@ body {
 }
 
 @media (max-width: 640px) {
-  .safari-score-badge { right: 12px; bottom: 88px; min-width: 185px; }
+  .safari-return-dock { right: 12px; bottom: 12px; }
+  .safari-return-icon { width: 62px; height: 62px; }
+  .safari-return-icon::before,.safari-return-icon::after { top: 20px; width: 11px; }
+  .safari-return-icon::before { left: 16px; }
+  .safari-return-icon::after { right: 16px; }
+  .safari-score-badge { min-width: 175px; }
   .leaderboard-hero { min-height: 470px; }
   .score-board > header { grid-template-columns: 34px 1fr auto; }
   .score-board article { grid-template-columns: 34px minmax(0,1fr); padding-inline: 4px; }

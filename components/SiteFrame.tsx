@@ -1,6 +1,5 @@
 'use client';
 
-import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import AnnouncementBar from '@/components/AnnouncementBar';
 import Footer from '@/components/Footer';
@@ -27,11 +26,6 @@ export default function SiteFrame({ children }: { children: React.ReactNode }) {
       </header>
       <AnnouncementBar />
       <SafariScoreBadge />
-      <Link className="return-to-expedition" href="/" aria-label="Return to the Swovee Safari">
-        <span>RETURN TO</span>
-        <strong>SWOVEE SAFARI</strong>
-        <b aria-hidden="true">↙</b>
-      </Link>
       <main id="main-content" className="flex-1">{children}</main>
       <Footer />
     </div>

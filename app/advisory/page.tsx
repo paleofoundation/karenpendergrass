@@ -116,12 +116,12 @@ const boardDomains: { title: string; description: ReactNode; keywords: string }[
         </Link>{' '}
         (
         <a
-          href="https://gardensofstgertrude.com"
+          href="https://gardensofstgertrude.org"
           target="_blank"
           rel="noopener noreferrer"
           className="text-accent"
         >
-          gardensofstgertrude.com
+          gardensofstgertrude.org
         </a>
         ; 92-cat sanctuary in Cyprus) and{' '}
         <Link href="/ventures" className="text-accent">
@@ -267,12 +267,12 @@ const credentials: { label: string; value: ReactNode }[] = [
         </Link>{' '}
         (
         <a
-          href="https://gardensofstgertrude.com"
+          href="https://gardensofstgertrude.org"
           target="_blank"
           rel="noopener noreferrer"
           className="text-accent"
         >
-          gardensofstgertrude.com
+          gardensofstgertrude.org
         </a>
         )
       </>

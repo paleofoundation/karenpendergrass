@@ -25,7 +25,7 @@ Karen has founded six organizations. Heavy Metal Tested & Certified (HMTc) is a 
 - Journal of Food Metallomics (https://microbialmetallomics.com) — Trace metal analysis and microbiome research
 - WikiBiome (https://wikibiome.com) — Open microbiome knowledge platform
 - Tinies (https://tinies.com) — Connecting animal sanctuaries with sponsors
-- Gardens of St. Gertrude (https://gardensofstgertrude.com) — Cat sanctuary in Parekklisia, Cyprus
+- Gardens of St. Gertrude (https://gardensofstgertrude.org) — Cat sanctuary in Parekklisia, Cyprus
 
 ## Additional Project
 - Swovee (https://swovee.com) — Karen Pendergrass's 2017 robotics, AI, laser-scanning, and large-format 3D-printing project; the Rovalizer is its terrain-aware construction machine concept.

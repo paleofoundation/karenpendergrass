@@ -4,7 +4,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createSwoveeExperience } from "./engine";
-import { expeditionZones, mapExtent, markedZones, type ExpeditionZone } from "./zones";
+import { billboards, expeditionZones, mapExtent, markedZones, type ExpeditionZone } from "./zones";
 import type { DriveAction, ExperienceHandle, FieldObjectEvent, Telemetry } from "./types";
 import KpCompanion from "./KpCompanion";
 
@@ -127,6 +127,7 @@ export default function SwoveeGame() {
   const [oracleFound, setOracleFound] = useState(false);
   const [fieldLink, setFieldLink] = useState<FieldObjectEvent | null>(null);
   const [knockedDown, setKnockedDown] = useState<string[]>([]);
+  const [linkRewards, setLinkRewards] = useState<string[]>([]);
   const [knowledgeOpened, setKnowledgeOpened] = useState<string[]>([]);
   const [articleRewards, setArticleRewards] = useState<string[]>([]);
   const [showMap, setShowMap] = useState(false);
@@ -138,11 +139,11 @@ export default function SwoveeGame() {
   const nearbyZone = expeditionZones.find((zone) => zone.id === nearbyId) ?? null;
   const mapPlayerX = mapPercent(telemetry.x);
   const mapPlayerY = mapPercent(telemetry.z);
-  const socialFinds = knockedDown.filter((id) => id.startsWith("social-")).length;
-  const researchFinds = knockedDown.filter((id) => id.startsWith("project-")).length;
+  const socialFinds = linkRewards.filter((id) => id.startsWith("social-")).length;
+  const researchFinds = linkRewards.filter((id) => id.startsWith("project-") || id.startsWith("billboard-")).length;
   const challenges = useMemo(() => [
     { id: "districts", title: "Discover all four districts", progress: discovered.length, target: markedZones.length },
-    { id: "questions", title: "Answer the roadside questions", progress: knowledgeOpened.length, target: 4 },
+    { id: "questions", title: "Answer the roadside questions", progress: knowledgeOpened.length, target: 5 },
     { id: "research", title: "Open three research landmarks", progress: Math.min(researchFinds, 3), target: 3 },
     { id: "social", title: "Find Social Plaza", progress: Math.min(socialFinds, 1), target: 1 },
     { id: "cats", title: "Reach two districts without hitting a cat", progress: catPenalty === 0 ? Math.min(discovered.length, 2) : 0, target: 2 },
@@ -159,7 +160,7 @@ export default function SwoveeGame() {
   useEffect(() => {
     try {
       const saved = JSON.parse(window.localStorage.getItem(RUN_STORAGE_KEY) || "null") as null | {
-        score?: number; catPenalty?: number; multiplier?: number; elapsedSeconds?: number; discovered?: string[]; knockedDown?: string[]; knowledgeOpened?: string[]; articleRewards?: string[]; oracleFound?: boolean;
+        score?: number; catPenalty?: number; multiplier?: number; elapsedSeconds?: number; discovered?: string[]; knockedDown?: string[]; linkRewards?: string[]; knowledgeOpened?: string[]; articleRewards?: string[]; oracleFound?: boolean;
       };
       if (saved) {
         setScore(Math.max(0, Number(saved.score) || 0));
@@ -168,6 +169,7 @@ export default function SwoveeGame() {
         setElapsedSeconds(Math.max(0, Number(saved.elapsedSeconds) || 0));
         setDiscovered(Array.isArray(saved.discovered) ? saved.discovered : []);
         setKnockedDown(Array.isArray(saved.knockedDown) ? saved.knockedDown : []);
+        setLinkRewards(Array.isArray(saved.linkRewards) ? saved.linkRewards : []);
         setKnowledgeOpened(Array.isArray(saved.knowledgeOpened) ? saved.knowledgeOpened : []);
         setArticleRewards(Array.isArray(saved.articleRewards) ? saved.articleRewards : []);
         setOracleFound(Boolean(saved.oracleFound));
@@ -179,9 +181,9 @@ export default function SwoveeGame() {
 
   useEffect(() => {
     if (!runLoaded) return;
-    window.localStorage.setItem(RUN_STORAGE_KEY, JSON.stringify({ score, catPenalty, multiplier, elapsedSeconds, discovered, knockedDown, knowledgeOpened, articleRewards, oracleFound, totalScore }));
+    window.localStorage.setItem(RUN_STORAGE_KEY, JSON.stringify({ score, catPenalty, multiplier, elapsedSeconds, discovered, knockedDown, linkRewards, knowledgeOpened, articleRewards, oracleFound, totalScore }));
     window.localStorage.setItem("kp-safari-score", String(totalScore));
-  }, [articleRewards, catPenalty, discovered, elapsedSeconds, knockedDown, knowledgeOpened, multiplier, oracleFound, runLoaded, score, totalScore]);
+  }, [articleRewards, catPenalty, discovered, elapsedSeconds, knockedDown, linkRewards, knowledgeOpened, multiplier, oracleFound, runLoaded, score, totalScore]);
 
   useEffect(() => {
     if (!started || endOpen) return;
@@ -265,8 +267,8 @@ export default function SwoveeGame() {
           if (!activeRef.current) return;
           setKnockedDown((current) => {
             if (current.includes(item.id)) return current;
-            if (item.kind !== "definition") setScore((value) => value + item.points);
-            setNotification(item.kind === "definition" ? `QUESTION FOUND · REVEAL FOR +${item.points}` : `${item.kind === "demolition" ? "ASSUMPTION FLATTENED" : "SIGNAL FOUND"} · +${item.points}`);
+            if (item.kind === "demolition") setScore((value) => value + item.points);
+            setNotification(item.kind === "definition" ? `QUESTION FOUND · REVEAL FOR +${item.points}` : item.kind === "demolition" ? `ASSUMPTION FLATTENED · +${item.points}` : `BRIEFING FOUND · OPEN THE SELECTED LINK FOR +${item.points}`);
             setFieldLink(item);
             experienceRef.current?.pause();
             return [...current, item.id];
@@ -320,6 +322,7 @@ export default function SwoveeGame() {
     setScore(0);
     setCatPenalty(0);
     setKnockedDown([]);
+    setLinkRewards([]);
     setKnowledgeOpened([]);
     setArticleRewards([]);
     setOracleFound(false);
@@ -384,6 +387,14 @@ export default function SwoveeGame() {
       setScore((value) => value + 250);
       setNotification("TINIES STORY OPENED · +250");
       return [...current, id];
+    });
+  };
+  const claimLink = (item: FieldObjectEvent) => {
+    setLinkRewards((current) => {
+      if (current.includes(item.id)) return current;
+      setScore((value) => value + item.points);
+      setNotification(`${item.label} OPENED · +${item.points}`);
+      return [...current, item.id];
     });
   };
   const openEnd = () => {
@@ -493,26 +504,32 @@ export default function SwoveeGame() {
 
       {fieldLink && (
         <div className="overlay" role="presentation" onMouseDown={closeOverlay}>
-          <article className={`field-link-card ${fieldLink.kind === "definition" ? "definition-card" : ""}`} style={{ "--field-link-color": fieldLink.color } as React.CSSProperties} role="dialog" aria-modal="true" aria-labelledby="field-link-title" onMouseDown={(event) => event.stopPropagation()}>
+          <article className={`field-link-card ${fieldLink.kind === "definition" ? "definition-card" : ""} ${fieldLink.kind === "support" || fieldLink.kind === "billboard" ? "rich-briefing-card" : ""} ${fieldLink.image ? "has-briefing-image" : ""}`} style={{ "--field-link-color": fieldLink.color } as React.CSSProperties} role="dialog" aria-modal="true" aria-labelledby="field-link-title" onMouseDown={(event) => event.stopPropagation()}>
             <button className="overlay-close" onClick={closeOverlay}>×</button>
-            <span>{fieldLink.kind === "demolition" ? "ROVALIZER 1 · OBSTACLE 0" : fieldLink.eyebrow}</span>
-            <h2 id="field-link-title">{fieldLink.label}</h2>
-            {fieldLink.kind === "definition" ? (
-              knowledgeOpened.includes(fieldLink.id) ? <p className="definition-answer">{fieldLink.copy}</p> : <div className="definition-locked"><b>?</b><p>Open the dashboard briefing to reveal the answer and collect <strong>+{fieldLink.points}</strong>.</p><button onClick={() => revealDefinition(fieldLink)}>REVEAL THE ANSWER · +{fieldLink.points}</button></div>
-            ) : (
-              <p>{fieldLink.kind === "demolition" ? DEMOLITION_QUIPS[fieldLink.label] : fieldLink.icon === "orcid" ? "Karen's scholarly record: papers, publications, and the research trail behind the work." : fieldLink.kind === "support" ? "A working project founded by Karen Pendergrass. Follow the signal to explore it." : fieldLink.icon === "linkedin" ? "Karen's professional profile and current work." : "A direct route to Karen."}</p>
-            )}
-            <div>
-              {fieldLink.href && (fieldLink.kind !== "definition" || knowledgeOpened.includes(fieldLink.id)) && <a href={fieldLink.href} target={isInteriorPage(fieldLink.href) ? undefined : "_blank"} rel={isInteriorPage(fieldLink.href) ? undefined : "noreferrer"}>{fieldLink.cta ?? (fieldLink.icon === "orcid" ? "OPEN ORCID" : fieldLink.icon === "email" ? "CONTACT KAREN" : "OPEN PROJECT")} {isInteriorPage(fieldLink.href) ? "→" : "↗"}</a>}
-              {fieldLink.articleHref && knowledgeOpened.includes(fieldLink.id) && <a className="article-reward-link" href={fieldLink.articleHref} target="_blank" rel="noreferrer" onClick={() => claimArticle("tinies-story")}>{articleRewards.includes("tinies-story") ? "TINIES STORY OPENED · +250 COLLECTED" : fieldLink.articleCta} ↗</a>}
-              <button onClick={closeOverlay}>RETURN TO THE SAFARI</button>
+            {fieldLink.image && <div className={`briefing-visual ${fieldLink.id === "billboard-gutsies" ? "is-product" : ""}`}><img src={fieldLink.image} alt={`${fieldLink.label} campaign artwork`} /><i style={{ background: `linear-gradient(180deg,transparent,${fieldLink.color})` }} /></div>}
+            <div className="briefing-copy">
+              <span>{fieldLink.kind === "demolition" ? "ROVALIZER 1 · OBSTACLE 0" : fieldLink.eyebrow}</span>
+              {fieldLink.founder && <strong className="founder-stamp">{fieldLink.founder}</strong>}
+              <h2 id="field-link-title">{fieldLink.label}</h2>
+              {fieldLink.kind === "definition" ? (
+                knowledgeOpened.includes(fieldLink.id) ? <p className="definition-answer">{fieldLink.copy}</p> : <div className="definition-locked"><b>?</b><p>Open the full dashboard briefing to reveal the answer and collect <strong>+{fieldLink.points}</strong>.</p><button onClick={() => revealDefinition(fieldLink)}>REVEAL THE ANSWER · +{fieldLink.points}</button></div>
+              ) : (
+                <p>{fieldLink.kind === "demolition" ? DEMOLITION_QUIPS[fieldLink.label] : fieldLink.copy ?? (fieldLink.icon === "orcid" ? "Karen's scholarly record: papers, publications, and the research trail behind the work." : fieldLink.icon === "linkedin" ? "Karen's professional profile and current work." : "A direct route to Karen.")}</p>
+              )}
+              {fieldLink.details && <ul className="briefing-details">{fieldLink.details.map((detail) => <li key={detail}>{detail}</li>)}</ul>}
+              {fieldLink.kind !== "definition" && fieldLink.kind !== "demolition" && <p className="link-reward-note">POINTS ARE EARNED WHEN YOU OPEN KAREN&apos;S SELECTED LINK—not merely when you find the marker.</p>}
+              <div className="briefing-actions">
+                {fieldLink.href && (fieldLink.kind !== "definition" || knowledgeOpened.includes(fieldLink.id)) && <a href={fieldLink.href} target={isInteriorPage(fieldLink.href) ? undefined : "_blank"} rel={isInteriorPage(fieldLink.href) ? undefined : "noreferrer"} onClick={() => { if (fieldLink.kind !== "definition") claimLink(fieldLink); }}>{linkRewards.includes(fieldLink.id) ? `LINK OPENED · +${fieldLink.points} COLLECTED` : fieldLink.cta ?? (fieldLink.icon === "orcid" ? `OPEN ORCID · +${fieldLink.points}` : fieldLink.icon === "email" ? `CONTACT KAREN · +${fieldLink.points}` : `OPEN SELECTED LINK · +${fieldLink.points}`)} {isInteriorPage(fieldLink.href) ? "→" : "↗"}</a>}
+                {fieldLink.articleHref && knowledgeOpened.includes(fieldLink.id) && <a className="article-reward-link" href={fieldLink.articleHref} target="_blank" rel="noreferrer" onClick={() => claimArticle("tinies-story")}>{articleRewards.includes("tinies-story") ? "TINIES STORY OPENED · +250 COLLECTED" : fieldLink.articleCta} ↗</a>}
+                <button onClick={closeOverlay}>RETURN TO THE SAFARI</button>
+              </div>
             </div>
           </article>
         </div>
       )}
 
       {showMap && (
-        <div className="overlay" role="presentation" onMouseDown={closeOverlay}><section className="field-map-panel" role="dialog" aria-modal="true" aria-labelledby="map-title" onMouseDown={(event) => event.stopPropagation()}><button className="overlay-close" onClick={closeOverlay}>×</button><header><span>SWOVEE SAFARI · FAST TRAVEL</span><h2 id="map-title">CHOOSE A DISTRICT.</h2><p>Heavy Metals, Microbes, Swovee, Tinies—and Social Plaza between them.</p></header><div className="field-map">{WORLD_ROADS.map(([from, to], index) => <i key={index} className="map-world-road" style={mapRoadStyle(from, to)} />)}{expeditionZones.map((zone) => <button key={zone.id} className={`map-zone ${discovered.includes(zone.id) ? "is-found" : ""}`} style={{ left: `${mapPercent(zone.x)}%`, top: `${mapPercent(zone.z)}%`, "--zone-color": zone.color } as React.CSSProperties} onClick={() => jumpToZone(zone)}><i>{zone.index}</i><span>{zone.title}</span></button>)}<button className="map-social" style={{ left: `${mapPercent(-8)}%`, top: `${mapPercent(35)}%` }} onClick={() => { experienceRef.current?.teleportTo(-8, 29); setShowMap(false); experienceRef.current?.start(); }}>SOCIAL PLAZA</button><span className="map-rover" style={{ left: `${mapPlayerX}%`, top: `${mapPlayerY}%`, transform: `translate(-50%,-50%) rotate(${telemetry.heading + 90}deg)` }}>▲</span></div></section></div>
+        <div className="overlay" role="presentation" onMouseDown={closeOverlay}><section className="field-map-panel" role="dialog" aria-modal="true" aria-labelledby="map-title" onMouseDown={(event) => event.stopPropagation()}><button className="overlay-close" onClick={closeOverlay}>×</button><header><span>SWOVEE SAFARI · FAST TRAVEL</span><h2 id="map-title">CHOOSE A DISTRICT.</h2><p>Heavy Metals, Microbes, Swovee, Tinies—and three campaign billboards between them.</p></header><div className="field-map">{WORLD_ROADS.map(([from, to], index) => <i key={index} className="map-world-road" style={mapRoadStyle(from, to)} />)}{expeditionZones.map((zone) => <button key={zone.id} className={`map-zone ${discovered.includes(zone.id) ? "is-found" : ""}`} style={{ left: `${mapPercent(zone.x)}%`, top: `${mapPercent(zone.z)}%`, "--zone-color": zone.color } as React.CSSProperties} onClick={() => jumpToZone(zone)}><i>{zone.index}</i><span>{zone.title}</span></button>)}{billboards.map((billboard) => <button key={billboard.id} className="map-billboard" style={{ left: `${mapPercent(billboard.x)}%`, top: `${mapPercent(billboard.z)}%`, "--billboard-color": billboard.color } as React.CSSProperties} onClick={() => { experienceRef.current?.teleportTo(billboard.x, billboard.z + 9); setShowMap(false); experienceRef.current?.start(); }}><i>▰</i><span>{billboard.label}</span></button>)}<button className="map-social" style={{ left: `${mapPercent(-8)}%`, top: `${mapPercent(35)}%` }} onClick={() => { experienceRef.current?.teleportTo(-8, 29); setShowMap(false); experienceRef.current?.start(); }}>SOCIAL PLAZA</button><span className="map-rover" style={{ left: `${mapPlayerX}%`, top: `${mapPlayerY}%`, transform: `translate(-50%,-50%) rotate(${telemetry.heading + 90}deg)` }}>▲</span></div></section></div>
       )}
 
       {endOpen && (

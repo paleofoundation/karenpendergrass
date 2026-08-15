@@ -28,7 +28,7 @@ export type FieldObjectEvent = {
   id: string;
   label: string;
   eyebrow: string;
-  kind: "social" | "article" | "demolition" | "support" | "definition";
+  kind: "social" | "article" | "demolition" | "support" | "definition" | "billboard";
   href?: string;
   icon?: FieldIcon;
   supportPurpose?: DonationPurpose;
@@ -36,6 +36,10 @@ export type FieldObjectEvent = {
   cta?: string;
   articleHref?: string;
   articleCta?: string;
+  founder?: string;
+  details?: string[];
+  image?: string;
+  logoImage?: string;
   color: string;
   points: number;
 };

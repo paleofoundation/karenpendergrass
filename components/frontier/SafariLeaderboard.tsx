@@ -24,6 +24,7 @@ type LocalRun = {
   elapsedSeconds?: number;
   discovered?: string[];
   knockedDown?: string[];
+  linkRewards?: string[];
   knowledgeOpened?: string[];
   articleRewards?: string[];
 };
@@ -73,9 +74,9 @@ export default function SafariLeaderboard() {
   const safariScore = Number(run.totalScore ?? rawScore * (Number(run.multiplier) === 10 ? 10 : 1));
   const discoveries = run.discovered?.length ?? 0;
   const insights = (run.knowledgeOpened?.length ?? 0) + (run.articleRewards?.length ?? 0);
-  const researchFinds = run.knockedDown?.filter((id) => id.startsWith("project-")).length ?? 0;
-  const socialFinds = run.knockedDown?.some((id) => id.startsWith("social-")) ?? false;
-  const challenges = [discoveries >= 4, (run.knowledgeOpened?.length ?? 0) >= 4, researchFinds >= 3, socialFinds, Number(run.catPenalty || 0) === 0 && discoveries >= 2].filter(Boolean).length;
+  const researchFinds = run.linkRewards?.filter((id) => id.startsWith("project-") || id.startsWith("billboard-")).length ?? 0;
+  const socialFinds = run.linkRewards?.some((id) => id.startsWith("social-")) ?? false;
+  const challenges = [discoveries >= 4, (run.knowledgeOpened?.length ?? 0) >= 5, researchFinds >= 3, socialFinds, Number(run.catPenalty || 0) === 0 && discoveries >= 2].filter(Boolean).length;
 
   const submit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();

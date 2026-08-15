@@ -49,6 +49,10 @@ export type FieldLink = {
   cta?: string;
   articleHref?: string;
   articleCta?: string;
+  founder?: string;
+  details?: string[];
+  image?: string;
+  logoImage?: string;
   points?: number;
   color: string;
   x: number;
@@ -151,7 +155,7 @@ export const expeditionZones: ExpeditionZone[] = [
     color: "#ff9cae",
     href: "https://tinies.com",
     cta: "VISIT TINIES.COM",
-    secondaryHref: "https://gardensofstgertrude.com",
+    secondaryHref: "https://gardensofstgertrude.org",
     secondaryCta: "MEET THE GARDENS OF ST. GERTRUDE",
     founder: "SANCTUARY + PLATFORM FOUNDED BY KAREN PENDERGRASS",
     support: {
@@ -178,23 +182,86 @@ export const socialLinks: FieldLink[] = [
 
 /** Sculptural project marks placed inside the three research/life districts. */
 export const supportLinks: FieldLink[] = [
-  { id: "project-hmc", label: "HEAVY METAL CERTIFIED", eyebrow: "HUMAN-GRADE STANDARDS", href: "https://heavymetalcertified.com", icon: "heavy-metal", color: "#e23d36", x: -47, z: -11, rotation: 0.08, points: 140, cta: "VISIT HEAVY METAL CERTIFIED" },
-  { id: "project-hmi", label: "HEAVY METAL INDEX", eyebrow: "EVIDENCE LIBRARY", href: "https://heavymetalindex.com", icon: "heavy-metal-index", color: "#f18a52", x: -36, z: -10, rotation: -0.08, points: 140, cta: "EXPLORE HEAVY METAL INDEX" },
-  { id: "project-microbiome", label: "MICROBIOME MEDICINE", eyebrow: "OPEN RESEARCH", href: "https://microbiomemedicine.com", icon: "microbiome", color: "#38cfc5", x: -27, z: -41, rotation: 0.08, points: 160, cta: "SEE KAREN'S WORK" },
-  { id: "project-phage", label: "PHAGE COCKTAILS", eyebrow: "BACTERIOPHAGE RESEARCH", href: "https://phagecocktails.com", icon: "phage", color: "#8ce0be", x: -18, z: -39, rotation: 0, points: 140, cta: "VISIT PHAGE COCKTAILS" },
-  { id: "project-wikibiome", label: "WIKIBIOME", eyebrow: "FREE KNOWLEDGE", href: "https://wikibiome.com", icon: "wikibiome", color: "#b997e8", x: -9, z: -41, rotation: -0.08, points: 140, cta: "VISIT WIKIBIOME" },
-  { id: "project-tinies", label: "TINIES", eyebrow: "OUR ANIMALS", href: "https://tinies.com", icon: "tinies", color: "#ff9cae", x: 27, z: 31, rotation: 0.1, points: 140, cta: "VISIT TINIES.COM" },
-  { id: "project-gardens", label: "THE GARDENS", eyebrow: "GARDENS OF ST. GERTRUDE", href: "https://gardensofstgertrude.com", icon: "gardens", color: "#f4c56c", x: 39, z: 27, rotation: -0.08, points: 140, cta: "MEET THE SANCTUARY" },
+  {
+    id: "project-hmc", label: "HEAVY METAL CERTIFIED", eyebrow: "HUMAN-GRADE STANDARDS", href: "https://heavymetalcertified.com", icon: "heavy-metal", color: "#e23d36", x: -47, z: -11, rotation: 0.08, points: 180, cta: "OPEN HEAVY METAL CERTIFIED · +180", founder: "FOUNDED BY KAREN PENDERGRASS",
+    copy: "Heavy Metal Certified translates toxicology, serving-size reality, food categories, surveillance, and ALARA principles into certification standards people can actually use.",
+    details: ["Independent certification standards", "Human-grade thinking for food and pet food", "The work that has helped Karen feed the sanctuary cats"],
+  },
+  {
+    id: "project-hmi", label: "HEAVY METAL INDEX", eyebrow: "EVIDENCE LIBRARY", href: "https://heavymetalindex.com", icon: "heavy-metal-index", color: "#f18a52", x: -36, z: -10, rotation: -0.08, points: 160, cta: "EXPLORE THE HEAVY METAL INDEX · +160", founder: "FOUNDED BY KAREN PENDERGRASS",
+    copy: "A public evidence layer for understanding heavy metals in foods, products, exposures, and standards—built to make a confusing risk landscape legible.",
+    details: ["Evidence before alarm", "Food-category and serving-size context", "Research designed for real decisions"],
+  },
+  {
+    id: "project-microbiome", label: "MICROBIOME MEDICINE", eyebrow: "OPEN RESEARCH", href: "https://microbiomemedicine.com", icon: "microbiome", color: "#38cfc5", x: -27, z: -41, rotation: 0.08, points: 200, cta: "SEE KAREN'S MICROBIOME WORK · +200", founder: "FOUNDED BY KAREN PENDERGRASS",
+    copy: "MicrobiomeMedicine.com organizes condition-associated microbial signatures and explains what changes in the microbial ecosystem may mean for diagnosis, mechanism, and treatment.",
+    details: ["Condition-specific microbial signatures", "Bacteria, fungi, viruses, and host context", "Free research infrastructure"],
+  },
+  {
+    id: "project-phage", label: "PHAGE COCKTAILS", eyebrow: "PRECISION ANTIBIOTICS", href: "https://phagecocktails.com", icon: "phage", color: "#8ce0be", x: -18, z: -39, rotation: 0, points: 200, cta: "ENTER PHAGECOCKTAILS.COM · +200", founder: "FOUNDED BY KAREN PENDERGRASS",
+    copy: "A scientific platform about bacteriophage therapy: strain-targeted viruses that can kill pathogenic bacteria while preserving the surrounding microbiome.",
+    details: ["Phage Therapy 101 and landmark cases", "A Build-a-Cocktail Lab", "50 open-source, CC0 grant proposals"],
+  },
+  {
+    id: "project-wikibiome", label: "WIKIBIOME", eyebrow: "FREE KNOWLEDGE", href: "https://wikibiome.com", icon: "wikibiome", color: "#b997e8", x: -9, z: -41, rotation: -0.08, points: 160, cta: "OPEN WIKIBIOME · +160", founder: "FOUNDED BY KAREN PENDERGRASS",
+    copy: "WikiBiome is open microbiome infrastructure: a public, browsable knowledge project for making microbial evidence easier to find and connect.",
+    details: ["Free to use", "Built for cross-condition discovery", "Part of Karen's open microbiome work"],
+  },
+  {
+    id: "project-tinies", label: "TINIES", eyebrow: "OUR ANIMALS", href: "https://tinies.app", icon: "tinies", color: "#ff9cae", x: 27, z: 31, rotation: 0.1, points: 180, cta: "OPEN TINIES.APP · +180", founder: "FOUNDED BY KAREN PENDERGRASS",
+    copy: "Tinies is a pet-services marketplace and international animal-adoption platform created from Karen's daily experience caring for more than 90 sanctuary cats.",
+    details: ["Verified pet care", "Rescue adoption", "A business model intended to help fund animal welfare"],
+  },
+  {
+    id: "project-gardens", label: "THE GARDENS", eyebrow: "GARDENS OF ST. GERTRUDE", href: "https://gardensofstgertrude.org", icon: "gardens", color: "#f4c56c", x: 39, z: 27, rotation: -0.08, points: 180, cta: "MEET THE SANCTUARY · +180", founder: "FOUNDED BY KAREN PENDERGRASS",
+    copy: "Gardens of St. Gertrude is Karen's real 501(c)(3) cat sanctuary in Cyprus. The work is daily, physical, expensive, and currently supports more than 90 cats.",
+    details: ["Rescue and long-term sanctuary care", "Food, veterinary care, shelter, and sterilization", "A real place—not a brand metaphor"],
+  },
+];
+
+/** Real advertising boards: large, photographic landmarks rather than boxes. */
+export const billboards: FieldLink[] = [
+  {
+    id: "billboard-tinies", label: "TINIES.APP", eyebrow: "NO MATTER THE SIZE", href: "https://tinies.app/blog/she-built-a-tech-company-to-feed-92-cats", cta: "READ THE STORY BEHIND TINIES · +300", color: "#ff9cae", x: 54, z: 35, rotation: -Math.PI * 0.5, points: 300,
+    founder: "FOUNDED BY KAREN PENDERGRASS", image: "https://raw.githubusercontent.com/paleofoundation/Cats/main/assets/hero_cats_v2.jpg",
+    copy: "Book trusted pet care. Find a rescue animal. Meet the platform built from the reality of caring for 92 cats.",
+    details: ["Pet services marketplace", "International animal adoption", "Read why Karen built a tech company to feed 92 cats"],
+  },
+  {
+    id: "billboard-gutsies", label: "GUTSIES", eyebrow: "HAPPY GUTS FOR KIDS", href: "https://gutsies.com/#products", cta: "SEE THE CHILDREN'S GUT-HEALTH PRODUCTS · +250", color: "#36bbb6", x: 17, z: -13, rotation: 0.22, points: 250,
+    founder: "FOUNDED BY KAREN PENDERGRASS", image: "https://gutsies.com/assets/gutsies-tiny-tummies-strawberry-probiotic-gummies-bottle.png", logoImage: "https://gutsies.com/assets/gutsies-logo-happy-guts-for-kids.png",
+    copy: "Pediatric gut health without the daily battle: probiotic and prebiotic products for children, with clinically studied strains, no synthetic dyes, and heavy-metal testing with public certificates of analysis.",
+    details: ["Probiotic + prebiotic gummies", "Products for infants and children", "Every batch tested for lead, arsenic, cadmium, and mercury"],
+  },
+  {
+    id: "billboard-swovee", label: "SWOVEE.COM", eyebrow: "EARTH · MOON · MARS", href: "https://swovee.com/real-world", cta: "OPEN THE REAL-WORLD ROVALIZER · +300", color: "#63aef8", x: 51, z: -22, rotation: -0.72, points: 300,
+    founder: "A PROJECT FOUNDED BY KAREN PENDERGRASS · 2017", image: "https://swovee.com/swovee-simulator-first-shelter.png",
+    copy: "Swovee explores mobile additive construction and autonomous surface industrialization across Earth, Moon, and Mars simulations. The A02 Rovalizer scans terrain, plans within constraints, mixes material onboard, and prints while moving.",
+    details: ["Robotics + laser scanning + AI", "Mobile large-format 3D printing", "Playable Earth, Moon, and Mars simulations"],
+  },
 ];
 
 /** Short roadside questions. Their answers live in dashboard briefings. */
 export const knowledgeSigns: FieldLink[] = [
   {
+    id: "definition-phage",
+    label: "WHAT IS A PHAGE COCKTAIL?",
+    eyebrow: "MICROBIOME MEDICINE × PRECISION ANTIBIOTICS",
+    href: "https://phagecocktails.com/101",
+    cta: "OPEN PHAGE THERAPY 101",
+    copy: "A phage cocktail is a deliberately selected combination of bacteriophages—viruses that infect bacteria—designed to target a pathogenic bacterial strain or a broader group of related strains. Because an individual phage usually has a narrow host range, combining complementary phages broadens coverage and makes it harder for bacteria to escape through resistance. Unlike broad-spectrum antibiotics, a well-matched cocktail can remove the target organism while leaving much of the surrounding microbiome intact.",
+    color: "#8ce0be",
+    x: -17,
+    z: -29,
+    rotation: 0.08,
+    points: 225,
+  },
+  {
     id: "definition-tinies",
     label: "WHAT ARE TINIES?",
     eyebrow: "ROADSIDE QUESTION",
-    href: "https://tinies.com",
-    cta: "VISIT TINIES.COM",
+    href: "https://tinies.app",
+    cta: "VISIT TINIES.APP",
     articleHref: "https://tinies.app/blog/she-built-a-tech-company-to-feed-92-cats",
     articleCta: "READ: SHE BUILT A TECH COMPANY TO FEED 92 CATS · +250",
     copy: "Tinies — named for what Karen has always called animals, all animals, regardless of size (\"An elephant is a tiny. A bug is a tiny. A Great Dane is a tiny too.\") — is a pet services marketplace and international animal adoption platform. \"All tinies is tinies.\"",
