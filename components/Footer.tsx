@@ -12,6 +12,7 @@ const footerSections = [
       { href: '/frameworks', label: 'Frameworks' },
       { href: '/writing', label: 'Writing' },
       { href: '/publications', label: 'Publications' },
+      { href: '/leaderboard', label: 'Safari Leaderboard' },
       { href: '/advisory', label: 'Advisory & Board' },
     ],
   },

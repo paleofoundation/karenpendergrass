@@ -9,16 +9,33 @@ export type Telemetry = {
   scanning: boolean;
 };
 
-export type FieldIcon = "linkedin" | "instagram" | "x" | "facebook" | "email" | "orcid" | "microbiome" | "wikibiome";
+export type FieldIcon =
+  | "linkedin"
+  | "instagram"
+  | "x"
+  | "facebook"
+  | "email"
+  | "orcid"
+  | "microbiome"
+  | "wikibiome"
+  | "phage"
+  | "heavy-metal"
+  | "heavy-metal-index"
+  | "tinies"
+  | "gardens";
 
 export type FieldObjectEvent = {
   id: string;
   label: string;
   eyebrow: string;
-  kind: "social" | "article" | "demolition" | "support";
+  kind: "social" | "article" | "demolition" | "support" | "definition";
   href?: string;
   icon?: FieldIcon;
   supportPurpose?: DonationPurpose;
+  copy?: string;
+  cta?: string;
+  articleHref?: string;
+  articleCta?: string;
   color: string;
   points: number;
 };

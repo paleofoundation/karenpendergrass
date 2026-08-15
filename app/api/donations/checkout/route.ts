@@ -12,7 +12,7 @@ export async function POST(request: Request) {
     const program = DONATION_PROGRAMS[purpose];
     const session = await stripe.checkout.sessions.create({
       mode: 'payment',
-      submit_type: purpose === 'tinies' ? 'donate' : 'pay',
+      submit_type: purpose === 'tinies' || purpose === 'tinies-safari' ? 'donate' : 'pay',
       customer_creation: 'always',
       line_items: [
         {
@@ -30,8 +30,8 @@ export async function POST(request: Request) {
       metadata: {
         purpose,
         project: program.project,
-        sanctuary: purpose === 'tinies' ? 'Gardens of St. Gertrude' : '',
-        expedition: 'KP-01',
+        sanctuary: purpose === 'tinies' || purpose === 'tinies-safari' ? 'Gardens of St. Gertrude' : '',
+        expedition: purpose === 'tinies-safari' ? 'Swovee Safari' : 'KP-01',
       },
       success_url: `${origin}/donation/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/?donation=cancelled`,

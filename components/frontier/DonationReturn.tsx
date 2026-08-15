@@ -9,6 +9,11 @@ export default function DonationReturn({ verified, purpose }: { verified: boolea
 
   useEffect(() => {
     if (!verified) return;
+    if (purpose === "tinies-safari") {
+      window.localStorage.setItem("kp-tinies-safari-donation-verified", String(Date.now()));
+      window.opener?.postMessage({ type: "kp-tinies-safari-donation-verified" }, window.location.origin);
+      return;
+    }
     if (purpose === "tinies") {
       window.localStorage.setItem("kp-tinies-donation-verified", String(Date.now()));
       window.opener?.postMessage({ type: "kp-tinies-donation-verified" }, window.location.origin);
@@ -23,8 +28,8 @@ export default function DonationReturn({ verified, purpose }: { verified: boolea
       <section className={verified ? "donation-return-card is-verified" : "donation-return-card"}>
         <span>{verified ? program.successEyebrow : "PAYMENT NOT VERIFIED"}</span>
         <h1>{verified ? program.successTitle : "WE COULD NOT CONFIRM THAT GIFT."}</h1>
-        <p>{verified ? program.successCopy : `No completed ${program.amountLabel} Stripe payment was found. You can return to the expedition and try the support mission again.`}</p>
-        <Link href="/">RETURN TO EXPEDITION KP–01 →</Link>
+        <p>{verified ? program.successCopy : `No completed ${program.amountLabel} Stripe payment was found. You can return to the Safari and try again.`}</p>
+        <Link href="/">RETURN TO THE SWOVEE SAFARI →</Link>
       </section>
     </main>
   );

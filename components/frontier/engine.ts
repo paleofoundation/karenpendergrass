@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { RoundedBoxGeometry } from "three/examples/jsm/geometries/RoundedBoxGeometry.js";
 import type { DynamicRayCastVehicleController, RigidBody, World } from "@dimforge/rapier3d-compat";
-import { articleSignals, expeditionZones, fieldOperations, oracleBlocks, socialLinks, supportLinks, type ExpeditionZone, type FieldOperation } from "./zones";
+import { articleSignals, expeditionZones, fieldOperations, knowledgeSigns, oracleBlocks, socialLinks, supportLinks, type ExpeditionZone, type FieldOperation } from "./zones";
 import type { DriveAction, ExperienceCallbacks, ExperienceHandle, FieldObjectEvent, OperationStage } from "./types";
 
 const TAU = Math.PI * 2;
@@ -451,6 +451,50 @@ function createLogoKnockableVisual(event: FieldObjectEvent, width: number, heigh
     addBar(0.2, 1.7, -0.68, 0, -0.16);
     addBar(0.2, 1.7, 0, 0, 0.16);
     addBar(0.2, 1.7, 0.68, 0, -0.16);
+  } else if (icon === "phage") {
+    const head = mesh(new THREE.IcosahedronGeometry(1.03, 1), brand);
+    head.position.y = 0.5;
+    mark.add(head);
+    addBar(0.22, 1.15, 0, -0.72, 0, steel);
+    const collar = mesh(new THREE.TorusGeometry(0.46, 0.1, 8, 24), white);
+    collar.rotation.x = Math.PI * 0.5;
+    collar.position.y = -0.35;
+    mark.add(collar);
+    [-0.68, 0, 0.68].forEach((x, index) => addBar(0.13, 1.05, x, -1.16, index === 1 ? 0 : index ? -0.55 : 0.55, white));
+  } else if (icon === "heavy-metal") {
+    const shield = mesh(new THREE.CylinderGeometry(1.55, 1.35, 0.42, 6), brand);
+    shield.rotation.x = Math.PI * 0.5;
+    shield.rotation.z = Math.PI * 0.5;
+    mark.add(shield);
+    addBar(0.27, 2.05, -0.55, 0, 0, white);
+    addBar(0.27, 2.05, 0.55, 0, 0, white);
+    addBar(1.35, 0.27, 0, 0.12, 0, white);
+  } else if (icon === "heavy-metal-index") {
+    addTile(3.15, 2.75, 0.38, dark);
+    [-0.85, -0.28, 0.28, 0.85].forEach((x, index) => {
+      const barHeight = 0.7 + index * 0.38;
+      addBar(0.32, barHeight, x, -0.82 + barHeight * 0.5, 0, index === 3 ? brand : white, 0.24);
+    });
+  } else if (icon === "tinies") {
+    const face = mesh(new THREE.SphereGeometry(1.12, 24, 18), brand);
+    face.scale.set(1, 0.88, 0.42);
+    mark.add(face);
+    [-0.58, 0.58].forEach((x) => {
+      const ear = mesh(new THREE.ConeGeometry(0.46, 0.9, 3), brand);
+      ear.position.set(x, 0.88, 0);
+      mark.add(ear);
+      const eye = mesh(new THREE.SphereGeometry(0.11, 12, 8), white);
+      eye.position.set(x * 0.55, 0.12, 0.43);
+      mark.add(eye);
+    });
+  } else if (icon === "gardens") {
+    addTile(2.9, 2.35, 0.36, brand);
+    const roof = mesh(new THREE.ConeGeometry(2.05, 1.35, 4), white);
+    roof.rotation.y = Math.PI * 0.25;
+    roof.position.y = 1.35;
+    roof.scale.z = 0.72;
+    mark.add(roof);
+    addBar(0.72, 1.25, 0, -0.55, 0, dark, 0.22);
   }
 
   return group;
@@ -458,6 +502,33 @@ function createLogoKnockableVisual(event: FieldObjectEvent, width: number, heigh
 
 function createKnockableVisual(event: FieldObjectEvent, width: number, height: number, depth: number) {
   if (event.icon) return createLogoKnockableVisual(event, width, height, depth);
+  if (event.kind === "definition") {
+    const group = new THREE.Group();
+    const postMaterial = material("#625e69", 0.42, 0.62);
+    [-width * 0.37, width * 0.37].forEach((x) => {
+      const post = mesh(new THREE.CylinderGeometry(0.09, 0.12, height * 0.84, 8), postMaterial);
+      post.position.set(x, -height * 0.08, 0);
+      group.add(post);
+    });
+    const signTexture = createTextTexture(event.label, event.eyebrow, "#eff9e9", event.color);
+    [-1, 1].forEach((side) => {
+      const sign = mesh(
+        new THREE.PlaneGeometry(width * 0.94, height * 0.48),
+        new THREE.MeshBasicMaterial({ map: signTexture, transparent: true, side: THREE.DoubleSide }),
+        false,
+        false,
+      );
+      sign.position.set(0, height * 0.19, side * (depth * 0.5 + 0.012));
+      sign.rotation.y = side < 0 ? Math.PI : 0;
+      group.add(sign);
+    });
+    const crossbar = mesh(new RoundedBoxGeometry(width, height * 0.53, depth, 3, 0.08), material("#373241", 0.5, 0.35));
+    crossbar.position.y = height * 0.19;
+    group.add(crossbar);
+    // Keep the readable faces slightly proud of the physical sign.
+    group.children.slice(2, 4).forEach((child) => { child.renderOrder = 2; });
+    return group;
+  }
   const group = new THREE.Group();
   const shell = mesh(
     new RoundedBoxGeometry(width, height, depth, 4, Math.min(0.18, depth * 0.1)),
@@ -530,7 +601,9 @@ function addZonePad(scene: THREE.Scene, zone: ExpeditionZone) {
   ring.position.set(zone.x, 0.23, zone.z);
   ring.rotation.x = Math.PI * 0.5;
   scene.add(ring);
-
+  const points = createPointsSprite(100, zone.color, "DISCOVER DISTRICT");
+  points.position.set(zone.x, 5.6, zone.z);
+  scene.add(points);
 }
 
 function createFoundry(scene: THREE.Scene, zone: ExpeditionZone) {
@@ -633,20 +706,45 @@ function createObservatory(scene: THREE.Scene, zone: ExpeditionZone) {
 function createCat(color: string) {
   const group = new THREE.Group();
   const fur = material(color, 0.9, 0);
-  const body = mesh(new THREE.SphereGeometry(0.32, 10, 8), fur);
-  body.scale.set(1.15, 0.8, 0.72);
-  body.position.y = 0.32;
-  const head = mesh(new THREE.SphereGeometry(0.22, 10, 8), fur);
-  head.position.set(0.28, 0.52, 0);
-  const earGeometry = new THREE.ConeGeometry(0.1, 0.2, 3);
+  const body = mesh(new THREE.CapsuleGeometry(0.3, 0.58, 6, 12), fur);
+  body.rotation.z = Math.PI * 0.5;
+  body.scale.set(1, 0.82, 0.86);
+  body.position.set(-0.05, 0.52, 0);
+  const chest = mesh(new THREE.SphereGeometry(0.32, 14, 10), fur);
+  chest.scale.set(0.82, 1.15, 0.9);
+  chest.position.set(0.34, 0.56, 0);
+  const head = mesh(new THREE.SphereGeometry(0.3, 16, 12), fur);
+  head.scale.set(0.96, 0.9, 0.88);
+  head.position.set(0.52, 0.9, 0);
+  const muzzle = mesh(new THREE.SphereGeometry(0.13, 12, 8), material("#efe4d5", 0.92, 0));
+  muzzle.scale.set(0.75, 0.55, 1.15);
+  muzzle.position.set(0.77, 0.84, 0);
+  const nose = mesh(new THREE.SphereGeometry(0.045, 10, 7), material("#8c5b65", 0.72, 0));
+  nose.position.set(0.88, 0.89, 0);
+  const earGeometry = new THREE.ConeGeometry(0.13, 0.28, 3);
   const earA = mesh(earGeometry, fur);
   const earB = earA.clone();
-  earA.position.set(0.3, 0.77, 0.12);
-  earB.position.set(0.3, 0.77, -0.12);
-  const tail = mesh(new THREE.TorusGeometry(0.28, 0.045, 6, 15, Math.PI * 1.2), fur);
-  tail.position.set(-0.35, 0.48, 0);
+  earA.position.set(0.52, 1.19, 0.15);
+  earB.position.set(0.52, 1.19, -0.15);
+  const eyeMaterial = new THREE.MeshStandardMaterial({ color: "#cbe76b", emissive: "#9fbd43", emissiveIntensity: 0.7, roughness: 0.35 });
+  [-0.13, 0.13].forEach((z) => {
+    const eye = mesh(new THREE.SphereGeometry(0.043, 10, 7), eyeMaterial, false, false);
+    eye.position.set(0.78, 0.99, z);
+    group.add(eye);
+  });
+  [-0.2, 0.2].forEach((z) => {
+    const frontLeg = mesh(new THREE.CapsuleGeometry(0.055, 0.38, 4, 8), fur);
+    frontLeg.position.set(0.37, 0.22, z);
+    group.add(frontLeg);
+    const backLeg = frontLeg.clone();
+    backLeg.position.x = -0.35;
+    group.add(backLeg);
+  });
+  const tail = mesh(new THREE.TorusGeometry(0.42, 0.06, 8, 20, Math.PI * 1.35), fur);
+  tail.position.set(-0.5, 0.7, 0);
   tail.rotation.x = Math.PI * 0.5;
-  group.add(body, head, earA, earB, tail);
+  tail.rotation.z = -0.35;
+  group.add(body, chest, head, muzzle, nose, earA, earB, tail);
   return group;
 }
 
@@ -668,13 +766,13 @@ function createSanctuary(scene: THREE.Scene, zone: ExpeditionZone) {
   door.position.set(1.2, 0.9, 1.94);
   group.add(door);
   const catColors = ["#efe6d2", "#282a28", "#d98242", "#a99b83", "#e8d4b9", "#47433c", "#d9d5c8", "#8c5b3f"];
-  for (let index = 0; index < 30; index += 1) {
+  for (let index = 0; index < 16; index += 1) {
     const cat = createCat(catColors[index % catColors.length]);
     const angle = index * 2.399963;
     const radius = 3.2 + (index % 7) * 0.72;
     cat.position.set(Math.cos(angle) * radius, 0, 1.5 + Math.sin(angle) * radius * 0.72);
     cat.rotation.y = -angle + (index % 2 ? 0.45 : -0.18);
-    cat.scale.setScalar(1.35 + (index % 5) * 0.12);
+    cat.scale.setScalar(1.08 + (index % 5) * 0.1);
     cat.userData.animate = "sanctuaryCat";
     cat.userData.offset = index * 0.73;
     cat.userData.baseY = cat.position.y;
@@ -689,6 +787,34 @@ function createSanctuary(scene: THREE.Scene, zone: ExpeditionZone) {
   }
   scene.add(group);
   addAreaMarker(scene, "CAT SAFETY ZONE", "-150 PER STRIKE · DRIVE SLOW", zone.x + 9, zone.z + 3, "#ff9cae", -Math.PI * 0.5);
+  return cats;
+}
+
+function createSafariCats(scene: THREE.Scene) {
+  const catColors = ["#efe6d2", "#282a28", "#d98242", "#a99b83", "#e8d4b9", "#47433c", "#d9d5c8", "#8c5b3f"];
+  const positions: Array<[number, number, number]> = [
+    [-2, 10, 0.4], [8, 18, -0.8], [-21, 23, 0.7], [-31, 15, -0.2],
+    [-48, 2, 0.9], [-55, -20, -0.6], [-45, -38, 0.35], [-29, -51, -0.8],
+    [-7, -53, 0.6], [10, -45, -0.25], [24, -33, 0.85], [38, -22, -0.4],
+    [51, -6, 0.5], [46, 13, -0.9], [24, 18, 0.25], [18, 41, -0.6],
+    [31, 51, 0.75], [51, 44, -0.35], [57, 28, 0.5], [5, 55, -0.75],
+    [-18, 50, 0.35], [-42, 39, -0.55], [-57, 20, 0.8], [2, -14, -0.25],
+    [61, 7, 0.65], [52, -38, -0.45], [30, -55, 0.25], [3, -64, -0.75],
+    [-23, -65, 0.55], [-64, -47, -0.3], [-68, 3, 0.7], [-34, 61, -0.55],
+  ];
+  const cats: CatVisual[] = [];
+  positions.forEach(([x, z, rotation], index) => {
+    const cat = createCat(catColors[index % catColors.length]);
+    cat.position.set(x, 0, z);
+    cat.rotation.y = rotation;
+    cat.scale.setScalar(1.15 + (index % 4) * 0.11);
+    cat.userData.animate = "sanctuaryCat";
+    cat.userData.offset = index * 0.77;
+    cat.userData.baseY = 0;
+    cat.userData.startleUntil = 0;
+    scene.add(cat);
+    cats.push({ id: `safari-cat-${index + 1}`, group: cat, position: new THREE.Vector3(x, 0.7, z), hit: false });
+  });
   return cats;
 }
 
@@ -1242,31 +1368,33 @@ function createLandscapeDetails(scene: THREE.Scene) {
   rocks.instanceMatrix.needsUpdate = true;
   scene.add(rocks);
 
-  const grassGeometry = new THREE.ConeGeometry(0.25, 1.2, 4);
-  const grassMaterial = material("#7f9857", 1, 0);
-  const grass = new THREE.InstancedMesh(grassGeometry, grassMaterial, 220);
-  grass.castShadow = false;
-  grass.receiveShadow = true;
-  for (let index = 0; index < 220; index += 1) {
-    const grove = index % 4;
-    const anchors = [
-      new THREE.Vector2(-55, 58),
-      new THREE.Vector2(58, 65),
-      new THREE.Vector2(69, -66),
-      new THREE.Vector2(-58, -66),
-    ];
-    const anchor = anchors[grove];
-    const angle = Math.random() * TAU;
-    const radius = 5 + Math.random() * 15;
-    transform.position.set(anchor.x + Math.cos(angle) * radius, 0.52, anchor.y + Math.sin(angle) * radius);
-    transform.rotation.set(0, Math.random() * TAU, (Math.random() - 0.5) * 0.16);
-    const scale = 0.65 + Math.random() * 1.2;
-    transform.scale.set(scale, scale, scale);
-    transform.updateMatrix();
-    grass.setMatrixAt(index, transform.matrix);
-  }
-  grass.instanceMatrix.needsUpdate = true;
-  scene.add(grass);
+  // Layered, low-poly grass creates a continuous Safari landscape while
+  // keeping the roads and district pads readable.
+  const grassGeometry = new THREE.ConeGeometry(0.18, 0.96, 3);
+  ["#789254", "#91a963", "#627d49"].forEach((grassColor, layer) => {
+    const count = 430;
+    const grass = new THREE.InstancedMesh(grassGeometry, material(grassColor, 1, 0), count);
+    grass.castShadow = false;
+    grass.receiveShadow = true;
+    let placed = 0;
+    while (placed < count) {
+      const x = -92 + Math.random() * 184;
+      const z = -92 + Math.random() * 184;
+      const nearZone = expeditionZones.some((zone) => Math.hypot(zone.x - x, zone.z - z) < zone.radius + 2.5);
+      const nearSpawn = Math.hypot(x - SPAWN.x, z - SPAWN.z) < 7;
+      if (nearZone || nearSpawn) continue;
+      const height = 0.55 + Math.random() * 1.2;
+      transform.position.set(x, height * 0.46, z);
+      transform.rotation.set((Math.random() - 0.5) * 0.12, Math.random() * TAU, (Math.random() - 0.5) * 0.22);
+      transform.scale.set(0.65 + Math.random() * 0.85, height, 0.65 + Math.random() * 0.85);
+      transform.updateMatrix();
+      grass.setMatrixAt(placed, transform.matrix);
+      placed += 1;
+    }
+    grass.instanceMatrix.needsUpdate = true;
+    grass.userData.windLayer = layer;
+    scene.add(grass);
+  });
 
   const flowerAnchors = [
     new THREE.Vector2(-49, 53),
@@ -1698,6 +1826,10 @@ function createOracleBlock(scene: THREE.Scene, id: string, x: number, z: number,
   halo.rotation.x = Math.PI * 0.5;
   halo.position.y = -0.76;
   group.add(halo);
+  const points = createPointsSprite(250, "#d5ff50", "FIELD RECEIPT");
+  points.position.y = 2.05;
+  points.userData.faceCamera = true;
+  group.add(points);
   scene.add(group);
   return { id, group, baseY, hit: false };
 }
@@ -1748,7 +1880,12 @@ export async function createSwoveeExperience(canvas: HTMLCanvasElement, callback
     new THREE.Vector2(SPAWN.x, SPAWN.z),
   ];
   for (let index = 0; index < roadPoints.length - 1; index += 1) addRoad(scene, roadPoints[index], roadPoints[index + 1], 5.4);
-  const sanctuaryCats = expeditionZones.flatMap((zone) => createZoneWorld(scene, zone));
+  const sanctuaryCats = [
+    ...expeditionZones.flatMap((zone) => createZoneWorld(scene, zone)),
+    ...createSafariCats(scene),
+  ];
+  addAreaMarker(scene, "SOCIAL PLAZA", "LINKEDIN · EMAIL · ORCID", -8, 42, "#a6ce39", Math.PI);
+  addAreaMarker(scene, "CAT SAFARI", "AVOID THE CATS · -150 PER STRIKE", 4, 9, "#ff9cae", -0.35);
   const oracleVisuals = oracleBlocks.map((block) => createOracleBlock(scene, block.id, block.x, block.z, block.rotation));
   callbacks.onProgress(0.62, "ASSEMBLING FOUR FIELD DISTRICTS");
 
@@ -1785,6 +1922,10 @@ export async function createSwoveeExperience(canvas: HTMLCanvasElement, callback
     mass = 0.7,
   ) => {
     const group = createKnockableVisual(event, width, height, depth);
+    const points = createPointsSprite(event.points, event.color, event.kind === "definition" ? "REVEAL ANSWER" : "DISCOVER");
+    points.position.set(0, height * 0.78 + 1.05, 0);
+    points.userData.faceCamera = true;
+    group.add(points);
     group.position.set(x, height * 0.5 + 0.04, z);
     group.rotation.y = rotation;
     scene.add(group);
@@ -1818,7 +1959,8 @@ export async function createSwoveeExperience(canvas: HTMLCanvasElement, callback
     const isOrcid = link.icon === "orcid";
     addKnockable({ ...link, kind: "social", points: isOrcid ? 250 : 90 }, link.x, link.z, link.rotation, isOrcid ? 4.4 : 3.6, isOrcid ? 4.8 : 4.2, isOrcid ? 1.65 : 1.45, isOrcid ? 0.82 : 0.62);
   });
-  supportLinks.forEach((link) => addKnockable({ ...link, kind: "support", points: 125 }, link.x, link.z, link.rotation, 4.4, 4.4, 1.55, 0.68));
+  supportLinks.forEach((link) => addKnockable({ ...link, kind: "support", points: link.points ?? 125 }, link.x, link.z, link.rotation, 3.9, 4.15, 1.45, 0.66));
+  knowledgeSigns.forEach((sign) => addKnockable({ ...sign, kind: "definition", points: sign.points ?? 150 }, sign.x, sign.z, sign.rotation, 5.2, 3.15, 0.46, 0.34));
   articleSignals.forEach((article) => addKnockable({ ...article, kind: "article", points: 140 }, article.x, article.z, article.rotation, 5, 3.3, 1.2, 0.66));
   const demolitionWords = ["NO MARKET", "TOO EARLY", "STAY IN YOUR LANE", "CREDENTIALS"];
   demolitionWords.forEach((label, index) => {

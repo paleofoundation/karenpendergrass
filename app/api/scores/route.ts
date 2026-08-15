@@ -15,6 +15,9 @@ type StoredRun = {
   score: number;
   discoveries: number;
   articles: number;
+  challenges?: number;
+  comment?: string;
+  website?: string;
   timeSeconds: number;
   createdAt: string;
 };
@@ -25,6 +28,27 @@ function getRedis() {
 
 function clientAddress(request: Request) {
   return (request.headers.get('x-forwarded-for') ?? 'unknown').split(',')[0].trim();
+}
+
+function cleanText(value: unknown, maxLength: number) {
+  return String(value ?? '')
+    .trim()
+    .replace(/[\u0000-\u001f\u007f<>]/g, '')
+    .replace(/\s+/g, ' ')
+    .slice(0, maxLength);
+}
+
+function cleanWebsite(value: unknown) {
+  const candidate = String(value ?? '').trim().slice(0, 180);
+  if (!candidate) return undefined;
+  try {
+    const normalized = /^https?:\/\//i.test(candidate) ? candidate : `https://${candidate}`;
+    const url = new URL(normalized);
+    if (!['http:', 'https:'].includes(url.protocol) || url.username || url.password) return null;
+    return url.toString();
+  } catch {
+    return null;
+  }
 }
 
 async function withinRateLimit(redis: Redis, request: Request, userId: string) {
@@ -49,10 +73,13 @@ export async function GET() {
         score: run.score,
         discoveries: run.discoveries,
         articles: run.articles,
+        challenges: run.challenges ?? 0,
+        comment: run.comment ?? '',
+        website: run.website,
         timeSeconds: run.timeSeconds,
         createdAt: run.createdAt,
       }];
-    }).slice(0, 10);
+    }).slice(0, 30);
     return Response.json({ scores }, { headers: { 'cache-control': 'no-store' } });
   } catch (error) {
     console.error('Unable to read the frontier leaderboard', error);
@@ -72,20 +99,22 @@ export async function POST(request: Request) {
     }
 
     const payload = (await request.json()) as Partial<Omit<StoredRun, 'id' | 'createdAt'>>;
-    const playerName = (payload.playerName ?? '')
-      .trim()
-      .replace(/[\u0000-\u001f\u007f<>]/g, '')
-      .replace(/\s+/g, ' ')
-      .slice(0, 32);
+    const playerName = cleanText(payload.playerName, 40);
+    const comment = cleanText(payload.comment, 320);
+    const website = cleanWebsite(payload.website);
     const score = Math.round(Number(payload.score));
     const discoveries = Math.round(Number(payload.discoveries));
     const articles = Math.round(Number(payload.articles));
+    const challenges = Math.round(Number(payload.challenges ?? 0));
     const timeSeconds = Math.round(Number(payload.timeSeconds));
 
     if (playerName.length < 2) return Response.json({ error: 'Player name must be at least two characters.' }, { status: 400 });
-    if (!Number.isFinite(score) || score < 0 || score > 12000) return Response.json({ error: 'Score is outside the expedition range.' }, { status: 400 });
-    if (!Number.isFinite(discoveries) || discoveries < 0 || discoveries > 8) return Response.json({ error: 'Discovery count is invalid.' }, { status: 400 });
-    if (!Number.isFinite(articles) || articles < 0 || articles > 8) return Response.json({ error: 'Briefing count is invalid.' }, { status: 400 });
+    if (!comment) return Response.json({ error: 'Leave a short note about your visit.' }, { status: 400 });
+    if (website === null) return Response.json({ error: 'Website must be a valid http or https address.' }, { status: 400 });
+    if (!Number.isFinite(score) || score < 0 || score > 250000) return Response.json({ error: 'Score is outside the Safari range.' }, { status: 400 });
+    if (!Number.isFinite(discoveries) || discoveries < 0 || discoveries > 12) return Response.json({ error: 'Discovery count is invalid.' }, { status: 400 });
+    if (!Number.isFinite(articles) || articles < 0 || articles > 12) return Response.json({ error: 'Briefing count is invalid.' }, { status: 400 });
+    if (!Number.isFinite(challenges) || challenges < 0 || challenges > 5) return Response.json({ error: 'Challenge count is invalid.' }, { status: 400 });
     if (!Number.isFinite(timeSeconds) || timeSeconds < 0 || timeSeconds > 86400) return Response.json({ error: 'Field time is invalid.' }, { status: 400 });
 
     const record: StoredRun = {
@@ -95,6 +124,9 @@ export async function POST(request: Request) {
       score,
       discoveries,
       articles,
+      challenges,
+      comment,
+      website: website ?? undefined,
       timeSeconds,
       createdAt: new Date().toISOString(),
     };

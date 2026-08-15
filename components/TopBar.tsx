@@ -12,6 +12,7 @@ const primaryLinks = [
   { href: '/frameworks', label: 'Frameworks' },
   { href: '/writing', label: 'Writing' },
   { href: '/receipts', label: 'Receipts' },
+  { href: '/leaderboard', label: 'Safari Board' },
   { href: '/advisory', label: 'Advisory' },
 ];
 

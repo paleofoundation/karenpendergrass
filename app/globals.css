@@ -155,6 +155,78 @@ body {
   }
 }
 
+.safari-score-badge {
+  position: fixed;
+  z-index: 45;
+  right: 28px;
+  bottom: 96px;
+  min-width: 210px;
+  display: grid;
+  padding: 11px 13px;
+  border: 1px solid rgba(213,255,80,.44);
+  color: var(--color-bg);
+  background: rgba(6,17,14,.92);
+  backdrop-filter: blur(12px);
+  text-decoration: none;
+  box-shadow: 0 12px 32px rgba(6,17,14,.18);
+}
+.safari-score-badge span,.safari-score-badge b { color: rgba(238,247,233,.48); font: 700 7px var(--font-mono); letter-spacing: .13em; }
+.safari-score-badge strong { margin: 2px 0; color: var(--color-accent); font: 700 19px var(--font-mono); }
+.safari-score-badge b { color: var(--color-accent); }
+.safari-score-badge:hover { border-color: var(--color-accent); transform: translateY(-2px); }
+
+.leaderboard-page { min-height: 100vh; color: #eef7e9; background: #161d1a; }
+.leaderboard-hero { min-height: 520px; display: flex; flex-direction: column; justify-content: flex-end; padding: clamp(70px,10vw,140px) max(6vw,24px) 70px; background: radial-gradient(circle at 78% 15%,rgba(213,255,80,.14),transparent 30%),linear-gradient(135deg,#352c43,#14201b 62%,#0b1713); }
+.leaderboard-hero > span { color: #d5ff50; font: 800 9px var(--font-mono); letter-spacing: .18em; }
+.leaderboard-hero h1 { max-width: 1050px; margin: 16px 0 22px; color: #fbfaf6; font: 500 clamp(58px,8.5vw,125px)/.8 var(--font-display); letter-spacing: -.065em; }
+.leaderboard-hero h1 em { color: #d5ff50; font-style: normal; }
+.leaderboard-hero > p { max-width: 700px; color: rgba(238,247,233,.66); font-size: clamp(15px,1.8vw,20px); line-height: 1.55; }
+.leaderboard-hero > div { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.leaderboard-hero > div a { min-width: 210px; padding: 15px 18px; border: 1px solid #d5ff50; color: #101713; background: #d5ff50; text-align: center; text-decoration: none; font: 850 8px var(--font-mono); letter-spacing: .09em; }
+.leaderboard-hero > div a + a { color: #d5ff50; background: transparent; }
+.leaderboard-grid { display: grid; grid-template-columns: minmax(0,1.45fr) minmax(330px,.55fr); gap: clamp(28px,5vw,70px); max-width: 1500px; margin: 0 auto; padding: clamp(55px,8vw,110px) max(4vw,22px); }
+.score-board { min-width: 0; }
+.score-board > header { display: grid; grid-template-columns: 64px 1fr auto; gap: 15px; padding: 0 12px 12px; border-bottom: 1px solid rgba(255,255,255,.2); color: rgba(238,247,233,.38); font: 750 8px var(--font-mono); letter-spacing: .13em; }
+.score-board article { display: grid; grid-template-columns: 64px minmax(0,1fr) auto; gap: 15px; align-items: start; padding: 24px 12px; border-bottom: 1px solid rgba(255,255,255,.1); }
+.score-board article > b { color: rgba(238,247,233,.32); font: 700 18px var(--font-mono); }
+.score-board article h2 { margin: 0; color: #fbfaf6; font: 500 clamp(24px,3vw,37px)/1 var(--font-display); }
+.score-board article h2 a { color: inherit; text-decoration-color: rgba(213,255,80,.42); text-underline-offset: 5px; }
+.score-board article blockquote { margin: 11px 0 9px; color: rgba(238,247,233,.7); font-size: 14px; line-height: 1.5; }
+.score-board article small { color: rgba(238,247,233,.37); font: 700 7px var(--font-mono); letter-spacing: .09em; }
+.score-board article > strong { color: #d5ff50; font: 700 clamp(20px,3vw,34px) var(--font-mono); letter-spacing: -.06em; }
+.score-board article.podium { background: linear-gradient(90deg,rgba(213,255,80,.065),transparent); }
+.score-board article.podium > b { color: #d5ff50; }
+.board-status { padding: 42px 12px; color: rgba(238,247,233,.52); }
+.guestbook-form { position: sticky; top: 92px; align-self: start; padding: 28px; border: 1px solid rgba(213,255,80,.38); background: #222b27; }
+.guestbook-form > span { color: rgba(238,247,233,.46); font: 750 8px var(--font-mono); letter-spacing: .14em; }
+.guestbook-form > strong { display: block; margin: 3px 0; color: #d5ff50; font: 700 48px/.95 var(--font-mono); letter-spacing: -.07em; }
+.guestbook-form > small { color: rgba(238,247,233,.42); font: 700 7px var(--font-mono); letter-spacing: .07em; }
+.sign-in-gate { margin-top: 27px; padding-top: 25px; border-top: 1px solid rgba(255,255,255,.13); }
+.sign-in-gate h2 { margin: 0 0 10px; color: #fbfaf6; font-size: 32px; }
+.sign-in-gate p,.guestbook-note { color: rgba(238,247,233,.58); font-size: 13px; line-height: 1.52; }
+.sign-in-gate button,.guestbook-form form > button { width: 100%; min-height: 50px; border: 1px solid #d5ff50; color: #101713; background: #d5ff50; cursor: pointer; font: 850 8px var(--font-mono); letter-spacing: .08em; }
+.guestbook-form form { display: grid; gap: 15px; margin-top: 25px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,.13); }
+.guestbook-form label { display: grid; gap: 6px; color: rgba(238,247,233,.52); font: 750 7px var(--font-mono); letter-spacing: .11em; }
+.guestbook-form input,.guestbook-form textarea { width: 100%; border: 1px solid rgba(255,255,255,.2); border-radius: 0; padding: 11px 12px; color: #fbfaf6; background: rgba(255,255,255,.035); outline: none; font: 14px var(--font-body); }
+.guestbook-form textarea { resize: vertical; }
+.guestbook-form input:focus,.guestbook-form textarea:focus { border-color: #d5ff50; }
+.signed-in-row { display: flex; align-items: center; justify-content: space-between; color: #d5ff50; font: 750 7px var(--font-mono); letter-spacing: .12em; }
+.form-message { margin: 15px 0 0; padding: 10px; border-left: 2px solid #d5ff50; color: #d5ff50; background: rgba(213,255,80,.05); font-size: 12px; }
+.guestbook-note { margin: 18px 0 0; }
+
+@media (max-width: 900px) {
+  .leaderboard-grid { grid-template-columns: 1fr; }
+  .guestbook-form { position: static; }
+}
+
+@media (max-width: 640px) {
+  .safari-score-badge { right: 12px; bottom: 88px; min-width: 185px; }
+  .leaderboard-hero { min-height: 470px; }
+  .score-board > header { grid-template-columns: 34px 1fr auto; }
+  .score-board article { grid-template-columns: 34px minmax(0,1fr); padding-inline: 4px; }
+  .score-board article > strong { grid-column: 2; }
+}
+
 /* ============================================
    TYPOGRAPHY HIERARCHY
    ============================================ */

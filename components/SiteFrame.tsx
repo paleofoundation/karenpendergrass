@@ -6,6 +6,7 @@ import AnnouncementBar from '@/components/AnnouncementBar';
 import Footer from '@/components/Footer';
 import SidebarNav from '@/components/SidebarNav';
 import TopBar from '@/components/TopBar';
+import SafariScoreBadge from '@/components/frontier/SafariScoreBadge';
 
 export default function SiteFrame({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -25,9 +26,10 @@ export default function SiteFrame({ children }: { children: React.ReactNode }) {
         <TopBar />
       </header>
       <AnnouncementBar />
-      <Link className="return-to-expedition" href="/" aria-label="Return to the Drive the Frontier expedition">
+      <SafariScoreBadge />
+      <Link className="return-to-expedition" href="/" aria-label="Return to the Swovee Safari">
         <span>RETURN TO</span>
-        <strong>EXPEDITION KP–01</strong>
+        <strong>SWOVEE SAFARI</strong>
         <b aria-hidden="true">↙</b>
       </Link>
       <main id="main-content" className="flex-1">{children}</main>
