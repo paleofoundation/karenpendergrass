@@ -108,6 +108,15 @@ function TouchButton({ action, label, className = "", setAction }: { action: Dri
   );
 }
 
+function ContinueSafariButton({ onContinue, label = "CONTINUE THE SAFARI" }: { onContinue: () => void; label?: string }) {
+  return (
+    <button type="button" className="continue-safari-button" onClick={onContinue}>
+      <b>{label}</b>
+      <span><kbd>ENTER</kbd> · NO POINTS</span>
+    </button>
+  );
+}
+
 export default function SwoveeGame() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const experienceRef = useRef<ExperienceHandle | null>(null);
@@ -166,6 +175,8 @@ export default function SwoveeGame() {
   const projectPrimaryReward = project ? getSafariLinkReward(project.href) : null;
   const projectSecondaryReward = project?.secondaryHref ? getSafariLinkReward(project.secondaryHref) : null;
   const fieldReward = fieldLink?.href ? getSafariLinkReward(fieldLink.href) : null;
+  const fieldSignalGlyph = fieldLink?.kind === "definition" ? "?" : fieldLink?.kind === "demolition" ? "×" : fieldLink?.icon === "orcid" ? "iD" : fieldLink?.kind === "social" ? "↗" : "KP";
+  const fieldSignalType = fieldLink?.kind === "support" ? "PROJECT" : fieldLink?.kind?.toUpperCase() ?? "SIGNAL";
 
   useEffect(() => { startedRef.current = started; }, [started]);
   useEffect(() => { nearbyRef.current = nearbyId; }, [nearbyId]);
@@ -381,8 +392,15 @@ export default function SwoveeGame() {
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
-      if (["INPUT", "TEXTAREA"].includes((event.target as HTMLElement)?.tagName)) return;
+      const targetTag = (event.target as HTMLElement)?.tagName;
+      if (["INPUT", "TEXTAREA"].includes(targetTag)) return;
       const key = event.key.toLowerCase();
+      if (key === "enter" && startedRef.current && modalOpenRef.current && !safetyOpen) {
+        if (["A", "BUTTON"].includes(targetTag)) return;
+        event.preventDefault();
+        closeOverlay();
+        return;
+      }
       if ((key === "e" || key === "enter") && startedRef.current && !modalOpenRef.current) {
         const zone = expeditionZones.find((item) => item.id === nearbyRef.current);
         if (zone) { event.preventDefault(); openZone(zone); }
@@ -533,7 +551,7 @@ export default function SwoveeGame() {
           <article className="project-card" style={{ "--project-color": project.color } as React.CSSProperties} role="dialog" aria-modal="true" aria-labelledby="project-title" onMouseDown={(event) => event.stopPropagation()}>
             <button className="overlay-close" onClick={closeOverlay} aria-label="Close project">×</button>
             {project.logo ? <div className="project-logo"><img src={project.logo} alt="Heavy Metal Certified" /></div> : <div className={`project-mark mark-${project.kind}`} aria-hidden="true"><span>{project.index}</span></div>}
-            <div className="project-copy"><span>{project.index} · {project.label}</span>{project.id === "heavy-metal-certified" && <b className="commercial-anchor">PRIMARY COMMERCIAL DESTINATION</b>}{project.founder && <strong className="founder-stamp">{project.founder}</strong>}<h2 id="project-title">{project.title}</h2><p className="project-kicker">{project.kicker}</p><p>{project.description}</p><div className="project-actions"><a href={project.href} target={isInteriorPage(project.href) ? undefined : "_blank"} rel={isInteriorPage(project.href) ? undefined : "noreferrer"} onClick={() => claimHref(project.href)}>{project.cta}{projectPrimaryReward ? ` · +${projectPrimaryReward.points}` : ""} {isInteriorPage(project.href) ? "→" : "↗"}</a>{project.secondaryHref && <a className="secondary" href={project.secondaryHref} target={isInteriorPage(project.secondaryHref) ? undefined : "_blank"} rel={isInteriorPage(project.secondaryHref) ? undefined : "noreferrer"} onClick={() => claimHref(project.secondaryHref!)}>{project.secondaryCta}{projectSecondaryReward ? ` · +${projectSecondaryReward.points}` : ""} {isInteriorPage(project.secondaryHref) ? "→" : "↗"}</a>}{project.support && <button className="donate" onClick={() => { setProject(null); setSupportOpen(true); }}>{project.support.cta} →</button>}<button onClick={closeOverlay}>RETURN TO THE SAFARI</button></div></div>
+            <div className="project-copy"><div className="briefing-status-bar"><span>IN-VEHICLE PROJECT DOSSIER</span><b>SIGNAL {project.index} · FIELD VERIFIED</b></div><span>{project.index} · {project.label}</span>{project.id === "heavy-metal-certified" && <b className="commercial-anchor">PRIMARY COMMERCIAL DESTINATION</b>}{project.founder && <strong className="founder-stamp">{project.founder}</strong>}<h2 id="project-title">{project.title}</h2><p className="project-kicker">{project.kicker}</p><p>{project.description}</p><div className="project-actions"><a href={project.href} target={isInteriorPage(project.href) ? undefined : "_blank"} rel={isInteriorPage(project.href) ? undefined : "noreferrer"} onClick={() => claimHref(project.href)}>{project.cta}{projectPrimaryReward ? ` · +${projectPrimaryReward.points}` : ""} {isInteriorPage(project.href) ? "→" : "↗"}</a>{project.secondaryHref && <a className="secondary" href={project.secondaryHref} target={isInteriorPage(project.secondaryHref) ? undefined : "_blank"} rel={isInteriorPage(project.secondaryHref) ? undefined : "noreferrer"} onClick={() => claimHref(project.secondaryHref!)}>{project.secondaryCta}{projectSecondaryReward ? ` · +${projectSecondaryReward.points}` : ""} {isInteriorPage(project.secondaryHref) ? "→" : "↗"}</a>}{project.support && <button className="donate" onClick={() => { setProject(null); setSupportOpen(true); }}>{project.support.cta} →</button>}<ContinueSafariButton onContinue={closeOverlay} /></div></div>
           </article>
         </div>
       )}
@@ -543,21 +561,22 @@ export default function SwoveeGame() {
           <article className="cat-support-card" role="dialog" aria-modal="true" aria-labelledby="cat-support-title" onMouseDown={(event) => event.stopPropagation()}>
             <button className="overlay-close" onClick={closeOverlay} aria-label="Close donation card">×</button>
             <div className="sanctuary-cats" aria-label="Real cats from Gardens of St. Gertrude"><img src="https://raw.githubusercontent.com/paleofoundation/Cats/main/assets/profile_ziggy.jpg" alt="Ziggy, a real rescue cat at Gardens of St. Gertrude" /><img src="https://nwjuktwclfdkfxrjhwhq.supabase.co/storage/v1/object/public/site-images/adoption/adoption-toshiba-1.jpg" alt="Toshiba, a real sanctuary cat" /><img src="https://nwjuktwclfdkfxrjhwhq.supabase.co/storage/v1/object/public/site-images/adoption/adoption-splotch-1.jpg" alt="Splotch, a real sanctuary cat" /><img src="https://nwjuktwclfdkfxrjhwhq.supabase.co/storage/v1/object/public/site-images/adoption/adoption-ziggy-1.jpg" alt="A real rescue cat cared for at the sanctuary" /></div>
-            <div className="cat-support-copy"><span>GARDENS OF ST. GERTRUDE · 501(c)(3)</span><h2 id="cat-support-title">10× THE SCORE.<br /><em>REAL CAT FOOD.</em></h2><p>{tiniesZone.support.description}</p><p className="cat-funding-note">Heavy Metal Certified has helped fund and feed the sanctuary for years. Your gift helps Karen care for the 90+.</p><form action="/api/donations/checkout" method="post" target="_blank" onSubmit={beginSupportDonation}><input type="hidden" name="purpose" value="tinies-safari" /><button type="submit" disabled={supportClaimed}>{supportClaimed ? "10× MULTIPLIER VERIFIED · THANK YOU" : "DONATE $10 SECURELY · UNLOCK 10× ↗"}</button></form><button onClick={closeOverlay}>RETURN TO THE SAFARI</button></div>
+            <div className="cat-support-copy"><span>GARDENS OF ST. GERTRUDE · 501(c)(3)</span><h2 id="cat-support-title">10× THE SCORE.<br /><em>REAL CAT FOOD.</em></h2><p>{tiniesZone.support.description}</p><p className="cat-funding-note">Heavy Metal Certified has helped fund and feed the sanctuary for years. Your gift helps Karen care for the 90+.</p><form action="/api/donations/checkout" method="post" target="_blank" onSubmit={beginSupportDonation}><input type="hidden" name="purpose" value="tinies-safari" /><button type="submit" disabled={supportClaimed}>{supportClaimed ? "10× MULTIPLIER VERIFIED · THANK YOU" : "DONATE $10 SECURELY · UNLOCK 10× ↗"}</button></form><ContinueSafariButton onContinue={closeOverlay} /></div>
           </article>
         </div>
       )}
 
       {oracleOpen && (
-        <div className="overlay" role="presentation" onMouseDown={closeOverlay}><article className="oracle-card" role="dialog" aria-modal="true" aria-labelledby="oracle-title" onMouseDown={(event) => event.stopPropagation()}><button className="overlay-close" onClick={closeOverlay}>×</button><span>THE ORACLE · A RECEIPT</span><h2 id="oracle-title">“Well, if it isn’t the Oracle herself.”</h2><p>Fred Hart gave Karen the nickname after she predicted that major food companies would put prebiotics on the front of their packaging—years before the market arrived. The point is not mysticism. It is a documented habit of seeing weak signals early.</p><div><a href="/receipts">SEE KAREN&apos;S RECEIPTS →</a><button onClick={closeOverlay}>KEEP DRIVING</button></div></article></div>
+        <div className="overlay" role="presentation" onMouseDown={closeOverlay}><article className="oracle-card" role="dialog" aria-modal="true" aria-labelledby="oracle-title" onMouseDown={(event) => event.stopPropagation()}><button className="overlay-close" onClick={closeOverlay}>×</button><div className="oracle-signal" aria-hidden="true"><span>THE</span><strong>O</strong><small>ORACLE</small></div><div className="oracle-copy"><div className="briefing-status-bar"><span>IN-VEHICLE RECEIPT</span><b>ARCHIVE SIGNAL · VERIFIED</b></div><span>THE ORACLE · A RECEIPT</span><h2 id="oracle-title">“Well, if it isn’t the Oracle herself.”</h2><p>Fred Hart gave Karen the nickname after she predicted that major food companies would put prebiotics on the front of their packaging—years before the market arrived. The point is not mysticism. It is a documented habit of seeing weak signals early.</p><div className="briefing-actions"><a href="/receipts" onClick={() => claimHref("/receipts")}>SEE KAREN&apos;S RECEIPTS · +100 →</a><ContinueSafariButton onContinue={closeOverlay} label="KEEP DRIVING" /></div></div></article></div>
       )}
 
       {fieldLink && (
         <div className="overlay" role="presentation" onMouseDown={closeOverlay}>
-          <article className={`field-link-card ${fieldLink.kind === "definition" ? "definition-card" : ""} ${fieldLink.kind === "support" || fieldLink.kind === "billboard" ? "rich-briefing-card" : ""} ${fieldLink.image ? "has-briefing-image" : ""}`} style={{ "--field-link-color": fieldLink.color } as React.CSSProperties} role="dialog" aria-modal="true" aria-labelledby="field-link-title" onMouseDown={(event) => event.stopPropagation()}>
+          <article className={`field-link-card is-dossier ${fieldLink.kind === "definition" ? "definition-card" : ""} ${fieldLink.kind === "support" || fieldLink.kind === "billboard" ? "rich-briefing-card" : ""} ${fieldLink.image ? "has-briefing-image" : "has-signal-visual"}`} style={{ "--field-link-color": fieldLink.color } as React.CSSProperties} role="dialog" aria-modal="true" aria-labelledby="field-link-title" onMouseDown={(event) => event.stopPropagation()}>
             <button className="overlay-close" onClick={closeOverlay}>×</button>
-            {fieldLink.image && <div className={`briefing-visual ${fieldLink.id === "billboard-gutsies" ? "is-product" : ""} ${fieldLink.id === "billboard-consulting" ? "is-portrait" : ""}`}><img src={fieldLink.image} alt={`${fieldLink.label} campaign artwork`} /><i style={{ background: `linear-gradient(180deg,transparent,${fieldLink.color})` }} /></div>}
+            {fieldLink.image ? <div className={`briefing-visual ${fieldLink.id === "billboard-gutsies" ? "is-product" : ""} ${fieldLink.id === "billboard-consulting" ? "is-portrait" : ""}`}><img src={fieldLink.image} alt={`${fieldLink.label} campaign artwork`} /><i style={{ background: `linear-gradient(180deg,transparent,${fieldLink.color})` }} /><div className="visual-telemetry"><span>SWOVEE LIDAR CAPTURE</span><b>{fieldSignalType} · {fieldLink.points} PT OBJECTIVE</b></div></div> : <div className={`briefing-visual is-signal is-${fieldLink.kind}`} aria-hidden="true"><div className="signal-glyph"><b>{fieldSignalGlyph}</b></div><div className="visual-telemetry"><span>SWOVEE LIDAR SIGNAL</span><b>{fieldSignalType} · {fieldLink.points} PT OBJECTIVE</b></div></div>}
             <div className="briefing-copy">
+              <div className="briefing-status-bar"><span>IN-VEHICLE FIELD DOSSIER</span><b>KP–01 · SIGNAL LOGGED</b></div>
               <span>{fieldLink.kind === "demolition" ? "ROVALIZER 1 · OBSTACLE 0" : fieldLink.eyebrow}</span>
               {fieldLink.founder && <strong className="founder-stamp">{fieldLink.founder}</strong>}
               <h2 id="field-link-title">{fieldLink.label}</h2>
@@ -571,7 +590,7 @@ export default function SwoveeGame() {
               <div className="briefing-actions">
                 {fieldLink.href && (fieldLink.kind !== "definition" || knowledgeOpened.includes(fieldLink.id)) && <a href={fieldLink.href} target={isInteriorPage(fieldLink.href) ? undefined : "_blank"} rel={isInteriorPage(fieldLink.href) ? undefined : "noreferrer"} onClick={() => claimLink(fieldLink)}>{fieldReward && linkRewards.includes(fieldReward.id) ? `LINK OPENED · +${fieldReward.points} COLLECTED` : fieldLink.cta ?? (fieldLink.icon === "orcid" ? `OPEN ORCID · +${fieldLink.points}` : fieldLink.icon === "email" ? `CONTACT KAREN · +${fieldLink.points}` : `OPEN SELECTED LINK · +${fieldLink.points}`)} {isInteriorPage(fieldLink.href) ? "→" : "↗"}</a>}
                 {fieldLink.articleHref && knowledgeOpened.includes(fieldLink.id) && <a className="article-reward-link" href={fieldLink.articleHref} target="_blank" rel="noreferrer" onClick={() => claimArticle(fieldLink.articleHref!, "tinies-story")}>{articleRewards.includes("tinies-story") || linkRewards.includes("article-tinies-story") ? "TINIES STORY OPENED · +250 COLLECTED" : fieldLink.articleCta} ↗</a>}
-                <button onClick={closeOverlay}>RETURN TO THE SAFARI</button>
+                <ContinueSafariButton onContinue={closeOverlay} />
               </div>
             </div>
           </article>

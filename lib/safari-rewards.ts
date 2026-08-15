@@ -71,6 +71,15 @@ export function getSafariLinkReward(href: string): SafariLinkReward | null {
     }
   }
 
+  if (url.hostname === "microbiomemedicine.com" || url.hostname === "www.microbiomemedicine.com") {
+    if (url.pathname.replace(/\/$/, "") === "/conditions/endometriosis") {
+      return { id: "site-microbiome-endometriosis", label: "Endometriosis research opened", points: 150 };
+    }
+    if (url.pathname.replace(/\/$/, "") === "/definition/microbiome-medicine") {
+      return { id: "site-microbiome-definition", label: "Microbiome Medicine definition opened", points: 150 };
+    }
+  }
+
   if (url.hostname === "www.linkedin.com" && url.pathname.startsWith("/in/karenpendergras")) {
     return { id: "social-linkedin", label: "Karen's LinkedIn opened", points: 100 };
   }
