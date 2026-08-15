@@ -31,8 +31,9 @@ export const metadata: Metadata = {
     template: '%s | Karen Pendergrass',
   },
   icons: {
-    icon: '/favicon.svg',
-    apple: '/favicon.svg',
+    icon: [{ url: '/kp-brain-favicon.svg?v=20260815', type: 'image/svg+xml' }],
+    shortcut: [{ url: '/kp-brain-favicon.svg?v=20260815', type: 'image/svg+xml' }],
+    apple: [{ url: '/kp-brain-favicon.svg?v=20260815', type: 'image/svg+xml' }],
   },
   description:
     'Standards developer, microbiome signatures researcher, and founder at the intersection of microbiome science, translational medicine, and regulatory innovation.',
