@@ -156,7 +156,7 @@ export default function SwoveeGame() {
   const [showMap, setShowMap] = useState(false);
   const [muted, setMuted] = useState(false);
   const [runLoaded, setRunLoaded] = useState(false);
-  const [notification, setNotification] = useState("SWOVEE SAFARI · FOUR DISTRICTS · 48 CATS");
+  const [notification, setNotification] = useState("KAREN'S BRAIN · FOUR DISTRICTS · 48 CATS");
 
   const totalScore = Math.max(0, score - catPenalty) * multiplier;
   const nearbyZone = expeditionZones.find((zone) => zone.id === nearbyId) ?? null;
@@ -471,11 +471,11 @@ export default function SwoveeGame() {
 
   return (
     <main className={`swovee-game ${started ? "is-started" : ""} ${muted ? "is-muted" : ""} ${catStrikeAt ? "has-cat-strike" : ""}`}>
-      <canvas ref={canvasRef} className="game-canvas" aria-label="Three-dimensional Swovee Safari" />
+      <canvas ref={canvasRef} className="game-canvas" aria-label="Three-dimensional journey through Karen's Brain" />
       <div className="screen-vignette" aria-hidden="true" />
 
       <header className="game-header">
-        <div className="game-brand"><span>KAREN PENDERGRASS / SWOVEE</span><strong>SWOVEE SAFARI</strong></div>
+        <div className="game-brand"><span>KAREN PENDERGRASS / SWOVEE</span><strong>KAREN&apos;S BRAIN</strong></div>
         <div className="header-telemetry" aria-label="Safari progress">
           <span><small>TIME</small><b>{formatTime(elapsedSeconds)}</b></span>
           <span><small>DISTRICTS</small><b>{discovered.length}/{markedZones.length}</b></span>
@@ -519,18 +519,18 @@ export default function SwoveeGame() {
       {!started && (
         <section className="launch-screen" aria-labelledby="launch-title">
           <div className="launch-panel">
-            <div className="launch-topline"><span>SWOVEE SAFARI</span><span>CYPRUS · 34.68° N / 33.14° E</span></div>
+            <div className="launch-topline"><span>KAREN&apos;S BRAIN · SWOVEE EXPEDITION</span><span>CYPRUS · 34.68° N / 33.14° E</span></div>
             <p className="launch-kicker">HEAVY METAL CERTIFICATION · MICROBIAL SCIENCE · ROBOTICS · AI · 90+ CATS</p>
-            <h1 id="launch-title">ENTER THE<br /><em>SWOVEE</em><br />SAFARI.</h1>
+            <h1 id="launch-title">ENTER<br /><em>KAREN&apos;S</em><br />BRAIN.</h1>
             <p className="launch-copy">Drive Karen&apos;s 2017 terrain-scanning, AI-guided 3D-printing machine through the work behind her career: Heavy Metal Certified as the commercial engine, microbial science as the research frontier, and the Gardens as the real-world impact.</p>
             <p className="launch-note">Collect points. Answer roadside questions. Find the research. Do not hit the cats.</p>
             <div className="launch-actions">
-              <button className="launch-button" onClick={requestBegin} disabled={!ready}><span>{ready ? "START THE SWOVEE SAFARI" : loadingLabel}</span><b>{ready ? "→" : `${Math.round(loadingProgress * 100)}%`}</b></button>
+              <button className="launch-button" onClick={requestBegin} disabled={!ready}><span>{ready ? "ENTER KAREN'S BRAIN" : loadingLabel}</span><b>{ready ? "→" : `${Math.round(loadingProgress * 100)}%`}</b></button>
               <a className="static-site-button" href="/start"><span>MEET KAREN · STATIC SITE</span><b>↗</b></a>
             </div>
             <div className="loading-rail"><i style={{ width: `${loadingProgress * 100}%` }} /></div>
           </div>
-          <aside className="launch-portrait" aria-label="Karen Pendergrass"><div className="portrait-readout"><span>SAFARI FOUNDER IDENTIFIED</span><b>KAREN PENDERGRASS</b><small>MICROBIOME MEDICINE · MICROBIAL METALLOMICS</small></div><img src="/images/Karen_Pendergrass.png" alt="Karen Pendergrass" /><i className="portrait-scan" aria-hidden="true" /></aside>
+          <aside className="launch-portrait" aria-label="Karen Pendergrass"><div className="portrait-readout"><span>FIELD SUBJECT IDENTIFIED</span><b>KAREN PENDERGRASS</b><small>MICROBIOME MEDICINE · MICROBIAL METALLOMICS</small></div><img src="/images/Karen_Pendergrass.png" alt="Karen Pendergrass" /><i className="portrait-scan" aria-hidden="true" /></aside>
         </section>
       )}
 
@@ -598,7 +598,7 @@ export default function SwoveeGame() {
       )}
 
       {showMap && (
-        <div className="overlay" role="presentation" onMouseDown={closeOverlay}><section className="field-map-panel" role="dialog" aria-modal="true" aria-labelledby="map-title" onMouseDown={(event) => event.stopPropagation()}><button className="overlay-close" onClick={closeOverlay}>×</button><header><span>SWOVEE SAFARI · FAST TRAVEL</span><h2 id="map-title">CHOOSE A DISTRICT.</h2><p>Heavy Metal Certification leads the route; Microbes, Swovee, Tinies, Social Plaza, and four campaign billboards branch from it.</p></header><div className="field-map">{WORLD_ROADS.map(([from, to], index) => <i key={index} className="map-world-road" style={mapRoadStyle(from, to)} />)}{expeditionZones.map((zone) => <button key={zone.id} className={`map-zone ${zone.id === "heavy-metal-certified" ? "is-primary" : ""} ${discovered.includes(zone.id) ? "is-found" : ""}`} style={{ left: `${mapPercent(zone.x)}%`, top: `${mapPercent(zone.z)}%`, "--zone-color": zone.color } as React.CSSProperties} onClick={() => jumpToZone(zone)}><i>{zone.index}</i><span>{zone.title}</span></button>)}{billboards.map((billboard) => <button key={billboard.id} className="map-billboard" style={{ left: `${mapPercent(billboard.x)}%`, top: `${mapPercent(billboard.z)}%`, "--billboard-color": billboard.color } as React.CSSProperties} onClick={() => { experienceRef.current?.teleportTo(billboard.x, billboard.z + 9); setShowMap(false); experienceRef.current?.start(); }}><i>▰</i><span>{billboard.label}</span></button>)}<button className="map-social" style={{ left: `${mapPercent(-8)}%`, top: `${mapPercent(35)}%` }} onClick={() => { experienceRef.current?.teleportTo(-8, 29); setShowMap(false); experienceRef.current?.start(); }}>SOCIAL PLAZA</button><span className="map-rover" style={{ left: `${mapPlayerX}%`, top: `${mapPlayerY}%`, transform: `translate(-50%,-50%) rotate(${telemetry.heading + 90}deg)` }}>▲</span></div></section></div>
+        <div className="overlay" role="presentation" onMouseDown={closeOverlay}><section className="field-map-panel" role="dialog" aria-modal="true" aria-labelledby="map-title" onMouseDown={(event) => event.stopPropagation()}><button className="overlay-close" onClick={closeOverlay}>×</button><header><span>KAREN&apos;S BRAIN · FAST TRAVEL</span><h2 id="map-title">CHOOSE A DISTRICT.</h2><p>Heavy Metal Certification leads the route; Microbes, Swovee, Tinies, Social Plaza, and four campaign billboards branch from it.</p></header><div className="field-map">{WORLD_ROADS.map(([from, to], index) => <i key={index} className="map-world-road" style={mapRoadStyle(from, to)} />)}{expeditionZones.map((zone) => <button key={zone.id} className={`map-zone ${zone.id === "heavy-metal-certified" ? "is-primary" : ""} ${discovered.includes(zone.id) ? "is-found" : ""}`} style={{ left: `${mapPercent(zone.x)}%`, top: `${mapPercent(zone.z)}%`, "--zone-color": zone.color } as React.CSSProperties} onClick={() => jumpToZone(zone)}><i>{zone.index}</i><span>{zone.title}</span></button>)}{billboards.map((billboard) => <button key={billboard.id} className="map-billboard" style={{ left: `${mapPercent(billboard.x)}%`, top: `${mapPercent(billboard.z)}%`, "--billboard-color": billboard.color } as React.CSSProperties} onClick={() => { experienceRef.current?.teleportTo(billboard.x, billboard.z + 9); setShowMap(false); experienceRef.current?.start(); }}><i>▰</i><span>{billboard.label}</span></button>)}<button className="map-social" style={{ left: `${mapPercent(-8)}%`, top: `${mapPercent(35)}%` }} onClick={() => { experienceRef.current?.teleportTo(-8, 29); setShowMap(false); experienceRef.current?.start(); }}>SOCIAL PLAZA</button><span className="map-rover" style={{ left: `${mapPlayerX}%`, top: `${mapPlayerY}%`, transform: `translate(-50%,-50%) rotate(${telemetry.heading + 90}deg)` }}>▲</span></div></section></div>
       )}
 
       {endOpen && (

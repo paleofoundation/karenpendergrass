@@ -8,9 +8,10 @@ const TAU = Math.PI * 2;
 const UP = new THREE.Vector3(0, 1, 0);
 const FORWARD = new THREE.Vector3(1, 0, 0);
 const SPAWN = new THREE.Vector3(-7, 2.6, 17);
-const SPAWN_YAW = 2.46;
 const SUN_OFFSET = new THREE.Vector3(58, 50, -32);
 const SUN_VISUAL_DIRECTION = new THREE.Vector3(80, -3, 0);
+// The parked Rovalizer now greets the visible white sun instead of turning away from it.
+const SPAWN_YAW = Math.atan2(-SUN_VISUAL_DIRECTION.z, SUN_VISUAL_DIRECTION.x);
 
 type WheelVisual = {
   container: THREE.Group;
@@ -239,7 +240,7 @@ function createSignalIconTexture(event: FieldObjectEvent) {
       context.fill();
     });
   } else if (icon === "wikibiome") {
-    context.font = "900 170px Georgia";
+    context.font = "900 170px Arial";
     context.fillText("W", 0, 8);
   }
   context.restore();

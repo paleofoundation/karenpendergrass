@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 /* ============================================
-   FONTS: Newsreader (editorial serif display) + Source Sans 3 (clean body)
+   FONTS: Barlow Condensed (expedition display) + Source Sans 3 (clean body)
    ============================================ */
 /* Fonts are self-hosted via next/font (see app/layout.tsx) — no render-blocking @import. */
 
@@ -12,7 +12,7 @@
    ============================================ */
 :root {
   /* Typography */
-  --font-display: var(--font-display-src), 'Newsreader', 'Georgia', serif;
+  --font-display: var(--font-display-src), 'Arial Narrow', 'Helvetica Neue', sans-serif;
   --font-body: var(--font-body-src), 'Source Sans 3', 'Helvetica Neue', sans-serif;
   --font-mono: var(--font-mono-src), 'JetBrains Mono', monospace;
 
@@ -166,22 +166,72 @@ body {
 }
 .safari-return-icon {
   position: relative;
-  width: 74px;
-  height: 74px;
+  width: 82px;
+  height: 86px;
   display: grid;
   place-items: center;
-  border: 2px solid #d5ff50;
-  border-radius: 50%;
   color: #101713;
-  background: #d5ff50;
+  background: transparent;
   text-decoration: none;
-  box-shadow: 0 0 0 7px rgba(213,255,80,.14),0 18px 40px rgba(6,17,14,.28);
+  filter: drop-shadow(0 15px 20px rgba(6,17,14,.3));
 }
-.safari-return-icon::before,.safari-return-icon::after { content: ""; position: absolute; top: 24px; width: 14px; height: 8px; border-bottom: 3px solid #101713; border-radius: 50%; }
-.safari-return-icon::before { left: 18px; }
-.safari-return-icon::after { right: 18px; }
-.safari-return-icon span { margin-top: 8px; font: 900 20px var(--font-mono); }
-.safari-return-icon b { position: absolute; bottom: 9px; font: 900 6px var(--font-mono); letter-spacing: .08em; }
+.swovee-mascot {
+  position: relative;
+  width: 82px;
+  height: 84px;
+  display: block;
+  flex: 0 0 auto;
+  filter: drop-shadow(0 12px 18px rgba(0,0,0,.36));
+}
+.swovee-mascot-hood {
+  position: absolute;
+  left: 9px;
+  top: 0;
+  width: 64px;
+  height: 50px;
+  border-radius: 47% 53% 40% 42%;
+  background: linear-gradient(145deg,#d5ff50,#7ba43b 76%);
+  box-shadow: -7px 8px 0 #314b21,6px 7px 0 #9ac943,inset 8px 7px 12px rgba(255,255,255,.2);
+}
+.swovee-mascot-screen {
+  position: absolute;
+  left: 17px;
+  top: 17px;
+  width: 50px;
+  height: 38px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border: 3px solid #b9dd4f;
+  border-radius: 44% 44% 48% 48%;
+  background: radial-gradient(circle at 50% 0,#153f38,#071c19 68%);
+  box-shadow: inset 0 7px 12px rgba(100,244,232,.08);
+}
+.swovee-mascot-screen b {
+  width: 8px;
+  height: 4px;
+  border-radius: 0 0 8px 8px;
+  border-bottom: 3px solid #63f5ee;
+  transform: rotate(8deg);
+  box-shadow: 0 2px 7px rgba(99,245,238,.48);
+}
+.swovee-mascot-screen b:last-child { transform: rotate(-8deg); }
+.swovee-mascot-body {
+  position: absolute;
+  left: 18px;
+  bottom: 0;
+  width: 48px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 16px 16px 11px 11px;
+  color: #0a1814;
+  background: linear-gradient(180deg,#dcff64,#b8dc38);
+  font: normal 900 11px var(--font-mono);
+  box-shadow: inset 0 -6px 0 #7e9d2d,inset 5px 0 8px rgba(255,255,255,.16);
+}
+.swovee-mascot.is-compact { transform: scale(.95); }
 .safari-score-badge {
   min-width: 220px;
   display: grid;
@@ -197,7 +247,7 @@ body {
 .safari-score-badge a:last-child { color: var(--color-accent); }
 .safari-return-dock:hover .safari-return-icon { transform: translateY(-3px) rotate(-3deg); }
 .safari-return-dock:hover .safari-score-badge { border-color: var(--color-accent); }
-.safari-return-dock.is-safari { z-index: 45; }
+.safari-return-dock.is-safari { display: none; }
 .safari-reward-toast { position: absolute; right: 0; bottom: calc(100% + 14px); width: max-content; min-width: 230px; display: grid; padding: 13px 15px; border: 1px solid #d5ff50; color: #eef7e9; background: rgba(6,17,14,.96); box-shadow: 0 18px 42px rgba(6,17,14,.32),0 0 28px rgba(213,255,80,.13); animation: safariRewardIn .28s ease-out; }
 .safari-reward-toast span,.safari-reward-toast small { color: rgba(238,247,233,.55); font: 750 7px var(--font-mono); letter-spacing: .13em; }
 .safari-reward-toast strong { margin: 2px 0; color: #d5ff50; font: 800 28px/.95 var(--font-mono); }
@@ -251,10 +301,8 @@ body {
 @media (max-width: 640px) {
   .safari-return-dock { right: 12px; bottom: 12px; }
   .safari-return-dock.is-safari { bottom: 82px; }
-  .safari-return-icon { width: 62px; height: 62px; }
-  .safari-return-icon::before,.safari-return-icon::after { top: 20px; width: 11px; }
-  .safari-return-icon::before { left: 16px; }
-  .safari-return-icon::after { right: 16px; }
+  .safari-return-icon { width: 68px; height: 70px; }
+  .safari-return-icon .swovee-mascot { transform: scale(.78); }
   .safari-score-badge { min-width: 175px; }
   .safari-return-dock.is-safari .safari-score-badge { display: none; }
   .safari-reward-toast { min-width: 205px; }
@@ -269,8 +317,8 @@ body {
    ============================================ */
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-display);
-  font-weight: 500;
-  letter-spacing: -0.01em;
+  font-weight: 700;
+  letter-spacing: -0.025em;
   color: var(--color-ink);
   line-height: var(--line-height-tight);
   margin-bottom: var(--spacing-md);
@@ -278,20 +326,20 @@ h1, h2, h3, h4, h5, h6 {
 
 h1 {
   font-size: var(--text-6xl);
-  font-weight: 400; /* editorial display weight — high-contrast serif reads light */
-  letter-spacing: -0.02em;
+  font-weight: 800;
+  letter-spacing: -0.035em;
   margin-bottom: var(--spacing-lg);
 }
 
 h2 {
   font-size: var(--text-4xl);
-  font-weight: 400; /* display heading — editorial weight */
+  font-weight: 750;
   margin-bottom: var(--spacing-lg);
 }
 
 h3 {
   font-size: var(--text-2xl);
-  font-weight: 400; /* display heading — editorial weight */
+  font-weight: 700;
   margin-bottom: var(--spacing-md);
 }
 
@@ -319,7 +367,7 @@ p {
 .prose h3,
 .prose h4 {
   font-family: var(--font-display);
-  font-weight: 400;
+  font-weight: 700;
   letter-spacing: -0.01em;
   color: var(--color-ink);
 }
@@ -1005,17 +1053,17 @@ button:focus-visible,
    ============================================ */
 .cc-hero-title {
   font-family: var(--font-display);
-  font-weight: 500;
+  font-weight: 900;
   text-transform: uppercase;
   line-height: 0.9;
-  letter-spacing: -0.015em;
+  letter-spacing: -0.025em;
   font-size: clamp(2.75rem, 8vw, 7.5rem);
   color: inherit; /* take the section's color (overrides global h1 navy) */
 }
 
 .cc-ghost {
   font-family: var(--font-display);
-  font-weight: 600;
+  font-weight: 900;
   text-transform: uppercase;
   line-height: 0.78;
   letter-spacing: -0.02em;
@@ -1031,7 +1079,7 @@ button:focus-visible,
 
 .cc-feature-title {
   font-family: var(--font-display);
-  font-weight: 500;
+  font-weight: 800;
   line-height: 1.08;
   letter-spacing: -0.01em;
   font-size: clamp(1.5rem, 2.6vw, 2.4rem);
@@ -1117,21 +1165,11 @@ button:focus-visible,
   position: relative;
   overflow: hidden;
   isolation: isolate;
-  border: 1px solid rgba(255,255,255,.18);
-  background: radial-gradient(circle at 50% 38%,rgba(var(--color-accent-rgb),.12),transparent 58%);
+  border: 0;
+  background: transparent;
 }
 .kp-static-scan::before {
-  content: '';
-  position: absolute;
-  z-index: 3;
-  inset: 8%;
-  pointer-events: none;
-  border: 1px solid rgba(var(--color-accent-rgb),.24);
-  background:
-    linear-gradient(var(--color-accent),var(--color-accent)) left top/26px 1px no-repeat,
-    linear-gradient(var(--color-accent),var(--color-accent)) left top/1px 26px no-repeat,
-    linear-gradient(var(--color-accent),var(--color-accent)) right bottom/26px 1px no-repeat,
-    linear-gradient(var(--color-accent),var(--color-accent)) right bottom/1px 26px no-repeat;
+  display: none;
 }
 .kp-static-scan-line {
   position: absolute;

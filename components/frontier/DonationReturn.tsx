@@ -29,7 +29,7 @@ export default function DonationReturn({ verified, purpose }: { verified: boolea
         <span>{verified ? program.successEyebrow : "PAYMENT NOT VERIFIED"}</span>
         <h1>{verified ? program.successTitle : "WE COULD NOT CONFIRM THAT GIFT."}</h1>
         <p>{verified ? program.successCopy : `No completed ${program.amountLabel} Stripe payment was found. You can return to the Safari and try again.`}</p>
-        <Link href="/">RETURN TO THE SWOVEE SAFARI →</Link>
+        <Link href="/">RETURN TO KAREN&apos;S BRAIN →</Link>
       </section>
     </main>
   );

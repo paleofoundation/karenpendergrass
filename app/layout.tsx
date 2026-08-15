@@ -1,13 +1,14 @@
 import type { Metadata } from 'next';
 import { ClerkProvider } from '@clerk/nextjs';
-import { Newsreader, Source_Sans_3, JetBrains_Mono } from 'next/font/google';
+import { Barlow_Condensed, Source_Sans_3, JetBrains_Mono } from 'next/font/google';
 import './globals.css';
 import './frontier-game.css';
 import { PersonSchema } from '@/components/JsonLd';
 import SiteFrame from '@/components/SiteFrame';
 
-const newsreader = Newsreader({
+const barlowCondensed = Barlow_Condensed({
   subsets: ['latin'],
+  weight: ['400', '500', '600', '700', '800', '900'],
   style: ['normal', 'italic'],
   display: 'swap',
   variable: '--font-display-src',
@@ -80,7 +81,7 @@ export default function RootLayout({
 }) {
   return (
     <ClerkProvider>
-      <html lang="en" className={`${newsreader.variable} ${sourceSans.variable} ${jetbrainsMono.variable}`}>
+      <html lang="en" className={`${barlowCondensed.variable} ${sourceSans.variable} ${jetbrainsMono.variable}`}>
         <body className="min-h-screen flex flex-col">
           <PersonSchema />
           <SiteFrame>{children}</SiteFrame>

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { awardSafariOutboundLink } from "@/lib/safari-rewards";
+import SwoveeMascot from "./SwoveeMascot";
 
 type ReturnReward = {
   id: string;
@@ -80,11 +81,11 @@ export default function SafariScoreBadge({ safariActive = false }: { safariActiv
   }, []);
 
   return (
-    <aside className={`safari-return-dock ${safariActive ? "is-safari" : ""}`} aria-label="Swovee Safari score and return controls">
+    <aside className={`safari-return-dock ${safariActive ? "is-safari" : ""}`} aria-label="Karen's Brain score and return controls">
       {reward && <div className="safari-reward-toast" role="status" aria-live="polite"><span>POINTS RECEIVED</span><strong>+{reward.points.toLocaleString()}</strong><small>{reward.label}</small></div>}
-      <Link href="/" className="safari-return-icon" aria-label="Return to the Swovee Safari"><span>↙</span><b>SWOVEE</b></Link>
+      <Link href="/" className="safari-return-icon" aria-label="Return to Karen's Brain"><SwoveeMascot compact /></Link>
       <div className="safari-score-badge">
-        <Link href="/">{safariActive ? "SWOVEE SAFARI ACTIVE" : "RETURN TO THE SAFARI"}</Link>
+        <Link href="/">{safariActive ? "KAREN'S BRAIN ACTIVE" : "RETURN TO KAREN'S BRAIN"}</Link>
         <strong>{score.toLocaleString()} PTS</strong>
         <Link href="/leaderboard">SEE LEADERBOARD →</Link>
       </div>

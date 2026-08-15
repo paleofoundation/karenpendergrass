@@ -4,6 +4,7 @@ import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 import SocialLinks from '@/components/SocialLinks';
+import { oracleQuote, provenReceipts } from '@/lib/receipts';
 
 export const metadata: Metadata = {
   title: 'Karen Pendergrass — Standards Developer & Microbiome Researcher',
@@ -39,6 +40,17 @@ const disciplines = [
   },
 ];
 
+const landingReceipts = provenReceipts.filter((receipt) => ['2009', '2012', '2020'].includes(receipt.called)).slice(0, 3);
+
+const ventureIndex = [
+  { tag: 'Commercial engine', name: 'Heavy Metal Certified', note: 'Human-grade contaminant standards for food, supplements, personal care, and pet food.', href: 'https://heavymetalcertified.com' },
+  { tag: 'Evidence', name: 'Heavy Metal Index', note: 'A public map of heavy-metal testing, regulations, categories, and source evidence.', href: 'https://heavymetalindex.com' },
+  { tag: 'Research', name: 'Microbiome Medicine', note: 'Disease-associated microbiome patterns translated into clinical questions and interventions.', href: 'https://microbiomemedicine.com/conditions/endometriosis' },
+  { tag: 'Frontier', name: 'Phage Cocktails', note: 'Precision bacteriophage therapy for antimicrobial resistance without carpet-bombing the microbiome.', href: 'https://phagecocktails.com' },
+  { tag: 'Machines', name: 'Swovee', note: 'AI, robotics, laser scanning, and large-format 3D printing for terrain-aware construction.', href: 'https://swovee.com' },
+  { tag: 'Animals', name: 'Tinies + Gardens of St. Gertrude', note: 'A global animal platform born from the daily work of caring for 90+ sanctuary cats.', href: 'https://tinies.app' },
+];
+
 export default function StartHerePage() {
   return (
     <div className="page-enter">
@@ -68,7 +80,7 @@ export default function StartHerePage() {
                   Meet Karen
                 </Link>
                 <Link href="/" className="px-7 py-3.5 text-[11px] tracking-[.12em] uppercase" style={{ border: '1px solid rgba(255,255,255,.42)', color: PAPER, fontFamily: 'var(--font-mono)' }}>
-                  Drive the Swovee
+                  Enter Karen&apos;s Brain
                 </Link>
               </div>
               <div className="mt-8">
@@ -84,6 +96,24 @@ export default function StartHerePage() {
                 <div className="kp-static-readout"><span>SUBJECT IDENTIFIED</span><b>KAREN PENDERGRASS</b></div>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="py-20 md:py-24" style={{ background: 'var(--color-accent)', color: NAVY }}>
+        <div className="max-w-[1400px] mx-auto px-6 md:px-12 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-end">
+          <div className="lg:col-span-8">
+            <p className="cc-eyebrow text-[11px] mb-6" style={{ color: 'rgba(6,17,14,.62)' }}>The Oracle · On the record</p>
+            <blockquote className="cc-feature-title !mb-0" style={{ color: NAVY, fontSize: 'clamp(3rem,7vw,7rem)', lineHeight: '.86' }}>
+              “{oracleQuote.text}”
+            </blockquote>
+          </div>
+          <div className="lg:col-span-4 lg:border-l lg:border-black/20 lg:pl-9">
+            <p className="text-base leading-relaxed mb-5" style={{ color: 'rgba(6,17,14,.72)' }}>
+              In 2020, Karen told Fred Hart that Pepsi would eventually put fiber and prebiotics on the front of its cans. It shipped in 2026. Fred&apos;s greeting stuck.
+            </p>
+            <p className="cc-eyebrow text-[9px] mb-6" style={{ color: 'rgba(6,17,14,.62)' }}>{oracleQuote.author} · {oracleQuote.role}</p>
+            <Link href="/receipts" className="inline-block px-7 py-3.5 text-[10px] tracking-[.12em] uppercase" style={{ background: NAVY, color: PAPER, fontFamily: 'var(--font-mono)' }}>Open the receipts →</Link>
           </div>
         </div>
       </section>
@@ -138,6 +168,30 @@ export default function StartHerePage() {
         </div>
       </section>
 
+      <section className="py-20 md:py-28" style={{ background: '#e7eee5', color: NAVY }}>
+        <div className="max-w-[1400px] mx-auto px-6 md:px-12">
+          <div className="max-w-4xl mb-12">
+            <p className="cc-eyebrow text-[11px] mb-5" style={{ color: 'var(--color-accent-dark)' }}>Origin + receipts</p>
+            <h2 className="cc-feature-title" style={{ fontSize: 'clamp(2.4rem,5vw,4.9rem)', color: NAVY }}>The work did not begin with a brand deck.</h2>
+            <p className="text-lg leading-relaxed mt-5 max-w-3xl" style={{ color: 'var(--color-ink-secondary)' }}>
+              It began with lived problems, documented calls, and building the infrastructure before the market agreed it was necessary.
+            </p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-px" style={{ background: 'rgba(29,56,79,.2)' }}>
+            {landingReceipts.map((receipt) => (
+              <article key={`${receipt.called}-${receipt.title}`} className="p-8 md:p-10" style={{ background: '#e7eee5' }}>
+                <span className="cc-feature-title block" style={{ color: 'var(--color-accent-dark)', fontSize: '2.6rem' }}>{receipt.called}</span>
+                <h3 className="cc-feature-title mt-3" style={{ color: NAVY, fontSize: 'clamp(1.6rem,2.7vw,2.5rem)' }}>{receipt.title}</h3>
+                <p className="text-sm leading-relaxed mt-5" style={{ color: 'var(--color-ink-secondary)' }}>{receipt.detail}</p>
+                {receipt.href && (receipt.external
+                  ? <a href={receipt.href} target="_blank" rel="noreferrer" className="inline-block mt-5 cc-eyebrow text-[9px] underline underline-offset-4" style={{ color: NAVY }}>Follow the record ↗</a>
+                  : <Link href={receipt.href} className="inline-block mt-5 cc-eyebrow text-[9px] underline underline-offset-4" style={{ color: NAVY }}>Read the origin →</Link>)}
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
       <section className="py-20 md:py-28" style={{ background: '#f7e9ec', color: NAVY }}>
         <div className="max-w-[1400px] mx-auto px-6 md:px-12 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <div>
@@ -164,6 +218,28 @@ export default function StartHerePage() {
         </div>
       </section>
 
+      <section className="py-20 md:py-28" style={{ background: PAPER, color: NAVY }}>
+        <div className="max-w-[1400px] mx-auto px-6 md:px-12">
+          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-7 mb-10">
+            <div className="max-w-4xl">
+              <p className="cc-eyebrow text-[11px] mb-5" style={{ color: 'var(--color-accent-dark)' }}>Selected ventures · Founded by Karen Pendergrass</p>
+              <h2 className="cc-feature-title" style={{ fontSize: 'clamp(2.4rem,5vw,4.9rem)', color: NAVY }}>One brain. Several fields.</h2>
+            </div>
+            <Link href="/ventures" className="cc-eyebrow text-[10px] underline underline-offset-4" style={{ color: NAVY }}>Full venture index →</Link>
+          </div>
+          <div className="border-t" style={{ borderColor: 'rgba(29,56,79,.2)' }}>
+            {ventureIndex.map((venture) => (
+              <a key={venture.name} href={venture.href} target="_blank" rel="noreferrer" className="group grid grid-cols-1 md:grid-cols-[180px_1fr_1.25fr_34px] gap-2 md:gap-8 py-7 md:py-8 border-b items-center" style={{ borderColor: 'rgba(29,56,79,.2)', color: NAVY }}>
+                <span className="cc-eyebrow text-[9px]" style={{ color: 'var(--color-accent-dark)' }}>{venture.tag}</span>
+                <strong className="cc-feature-title" style={{ fontSize: 'clamp(1.6rem,2.5vw,2.6rem)' }}>{venture.name}</strong>
+                <span className="text-sm leading-relaxed" style={{ color: 'var(--color-ink-secondary)' }}>{venture.note}</span>
+                <span className="text-2xl transition-transform group-hover:translate-x-1">↗</span>
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+
       <section className="py-20 md:py-24" style={{ background: PAPER, color: NAVY }}>
         <div className="max-w-[1200px] mx-auto px-6 md:px-12 text-center">
           <p className="cc-eyebrow text-[11px] mb-6" style={{ color: 'var(--color-accent-dark)' }}>The record</p>
@@ -174,6 +250,7 @@ export default function StartHerePage() {
           <div className="flex flex-wrap justify-center gap-3 mt-9">
             <a href="https://orcid.org/0000-0002-2348-7259" target="_blank" rel="noreferrer" className="px-7 py-3.5 text-[11px] tracking-[.12em] uppercase" style={{ background: NAVY, color: PAPER, fontFamily: 'var(--font-mono)' }}>ORCID ↗</a>
             <Link href="/receipts" className="px-7 py-3.5 text-[11px] tracking-[.12em] uppercase" style={{ border: '1px solid rgba(29,56,79,.35)', color: NAVY, fontFamily: 'var(--font-mono)' }}>Receipts →</Link>
+            <Link href="/advisory" className="px-7 py-3.5 text-[11px] tracking-[.12em] uppercase" style={{ border: '1px solid rgba(29,56,79,.35)', color: NAVY, fontFamily: 'var(--font-mono)' }}>Advisory work →</Link>
             <Link href="/contact" className="px-7 py-3.5 text-[11px] tracking-[.12em] uppercase" style={{ border: '1px solid rgba(29,56,79,.35)', color: NAVY, fontFamily: 'var(--font-mono)' }}>Contact →</Link>
           </div>
         </div>

@@ -1,18 +1,17 @@
 "use client";
 
 import Link from "next/link";
+import SwoveeMascot from "./SwoveeMascot";
 
 export default function KpCompanion() {
   return (
-    <Link className="kp-companion" href="/start" aria-label="Meet Karen Pendergrass">
-      <span className="kp-companion-copy">
-        <strong>MEET KAREN</strong>
-        <small>Research, standards, biography, and receipts</small>
+    <Link className="kp-companion" href="/start" aria-label="Enter the static KarenPendergrass.com website">
+      <span className="kp-companion-bubble">
+        <strong>EXPLORE THE STATIC SITE</strong>
+        <small>Karen, the work, the receipts, and the full project index</small>
       </span>
-      <span className="kp-companion-avatar">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/images/Karen_Pendergrass.png" alt="" />
-      </span>
+      <SwoveeMascot />
+      <span className="kp-companion-label">KARENPENDERGRASS.COM&nbsp; ↗</span>
     </Link>
   );
 }

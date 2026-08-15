@@ -106,10 +106,10 @@ export default function SafariLeaderboard() {
   return (
     <div className="leaderboard-page">
       <section className="leaderboard-hero">
-        <span>SWOVEE SAFARI · PUBLIC SIGNAL BOARD</span>
+        <span>KAREN&apos;S BRAIN · PUBLIC SIGNAL BOARD</span>
         <h1>THE LEADERBOARD<br /><em>IS ALSO A GUESTBOOK.</em></h1>
         <p>Finish a Safari run, post your score, leave Karen a note, and—if you want—link your own corner of the internet.</p>
-        <div><a href="/">ENTER THE SAFARI →</a><a href="/start">MEET KAREN →</a></div>
+        <div><a href="/">ENTER KAREN&apos;S BRAIN →</a><a href="/start">MEET KAREN →</a></div>
       </section>
 
       <section className="leaderboard-grid">

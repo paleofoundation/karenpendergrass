@@ -8,7 +8,7 @@ const SwoveeGame = dynamic(() => import('./SwoveeGame'), {
     <div className="frontier-boot" role="status" aria-live="polite">
       <div>
         <span>KAREN PENDERGRASS · SWOVEE</span>
-        <strong>ENTER THE SWOVEE SAFARI</strong>
+        <strong>ENTER KAREN&apos;S BRAIN</strong>
         <small>Heavy metals · microbiome · robotics · 90+ cats</small>
         <i />
       </div>
