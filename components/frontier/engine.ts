@@ -2297,7 +2297,12 @@ export async function createSwoveeExperience(canvas: HTMLCanvasElement, callback
   let muted = false;
   let audioContext: AudioContext | null = null;
   let engineOscillator: OscillatorNode | null = null;
+  let engineFilter: BiquadFilterNode | null = null;
   let engineGain: GainNode | null = null;
+  let musicGain: GainNode | null = null;
+  let nextMusicAt = 0;
+  let musicStep = 0;
+  const safariMotif: Array<number | null> = [392, 493.88, 587.33, 659.25, 587.33, 493.88, 440, null, 392, 493.88, 659.25, 783.99, 739.99, 587.33, 493.88, null];
   const roverPosition = new THREE.Vector3();
   const roverQuaternion = new THREE.Quaternion();
   const roverForward = new THREE.Vector3();
@@ -2310,13 +2315,63 @@ export async function createSwoveeExperience(canvas: HTMLCanvasElement, callback
     }
     audioContext = new AudioContext();
     engineOscillator = audioContext.createOscillator();
+    engineFilter = audioContext.createBiquadFilter();
     engineGain = audioContext.createGain();
-    engineOscillator.type = "sawtooth";
-    engineOscillator.frequency.value = 52;
+    musicGain = audioContext.createGain();
+    engineOscillator.type = "triangle";
+    engineOscillator.frequency.value = 46;
+    engineFilter.type = "lowpass";
+    engineFilter.frequency.value = 260;
+    engineFilter.Q.value = 0.75;
     engineGain.gain.value = 0.0001;
-    engineOscillator.connect(engineGain);
+    musicGain.gain.value = 0.0001;
+    engineOscillator.connect(engineFilter);
+    engineFilter.connect(engineGain);
     engineGain.connect(audioContext.destination);
+    musicGain.connect(audioContext.destination);
     engineOscillator.start();
+  };
+
+  const playSafariNote = (frequency: number, now: number, duration = 0.2, peak = 0.018, type: OscillatorType = "triangle") => {
+    if (!audioContext || !musicGain || muted) return;
+    const oscillator = audioContext.createOscillator();
+    const filter = audioContext.createBiquadFilter();
+    const gain = audioContext.createGain();
+    oscillator.type = type;
+    oscillator.frequency.setValueAtTime(frequency, now);
+    oscillator.detune.setValueAtTime(Math.sin(musicStep) * 3, now);
+    filter.type = "lowpass";
+    filter.frequency.setValueAtTime(2300, now);
+    filter.frequency.exponentialRampToValueAtTime(980, now + duration);
+    filter.Q.value = 0.6;
+    gain.gain.setValueAtTime(0.0001, now);
+    gain.gain.exponentialRampToValueAtTime(peak, now + 0.014);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+    oscillator.connect(filter);
+    filter.connect(gain);
+    gain.connect(musicGain);
+    oscillator.start(now);
+    oscillator.stop(now + duration + 0.03);
+  };
+
+  const tickSafariMusic = () => {
+    if (!audioContext || !musicGain) return;
+    const now = audioContext.currentTime;
+    if (paused || muted) {
+      musicGain.gain.setTargetAtTime(0.0001, now, 0.08);
+      nextMusicAt = now + 0.2;
+      return;
+    }
+    musicGain.gain.setTargetAtTime(0.72, now, 0.35);
+    if (now < nextMusicAt) return;
+    const note = safariMotif[musicStep % safariMotif.length];
+    if (note) {
+      const accent = musicStep % 8 === 0;
+      playSafariNote(note, now, accent ? 0.28 : 0.18, accent ? 0.021 : 0.015, accent ? "sine" : "triangle");
+      if (musicStep % 4 === 0) playSafariNote(note / 2, now, 0.34, 0.007, "sine");
+    }
+    musicStep += 1;
+    nextMusicAt = now + (musicStep % 8 === 0 ? 0.48 : 0.32);
   };
 
   const playImpact = (kind: FieldObjectEvent["kind"]) => {
@@ -2459,10 +2514,13 @@ export async function createSwoveeExperience(canvas: HTMLCanvasElement, callback
     rover.scanRing.scale.setScalar(0.65 + scanPhase * 2.8);
     rover.scanRing.material.opacity = (1 - scanPhase) * 0.32;
     const speed = Math.abs(vehicleController.currentVehicleSpeed());
-    if (audioContext && engineOscillator && engineGain) {
-      engineOscillator.frequency.setTargetAtTime(48 + speed * 4.6 + (actions.boost ? 28 : 0), audioContext.currentTime, 0.06);
-      engineGain.gain.setTargetAtTime(paused || muted ? 0.0001 : 0.018 + Math.min(speed / 900, 0.035), audioContext.currentTime, 0.08);
+    if (audioContext && engineOscillator && engineFilter && engineGain) {
+      const now = audioContext.currentTime;
+      engineOscillator.frequency.setTargetAtTime(40 + speed * 2.5 + (actions.boost ? 16 : 0), now, 0.08);
+      engineFilter.frequency.setTargetAtTime(210 + speed * 12 + (actions.boost ? 90 : 0), now, 0.12);
+      engineGain.gain.setTargetAtTime(paused || muted ? 0.0001 : 0.006 + Math.min(speed / 1200, 0.014), now, 0.08);
     }
+    tickSafariMusic();
     rover.dust.material.opacity = THREE.MathUtils.lerp(rover.dust.material.opacity, Math.min(speed / 17, 0.55), 0.08);
     const dustPositions = rover.dust.geometry.attributes.position as THREE.BufferAttribute;
     for (let index = 0; index < dustPositions.count; index += 1) {
@@ -2663,7 +2721,14 @@ export async function createSwoveeExperience(canvas: HTMLCanvasElement, callback
     reset,
     teleportTo,
     print,
-    setMuted: (value) => { muted = value; },
+    setMuted: (value) => {
+      muted = value;
+      if (audioContext) {
+        const now = audioContext.currentTime;
+        engineGain?.gain.setTargetAtTime(value || paused ? 0.0001 : 0.006, now, 0.05);
+        musicGain?.gain.setTargetAtTime(value || paused ? 0.0001 : 0.72, now, 0.08);
+      }
+    },
     setAction: (action, active) => { actions[action] = active; },
     setOperation: (operationId, stage = "scan") => {
       activeOperationId = operationId;
