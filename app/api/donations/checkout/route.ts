@@ -1,11 +1,18 @@
 import { NextResponse } from 'next/server';
-import { stripe } from '@/lib/stripe';
+import { getStripe } from '@/lib/stripe';
 import { DONATION_PROGRAMS, resolveDonationPurpose } from '@/lib/donations';
 
 export const dynamic = 'force-dynamic';
 
 export async function POST(request: Request) {
   try {
+    const stripe = getStripe();
+    if (!stripe) {
+      return NextResponse.json(
+        { error: 'The support checkout is temporarily unavailable.' },
+        { status: 503 }
+      );
+    }
     const origin = new URL(request.url).origin;
     const formData = await request.formData();
     const purpose = resolveDonationPurpose(formData.get('purpose'));
