@@ -5,6 +5,7 @@ import './globals.css';
 import './frontier-game.css';
 import { PersonSchema } from '@/components/JsonLd';
 import SiteFrame from '@/components/SiteFrame';
+import { SITE_URL } from '@/lib/site';
 
 const newsreader = Newsreader({
   subsets: ['latin'],
@@ -47,15 +48,12 @@ export const metadata: Metadata = {
     'food safety researcher',
     'Limassol Cyprus',
   ],
-  metadataBase: new URL('https://karenpendergrass.com'),
-  alternates: {
-    canonical: '/',
-  },
+  metadataBase: new URL(SITE_URL),
   openGraph: {
     title: 'Karen Pendergrass',
     description:
       'Standards developer, microbiome signatures researcher, and founder at the intersection of microbiome science, translational medicine, and regulatory innovation.',
-    url: 'https://karenpendergrass.com',
+    url: SITE_URL,
     siteName: 'Karen Pendergrass',
     locale: 'en_US',
     type: 'website',
@@ -66,7 +64,7 @@ export const metadata: Metadata = {
     description:
       'Standards developer, microbiome signatures researcher, and founder at the intersection of microbiome science, translational medicine, and regulatory innovation.',
   },
-  authors: [{ name: 'Karen Pendergrass', url: 'https://karenpendergrass.com' }],
+  authors: [{ name: 'Karen Pendergrass', url: SITE_URL }],
   robots: {
     index: true,
     follow: true,

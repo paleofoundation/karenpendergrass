@@ -1,9 +1,18 @@
 import Stripe from 'stripe';
 
-if (!process.env.STRIPE_SECRET_KEY) {
-  throw new Error('STRIPE_SECRET_KEY is not configured.');
-}
+let stripeSingleton: Stripe | null | undefined;
 
-export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-  typescript: true,
-});
+/**
+ * Lazy Stripe client. Missing STRIPE_SECRET_KEY must not throw at import
+ * time — that 500s every donation route (and can fail `next build`).
+ */
+export function getStripe(): Stripe | null {
+  if (stripeSingleton !== undefined) return stripeSingleton;
+  const key = process.env.STRIPE_SECRET_KEY;
+  if (!key) {
+    stripeSingleton = null;
+    return null;
+  }
+  stripeSingleton = new Stripe(key, { typescript: true });
+  return stripeSingleton;
+}

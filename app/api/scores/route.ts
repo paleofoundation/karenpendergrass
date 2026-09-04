@@ -56,7 +56,10 @@ export async function GET() {
     return Response.json({ scores }, { headers: { 'cache-control': 'no-store' } });
   } catch (error) {
     console.error('Unable to read the frontier leaderboard', error);
-    return Response.json({ error: 'The signal board is temporarily offline.', scores: [] }, { status: 503 });
+    return Response.json(
+      { error: 'The signal board is temporarily offline.', scores: [] },
+      { status: 200, headers: { 'cache-control': 'no-store' } }
+    );
   }
 }
 

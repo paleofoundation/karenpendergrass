@@ -1,4 +1,10 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
+
+export const metadata: Metadata = {
+  title: 'Page not found',
+  robots: { index: false, follow: true },
+};
 
 export default function NotFound() {
   return (
@@ -16,7 +22,7 @@ export default function NotFound() {
         Page not found
       </h1>
       <p className="text-ink-light mb-8">
-        This page doesn't exist. If you followed a link from the old WordPress
+        This page doesn&apos;t exist. If you followed a link from the old WordPress
         site, it may have been restructured during the migration.
       </p>
       <div className="flex justify-center gap-4">
