@@ -69,8 +69,12 @@ await check('dated permalink is a single hop to /writing/:slug', async () => {
   const r = await probe('/2016/08/15/zinc-dyshomeostasis-multiple-sclerosis-pathogenesis/');
   assert([301, 308].includes(r.status), `status ${r.status}`);
   assert(
-    r.location?.endsWith('/writing/zinc-dyshomeostasis-multiple-sclerosis-pathogenesis'),
+    /\/writing\/zinc-dyshomeostasis-multiple-sclerosis-pathogenesis\/?$/.test(r.location || ''),
     `location ${r.location}`
+  );
+  assert(
+    !r.location?.endsWith('/zinc-dyshomeostasis-multiple-sclerosis-pathogenesis/'),
+    `redirect kept a trailing slash: ${r.location}`
   );
 });
 
@@ -107,6 +111,13 @@ await check('sitemap lists only apex URLs and includes /phage', async () => {
   for (const loc of locs) {
     assert(loc.startsWith('https://karenpendergrass.com'), `non-canonical loc ${loc}`);
   }
+});
+
+await check('trailing slash is a single hop to the slashless URL', async () => {
+  const r = await probe('/about/');
+  assert([301, 308].includes(r.status), `status ${r.status}`);
+  assert(r.location === '/about' || r.location?.endsWith('/about'), `location ${r.location}`);
+  assert(!r.location?.endsWith('/about/'), `self-redirect ${r.location}`);
 });
 
 await check('robots.txt points at apex sitemap and disallows /donation/', async () => {

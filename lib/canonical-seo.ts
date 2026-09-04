@@ -75,9 +75,7 @@ export function applyCanonicalSeo(request: NextRequest): NextResponse | null {
   }
 
   if (url.pathname !== '/' && url.pathname.endsWith('/')) {
-    const stripped = url.clone();
-    stripped.pathname = pathname;
-    return NextResponse.redirect(stripped, 308);
+    return redirectTo(request, pathname);
   }
 
   return null;
@@ -104,9 +102,9 @@ function matchSingleSegment(pathname: string): string | null {
 }
 
 function redirectTo(request: NextRequest, pathname: string): NextResponse {
-  const url = request.nextUrl.clone();
-  url.pathname = pathname;
-  return NextResponse.redirect(url, 308);
+  const dest = new URL(pathname, request.nextUrl.origin);
+  dest.search = request.nextUrl.search;
+  return NextResponse.redirect(dest, 308);
 }
 
 function rewriteNotFound(request: NextRequest): NextResponse {

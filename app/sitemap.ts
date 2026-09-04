@@ -5,16 +5,16 @@ import { SITE_URL } from '@/lib/site';
 
 function assertPublishedSlugIndex(slugs: string[]) {
   const fromContent = new Set(slugs);
-  for (const slug of fromContent) {
+  slugs.forEach((slug) => {
     if (!PUBLISHED_WRITING_SLUGS.has(slug)) {
       throw new Error(`published-slugs.ts is missing ${slug}`);
     }
-  }
-  for (const slug of PUBLISHED_WRITING_SLUGS) {
+  });
+  Array.from(PUBLISHED_WRITING_SLUGS).forEach((slug) => {
     if (!fromContent.has(slug)) {
       throw new Error(`published-slugs.ts has extra slug ${slug}`);
     }
-  }
+  });
 }
 
 export default function sitemap(): MetadataRoute.Sitemap {
